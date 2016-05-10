@@ -1,0 +1,28 @@
+<resources>
+
+    <style name="Theme.SurakshaDark" parent="AppTheme">
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="registerForm" parent="AppTheme.NoActionBar">
+        <item name="android:layout_marginTop">@dimen/edit_text_top_margin_register_member</item>
+        <item name="android:layout_marginBottom">@dimen/edit_text_top_margin_register_member</item>
+        <item name="android:layout_marginLeft">@dimen/edit_text_side_margin_register_member</item>
+        <item name="android:layout_marginRight">@dimen/edit_text_side_margin_register_member</item>
+    </style>
+
+</resources>

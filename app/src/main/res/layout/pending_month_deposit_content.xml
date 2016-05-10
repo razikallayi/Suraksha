@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <CheckBox
+        android:id="@+id/chkPendingDepositMonth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pending Deposits"
+        android:accessibilityLiveRegion="polite"
+        android:checked="true"
+        android:enabled="false"
+        />
+
+    <TextView
+        android:id="@+id/tvPendingDepositsAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="test00"
+        android:accessibilityLiveRegion="polite"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        />
+</RelativeLayout>

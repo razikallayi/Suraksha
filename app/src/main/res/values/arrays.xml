@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Used for Member Registration in dropdown-->
+    <string-array name="arrRelationWithNominee">
+        <item>Relation With Nominee</item>
+        <item>Father</item>
+        <item>Mother</item>
+        <item>Grand Father</item>
+        <item>Grand Mother</item>
+        <item>Brother</item>
+        <item>Sister</item>
+        <item>Cousin</item>
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Son</item>
+        <item>Daughter</item>
+        <item>Aunt</item>
+        <item>Uncle</item>
+        <item>Nephew</item>
+        <item>Mother-in-law</item>
+        <item>Father-in-law</item>
+        <item>Brother-in-law</item>
+        <item>Sister-in-Law</item>
+        <item>Grant Son</item>
+        <item>Grant Daughter</item>
+        <item>Friend</item>
+        <item>Neighbour</item>
+        <item>Other</item>
+    </string-array>
+
+
+</resources>

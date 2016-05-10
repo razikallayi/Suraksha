@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" tools:showIn="@layout/app_bar_base"
+    tools:context=".HomeActivity"
+    android:orientation="vertical">
+
+    <!-- A CardView with a linear view inside-->
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Registered members"
+                android:accessibilityLiveRegion="polite"
+                android:layout_weight="3"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvActiveMembers"
+                android:accessibilityLiveRegion="polite"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:padding="10dp"
+                android:text="test32"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <!-- A CardView with a linear view inside-->
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Working Money Fund"
+                android:accessibilityLiveRegion="polite"
+                android:layout_weight="3"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvWmf"
+                android:accessibilityLiveRegion="polite"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:padding="10dp"
+                android:text="test32"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+    <!-- A CardView with a linear view inside-->
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total Deposit"
+                android:accessibilityLiveRegion="polite"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvTotalDeposit"
+                android:accessibilityLiveRegion="polite"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:padding="10dp"
+                android:text="213132.0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+<!-- A CardView with a linear view inside-->
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total Loan Payed"
+                android:accessibilityLiveRegion="polite"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvTotalLoanPayed"
+                android:accessibilityLiveRegion="polite"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:padding="10dp"
+                android:text="213132.0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+<!-- A CardView with a linear view inside-->
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total Loan Return"
+                android:accessibilityLiveRegion="polite"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvTotalLoanReturn"
+                android:accessibilityLiveRegion="polite"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:padding="10dp"
+                android:text="213132.0"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transaction Report"
+        android:id="@+id/btnTxnReport"
+        android:background="@color/colorSecondary"
+        android:layout_margin="@dimen/text_margin"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Members List"
+        android:layout_margin="@dimen/text_margin"
+        android:background="@color/colorPrimaryDark"
+        android:id="@+id/btnMemberList"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_margin="@dimen/text_margin"
+        android:background="@color/colorSecondaryAccent"
+        android:id="@+id/btnLogout"
+        style="@style/Widget.AppCompat.Button.Borderless"
+
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>

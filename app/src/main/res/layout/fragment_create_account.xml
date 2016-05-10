@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutCreateAccount"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.razikallayi.suraksha.TxnReportActivity"
+        tools:showIn="@layout/activity_txn_report"
+        android:padding="16dp"
+        android:background="@color/colorBackground">
+
+
+        <!-- A CardView with a linear view inside-->
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="4dp"
+            android:elevation="5dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="3">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvMemberName"
+                            tools:text="testName"
+                            android:fontFamily="sans-serif-condensed"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:accessibilityLiveRegion="polite"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvMemberAddress"
+                            tools:text="testAddress,Location"
+                            android:fontFamily="sans-serif-condensed"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:layout_gravity="center_vertical" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Account No"
+                            android:layout_gravity="center" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvAccountNumber"
+                            tools:text="121"
+                            android:fontFamily="sans-serif-condensed"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:accessibilityLiveRegion="polite"
+                            android:layout_gravity="center"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin">
+
+                <CheckBox
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/chkRegistrationFee"
+                    android:text="Registration Fee"
+                    android:accessibilityLiveRegion="polite"
+                    android:layout_weight="6"
+                    android:checked="true"
+                    android:enabled="false" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvRegistrationFee"
+                    android:layout_weight="5"
+                    tools:text="test00"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_gravity="center|end"
+                    android:accessibilityLiveRegion="polite"
+                    android:textAlignment="textEnd"
+                    />
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/pending_deposit_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".RegisterMemberActivity"
+            tools:listitem="@layout/pending_month_deposit_content"
+            android:layout_margin="@dimen/text_margin"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvTotalRegistration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Total:"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/font_large"
+                android:layout_margin="10dp"
+                />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I accept terms and conditions of suraksha"
+                android:id="@+id/accept_terms"/>
+        </LinearLayout>
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+</android.support.v4.widget.NestedScrollView>
+</LinearLayout>
+

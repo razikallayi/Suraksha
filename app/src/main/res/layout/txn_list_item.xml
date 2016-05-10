@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/ic_due_list"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_transaction_48dp"
+        />
+
+    <TextView
+        android:id="@+id/ledger"
+        android:text="LEDGER"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_toEndOf="@id/ic_due_list"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/month"
+        android:text="Month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_below="@id/ledger"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/blue"
+        android:textStyle="bold"
+        android:layout_toEndOf="@id/ic_due_list"
+        android:textAppearance="?attr/textAppearanceListItem" />
+    <TextView
+        android:id="@+id/createdAt"
+        android:text="2016, 3:46PM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_below="@id/month"
+        android:textSize="10sp"
+        android:layout_toEndOf="@id/ic_due_list"
+        android:fontFamily="sans-serif-condensed"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/amount"
+        android:text="2000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="sans-serif-condensed"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/voucherName"
+        android:text="PAYED"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginRight="@dimen/text_margin"
+        android:layout_below="@id/amount"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="sans-serif-condensed"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.razikallayi.suraksha.TxnReportActivity"
+    tools:showIn="@layout/activity_txn_report">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/text_margin">
+
+        <TextView
+            android:id="@+id/txnDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transactions"
+            android:fontFamily="sans-serif-condensed"
+            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Deposit"
+            android:id="@+id/lblDeposit"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_below="@+id/txnDate"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/deposit_count"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/txnDate"
+            android:text="5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/tv_deposit_amount"
+            android:layout_below="@+id/txnDate"
+            android:layout_alignParentEnd="true"
+            android:text="5000" />
+
+        <TextView
+            android:id="@+id/lblRegistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Registration"
+            android:layout_below="@id/lblDeposit"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/registration_count"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/lblDeposit"
+            android:text="10" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/registration_amount"
+            android:layout_below="@+id/lblDeposit"
+            android:layout_alignParentEnd="true"
+            android:text="2500" />
+
+        <TextView
+            android:id="@+id/lblLoanPayed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Loan Payed"
+            android:layout_below="@id/lblRegistration"
+            
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@id/lblRegistration"
+            android:layout_centerHorizontal="true"
+            android:text="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@id/lblRegistration"
+            android:layout_alignParentEnd="true"
+            android:text="20000" />
+
+        <TextView
+            android:id="@+id/lblLoanReturn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@id/lblLoanPayed"
+            android:text="Loan Return"
+            
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@id/lblLoanPayed"
+            android:layout_centerHorizontal="true"
+            android:text="4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@id/lblLoanPayed"
+            android:layout_alignParentEnd="true"
+            android:text="8000" />
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

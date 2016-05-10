@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Default-->
+    <!--<color name="colorPrimary">#9e004c</color>-->
+    <!--<color name="colorPrimaryDark">#77063b</color>-->
+    <!--<color name="colorAccent">#ffffff</color>-->
+
+    <color name="colorPrimary">#f50057</color>
+    <color name="colorPrimaryDark">#880e4f</color>
+    <color name="colorAccent">#ffd600</color>
+
+    <color name="colorSecondary">#6a03bf</color>
+    <color name="colorSecondaryDark">#2b0240</color>
+    <color name="colorSecondaryAccent">#ffd000</color>
+
+
+    <color name="colorToolbar">#1e000000</color>
+    <color name="colorButton">#00b0ff</color>
+    <color name="colorBackground">#e0e0e0</color>
+    <color name="separatorLine">#28b8b8b8</color>
+
+    <!-- grayscale -->
+    <color name="white"     >#FFFFFF</color>
+    <color name="gray_light">#DBDBDB</color>
+    <color name="gray"      >#939393</color>
+    <color name="gray_dark" >#5F5F5F</color>
+    <color name="black"     >#323232</color>
+
+    <!-- basic colors -->
+    <color name="green">#27D34D</color>
+    <color name="blue">#2A91BD</color>
+    <color name="orange">#FF9D2F</color>
+    <color name="red">#FF432F</color>
+</resources>
