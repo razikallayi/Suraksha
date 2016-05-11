@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -41,6 +42,9 @@ public class CreateUserActivity extends AppCompatActivity {
             actionBar.setHomeActionContentDescription("Close");
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        //Enable full view scroll while soft keyboard is shown
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.create_user_form);
