@@ -283,10 +283,9 @@ public class SurakshaContract {
 
         public static final String TABLE_NAME                  = "users";
         public static final String COLUMN_NAME                 = "name";
-        public static final String COLUMN_DESIGNATION          = "designation";
+        public static final String COLUMN_MOBILE               = "mobile";
         public static final String COLUMN_USERNAME             = "username";
         public static final String COLUMN_PASSWORD             = "password";
-        public static final String COLUMN_MOBILE               = "mobile";
         public static final String COLUMN_ADDRESS              = "address";
         public static final String COLUMN_IS_ADMIN             = "isAdmin";
         public static final String COLUMN_CREATED_AT           = "created_at";

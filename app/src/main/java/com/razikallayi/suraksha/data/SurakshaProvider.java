@@ -34,6 +34,9 @@ public class SurakshaProvider extends ContentProvider {
     static final int TXN_TOTAL_LOAN_PAYED = 360;
     static final int TXN_TOTAL_LOAN_RETURN = 361;
 
+    static final int USER  = 400;
+    static final int USER_ID  = 401;
+
     private static final SQLiteQueryBuilder sAccountsOfMemberQueryBuilder;
     static{
         sAccountsOfMemberQueryBuilder = new SQLiteQueryBuilder();
@@ -78,6 +81,10 @@ public class SurakshaProvider extends ContentProvider {
         matcher.addURI(authority, SurakshaContract.PATH_MEMBER, MEMBER);
         matcher.addURI(authority, SurakshaContract.PATH_MEMBER + "/#", MEMBER_ID);
         matcher.addURI(authority, SurakshaContract.PATH_MEMBER_JOIN_ACCOUNT, MEMBER_JOIN_ACCOUNT);
+
+        // For each type of URI you want to add, create a corresponding code.
+        matcher.addURI(authority, SurakshaContract.PATH_USER, USER);
+        matcher.addURI(authority, SurakshaContract.PATH_USER + "/#", USER_ID);
 
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT, ACCOUNT);
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_OF_MEMBER+"/*", ACCOUNTS_OF_MEMBER);
@@ -229,6 +236,17 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                 );
                 break;
             }
+            case USER:{
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.UserEntry.TABLE_NAME,
+                        projection,
+                        selection,selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
             case TXN:{
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.TxnEntry.TABLE_NAME,
@@ -328,6 +346,8 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                 return SurakshaContract.MemberEntry.CONTENT_TYPE;
             case ACCOUNT:
                 return SurakshaContract.AccountEntry.CONTENT_TYPE;
+            case USER:
+                return SurakshaContract.UserEntry.CONTENT_TYPE;
             case TXN:
                 return SurakshaContract.TxnEntry.CONTENT_TYPE;
             case TXN_ON_DATE:
@@ -350,6 +370,18 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
             values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, SurakshaContract.normalizeDate(dateValue));
         }
         if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT)) {
+            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT);
+            values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, SurakshaContract.normalizeDate(dateValue));
+        }
+    }
+    private void normalizeUserDate(ContentValues values) {
+        //User table
+        // normalize the date value
+        if (values.containsKey(SurakshaContract.UserEntry.COLUMN_CREATED_AT)) {
+            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CREATED_AT);
+            values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, SurakshaContract.normalizeDate(dateValue));
+        }
+        if (values.containsKey(SurakshaContract.UserEntry.COLUMN_UPDATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT);
             values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, SurakshaContract.normalizeDate(dateValue));
         }
@@ -421,6 +453,17 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                 }
                 break;
             }
+            case USER: {
+                normalizeMemberDate(values);
+                long _id = db.insert(SurakshaContract.UserEntry.TABLE_NAME, null, values);
+                if( _id > 0){
+                    returnUri = SurakshaContract.UserEntry.buildUserUri(_id);
+                }
+                else{
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
             case TXN: {
                 normalizeTxnDate(values);
                 long _id = db.insert(SurakshaContract.TxnEntry.TABLE_NAME, null, values);
@@ -457,6 +500,10 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                 rowsDeleted = db.delete(
                         SurakshaContract.AccountEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case USER:
+                rowsDeleted = db.delete(
+                        SurakshaContract.UserEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             case TXN:
                 rowsDeleted = db.delete(
                         SurakshaContract.TxnEntry.TABLE_NAME, selection, selectionArgs);
@@ -486,6 +533,11 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                 normalizeAccountDate(values);
                 rowsUpdated = db.update(
                         SurakshaContract.AccountEntry.TABLE_NAME, values, selection,selectionArgs);
+                break;
+            case USER:
+                normalizeUserDate(values);
+                rowsUpdated = db.update(
+                        SurakshaContract.UserEntry.TABLE_NAME, values, selection,selectionArgs);
                 break;
             case TXN:
                 normalizeTxnDate(values);

@@ -74,6 +74,16 @@ public class HomeActivity extends BaseActivity
         });
 
 
+
+        Button btnCreateUser = (Button) findViewById(R.id.btnCreateUser);
+        btnCreateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),CreateUserActivity.class));
+            }
+        });
+
+
         Button btnLogout = (Button) findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

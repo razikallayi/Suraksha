@@ -6,8 +6,7 @@
         android:id="@+id/accounts_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="2dp"
-        android:padding="@dimen/text_margin">
+        android:layout_margin="@dimen/spacing_normal">
 
 
             <LinearLayout

@@ -28,7 +28,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_LOAN_PAYED_ENTRIES =
             "DROP TABLE IF EXISTS " + SurakshaContract.LoanPayedEntry.TABLE_NAME;
     private static final String SQL_DELETE_USER_ENTRIES =
-            "DROP TABLE IF EXISTS " + SurakshaContract.LoanPayedEntry.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + SurakshaContract.UserEntry.TABLE_NAME;
 
     private static final String SQL_CREATE_MEMBER_ENTRIES =
             "CREATE TABLE " + SurakshaContract.MemberEntry.TABLE_NAME + " (" +
@@ -46,7 +46,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.MemberEntry.COLUMN_NOMINEE                + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE  + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE     + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.MemberEntry.COLUMN_IS_DELETED + INT_TYPE  + COMMA_SEP +
+                    SurakshaContract.MemberEntry.COLUMN_IS_DELETED             + INT_TYPE  + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_REMARKS                + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_CLOSED_AT              + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_CREATED_AT             + TEXT_TYPE + COMMA_SEP +
@@ -98,12 +98,13 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + SurakshaContract.UserEntry.TABLE_NAME + " (" +
                     SurakshaContract.UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     SurakshaContract.UserEntry.COLUMN_NAME               + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.UserEntry.COLUMN_DESIGNATION        + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.UserEntry.COLUMN_USERNAME           + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.UserEntry.COLUMN_PASSWORD           + TEXT_TYPE  + COMMA_SEP +
                     SurakshaContract.UserEntry.COLUMN_MOBILE             + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.UserEntry.COLUMN_ADDRESS            + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.UserEntry.COLUMN_IS_ADMIN           + INT_TYPE +
+                    SurakshaContract.LoanPayedEntry.COLUMN_CREATED_AT               + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.LoanPayedEntry.COLUMN_UPDATED_AT               + TEXT_TYPE +
                     " )";
 
 

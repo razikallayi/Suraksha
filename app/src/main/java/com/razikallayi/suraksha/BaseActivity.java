@@ -29,7 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+//    setTheme(R.style.Theme_Suraksha);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!SettingsUtils.isLoggedIn(getApplicationContext())) {
             startActivity(new Intent(getApplicationContext(),LoginActivity.class));
@@ -37,6 +37,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
             return;
         }
 
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        //TODO: Reset inactivity check timer
     }
 
     @Override

@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SurakshaDark">
+        android:theme="@style/Theme.Suraksha">
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,6 +56,11 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
+            android:name=".CreateUserActivity"
+            android:label="@string/title_create_user"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MemberDetailActivity"
             android:label="@string/title_member_detail"
             android:parentActivityName=".MemberListActivity"
@@ -67,12 +72,11 @@
         <activity
             android:name=".AccountDetailActivity"
             android:label="@string/title_account_detail"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity
             android:name=".dailyTxn.DailyTransactionActivity"
             android:label="@string/title_activity_daily_transaction"
-            android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
