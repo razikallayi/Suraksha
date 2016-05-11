@@ -26,7 +26,6 @@
     android:id="@+id/create_user_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:overScrollMode="ifContentScrolls"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
