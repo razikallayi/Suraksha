@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-//import com.razikallayi.suraksha.OfficerFragment.OnListFragmentInteractionListener;
+import com.razikallayi.suraksha.OfficerFragment.OnListFragmentInteractionListener;
 import com.razikallayi.suraksha.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -19,15 +19,15 @@ import java.util.List;
 public class OfficerRecyclerViewAdapter extends RecyclerView.Adapter<OfficerRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
-//    private final OnListFragmentInteractionListener mListener;
+    private final OnListFragmentInteractionListener mListener;
 
-    public OfficerRecyclerViewAdapter(List<DummyItem> items) {
-        mValues = items;
-    }
-//    public OfficerRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+//    public OfficerRecyclerViewAdapter(List<DummyItem> items) {
 //        mValues = items;
-//        mListener = listener;
 //    }
+    public OfficerRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+        mValues = items;
+        mListener = listener;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,16 +42,16 @@ public class OfficerRecyclerViewAdapter extends RecyclerView.Adapter<OfficerRecy
         holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
 
-//        holder.mView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (null != mListener) {
-//                    // Notify the active callbacks interface (the activity, if the
-//                    // fragment is attached to one) that an item has been selected.
-//                    mListener.onListFragmentInteraction(holder.mItem);
-//                }
-//            }
-//        });
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.mItem);
+                }
+            }
+        });
     }
 
     @Override

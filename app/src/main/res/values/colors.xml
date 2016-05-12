@@ -7,10 +7,12 @@
     <!--<color name="colorAccent">#ffffff</color>-->
 
     <color name="colorPrimary">#f50057</color>
+    <color name="colorPrimaryLight">#e6b6c7</color>
     <color name="colorPrimaryDark">#880e4f</color>
     <color name="colorAccent">#ffd600</color>
 
     <color name="colorSecondary">#6a03bf</color>
+    <color name="colorSecondaryLight">#c4a6d7</color>
     <color name="colorSecondaryDark">#2b0240</color>
     <color name="colorSecondaryAccent">#ffd000</color>
 

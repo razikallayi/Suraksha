@@ -1,6 +1,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">Suraksha</string>
+    <string name="app_tag_name">Sevana Padhadi</string>
     <string name="app_full_name">Suraksha Sevana Padhadi</string>
     <string name="app_description">Run by: SSF Kooriyad</string>
 
@@ -53,7 +54,7 @@
 
 
     <string name="search_title">Search</string>
-    <string name="search_hint">Search name or AcNo</string>
+    <string name="search_hint">Search name or account number</string>
 
     <string name="title_create_user">Create User</string>
     <string name="username_is_required">Please enter username</string>
@@ -77,16 +78,11 @@
     <!-- Strings related to MemberDetailActivity -->
     <string name="edit">Edit</string>
 
-
     <string name="please_enter_member_name">Please enter member name</string>
-    <string name="title_activity_test">TestActivity</string>
-    <string name="section_format">Hello World from section: %1$s</string>
     <string name="title_member_list">Members</string>
     <string name="title_member_detail">Member Detail</string>
-    <string name="title_item_list">Items</string>
-    <string name="title_item_detail">Item Detail</string>
-
     <string name="title_account_detail">Account Detail</string>
+    <string name="title_officer_list">Officers</string>
 
     <string name="member_search_hint">Enter Name or Account Number</string>
 

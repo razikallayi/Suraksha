@@ -32,6 +32,11 @@
             android:label="@string/title_register_member"
             android:parentActivityName=".MemberDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateOfficerActivity"
+            android:label="@string/title_create_user"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name=".data.SurakshaProvider"
@@ -56,11 +61,6 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".CreateUserActivity"
-            android:label="@string/title_create_user"
-            android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MemberDetailActivity"
             android:label="@string/title_member_detail"
             android:parentActivityName=".MemberListActivity"
@@ -71,8 +71,7 @@
         </activity>
         <activity
             android:name=".AccountDetailActivity"
-            android:label="@string/title_account_detail"
-            />
+            android:label="@string/title_account_detail" />
         <activity
             android:name=".dailyTxn.DailyTransactionActivity"
             android:label="@string/title_activity_daily_transaction"
@@ -106,7 +105,8 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".BaseActivity"></activity>
+        <activity android:name=".OfficerListActivity"
+            android:parentActivityName=".HomeActivity"></activity>
     </application>
 
 </manifest>
