@@ -151,11 +151,11 @@ public class HomeActivity extends BaseActivity
 
         if (id == R.id.nav_members) {
             // Handle the register member action
-            Intent intent = new Intent(this,RegisterMemberActivity.class);
+            Intent intent = new Intent(this,MemberListActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_reports) {
-            Intent intent = new Intent(this, MemberListActivity.class);
+            Intent intent = new Intent(this, TxnReportActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_officer) {
             Intent intent = new Intent(this, OfficerListActivity.class);

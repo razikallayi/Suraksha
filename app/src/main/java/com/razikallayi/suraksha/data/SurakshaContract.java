@@ -43,7 +43,7 @@ public class SurakshaContract {
     public static final String PATH_TXN_TOTAL_LOAN_RETURN = "txn-total-loan-return";
 
     // Possible paths (appended to base content URI for possible URI's)
-    public static final String PATH_USER = "user";
+    public static final String PATH_OFFICER = "officer";
 
     public static final String PATH_LOAN_PAYED = "loan_payed";
 
@@ -76,7 +76,7 @@ public class SurakshaContract {
         public static final String COLUMN_SPOUSE               = "spouse";
         public static final String COLUMN_GENDER               = "gender";
         public static final String COLUMN_OCCUPATION           = "occupation";
-        public static final String COLUMN_AVATAR                  = "avatar";
+        public static final String COLUMN_AVATAR               = "avatar";
         public static final String COLUMN_AGE                  = "age";
         public static final String COLUMN_NOMINEE              = "nominee";
         public static final String COLUMN_RELATION_WITH_NOMINEE= "relation_with_nominee";
@@ -273,15 +273,15 @@ public class SurakshaContract {
 
     /* Inner class that defines the table contents */
     //Officer Entry
-    public static class UserEntry implements BaseColumns {
+    public static class OfficerEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_USER).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_OFFICER).build();
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USER;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_OFFICER;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_USER;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_OFFICER;
 
-        public static final String TABLE_NAME                  = "users";
+        public static final String TABLE_NAME                  = "officers";
         public static final String COLUMN_NAME                 = "name";
         public static final String COLUMN_MOBILE               = "mobile";
         public static final String COLUMN_USERNAME             = "username";
@@ -291,11 +291,11 @@ public class SurakshaContract {
         public static final String COLUMN_CREATED_AT           = "created_at";
         public static final String COLUMN_UPDATED_AT           = "updated_at";
 
-        public static Uri buildUserUri(long id) {
+        public static Uri buildOfficerUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static String getUserId(Uri uri) {
+        public static String getOfficerId(Uri uri) {
             return uri.getPathSegments().get(1);
         }
     }

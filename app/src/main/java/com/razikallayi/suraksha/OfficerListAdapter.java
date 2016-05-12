@@ -1,5 +1,6 @@
 package com.razikallayi.suraksha;
 
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,27 +8,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.razikallayi.suraksha.OfficerFragment.OnListFragmentInteractionListener;
-import com.razikallayi.suraksha.dummy.DummyContent.DummyItem;
-
-import java.util.List;
+import com.razikallayi.suraksha.data.SurakshaContract;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class OfficerRecyclerViewAdapter extends RecyclerView.Adapter<OfficerRecyclerViewAdapter.ViewHolder> {
+public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-//    public OfficerRecyclerViewAdapter(List<DummyItem> items) {
-//        mValues = items;
-//    }
-    public OfficerRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public OfficerListAdapter(OnListFragmentInteractionListener listener) {
+        super();
         mListener = listener;
     }
+
+    private static final String[] OFFICER_COLUMNS = {
+            SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry._ID,
+            SurakshaContract.OfficerEntry.COLUMN_NAME,
+    };
+
+    private static final int COL_OFFICER_ID = 0;
+    private static final int COL_OFFICER_NAME = 1;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,10 +38,13 @@ public class OfficerRecyclerViewAdapter extends RecyclerView.Adapter<OfficerRecy
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+    public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
+        // The Cursor is now set to the right position
+        Officer officer = new Officer();
+        officer.setId(cursor.getLong(COL_OFFICER_ID));
+        officer.setName(cursor.getString(COL_OFFICER_NAME));
+        holder.mOfficer = officer;
+        holder.mOfficerName.setText(officer.getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,33 +52,27 @@ public class OfficerRecyclerViewAdapter extends RecyclerView.Adapter<OfficerRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mOfficer);
                 }
             }
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return mValues.size();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mOfficerName;
+        public Officer mOfficer;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mOfficerName = (TextView) view.findViewById(R.id.content);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mOfficerName.getText() + "'";
         }
     }
 }

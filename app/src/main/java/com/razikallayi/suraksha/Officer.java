@@ -41,8 +41,8 @@ public class Officer {
     }
 
     protected void incrementId(Context context) {
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.UserEntry.CONTENT_URI,
-                new String[]{SurakshaContract.UserEntry._ID},null,null,null);
+        Cursor cursor = context.getContentResolver().query(SurakshaContract.OfficerEntry.CONTENT_URI,
+                new String[]{SurakshaContract.OfficerEntry._ID},null,null,null);
         if (cursor != null) {
             this.id = (long)(cursor.getCount() + 1);
             cursor.close();
@@ -52,13 +52,13 @@ public class Officer {
     public static ContentValues getUserContentValues(Officer officer){
         ContentValues values= new ContentValues();
 
-        values.put(SurakshaContract.UserEntry.COLUMN_NAME,                  officer.getName()              );
-        values.put(SurakshaContract.UserEntry.COLUMN_MOBILE,                 officer.getMobile()             );
-        values.put(SurakshaContract.UserEntry.COLUMN_USERNAME,                officer.getUsername()            );
-        values.put(SurakshaContract.UserEntry.COLUMN_PASSWORD,                officer.getPassword()            );
-        values.put(SurakshaContract.UserEntry.COLUMN_ADDRESS,                officer.getAddress()            );
-        values.put(SurakshaContract.UserEntry.COLUMN_IS_ADMIN,               officer.isAdmin()?1:0           );
-        values.put(SurakshaContract.UserEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        values.put(SurakshaContract.OfficerEntry.COLUMN_NAME,                  officer.getName()              );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_MOBILE,                 officer.getMobile()             );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_USERNAME,                officer.getUsername()            );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_PASSWORD,                officer.getPassword()            );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_ADDRESS,                officer.getAddress()            );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,               officer.isAdmin()?1:0           );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
 
         return values;
     }

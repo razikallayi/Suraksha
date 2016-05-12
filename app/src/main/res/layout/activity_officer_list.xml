@@ -19,10 +19,20 @@
             app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-    <fragment
-        android:name="com.razikallayi.suraksha.OfficerFragment"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.razikallayi.suraksha.OfficerListActivity"
-        tools:layout="@layout/list_officer" />
+        android:baselineAligned="false"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="horizontal"
+        tools:context=".OfficerListActivity">
+        <fragment
+            android:id="@+id/fragment_officer"
+            android:name="com.razikallayi.suraksha.OfficerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.razikallayi.suraksha.OfficerListActivity"
+            tools:layout="@layout/list_officer" />
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

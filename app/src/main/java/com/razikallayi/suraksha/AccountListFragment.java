@@ -117,7 +117,7 @@ public class AccountListFragment extends Fragment implements LoaderManager.Loade
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-//TODO USE ASYNC TASK
+//TODO USE Loader
         Cursor cursorAccounts = getContext().getContentResolver().query(SurakshaContract.AccountEntry
                         .buildAccountsOfMemberUri(getArguments().getLong(ARG_MEMBER_ID)),
                 ACCOUNT_COLUMNS, null, null, null);

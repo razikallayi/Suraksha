@@ -1,28 +1,44 @@
 package com.razikallayi.suraksha;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.razikallayi.suraksha.dummy.DummyContent;
+import com.razikallayi.suraksha.data.SurakshaContract;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
  */
-public class OfficerFragment extends Fragment {
+public class OfficerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String TAG = OfficerFragment.class.getClass().getSimpleName();
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
     private OnListFragmentInteractionListener mListener;
+
+    private OfficerListAdapter mOfficerListAdapter;
+
+    private static final String[] OFFICER_COLUMNS = {
+            SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry._ID,
+            SurakshaContract.OfficerEntry.COLUMN_NAME,
+    };
+
+    private static final int COL_OFFICER_ID = 0;
+    private static final int COL_OFFICER_NAME = 1;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -34,7 +50,8 @@ public class OfficerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mOfficerListAdapter =new OfficerListAdapter(mListener);
+        getLoaderManager().initLoader(1,null,this);
     }
 
     @Override
@@ -51,7 +68,7 @@ public class OfficerFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new OfficerRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(mOfficerListAdapter);
         }
         return view;
     }
@@ -74,6 +91,24 @@ public class OfficerFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getContext(),
+                SurakshaContract.OfficerEntry.CONTENT_URI,OFFICER_COLUMNS,null,null,null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d("FISH","is cursor null"+String.valueOf(data.getCount()));
+        Log.d("FISH","is cursor null"+ DatabaseUtils.dumpCursorToString(data));
+        mOfficerListAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mOfficerListAdapter.swapCursor(null);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -86,6 +121,6 @@ public class OfficerFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyContent.DummyItem item);
+        void onListFragmentInteraction(Officer officer);
     }
 }

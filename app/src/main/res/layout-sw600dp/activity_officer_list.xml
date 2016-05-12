@@ -33,7 +33,7 @@
     -->
 
     <fragment
-        android:id="@+id/fragment_forecast"
+        android:id="@+id/fragment_officer"
         android:name="com.razikallayi.suraksha.OfficerFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"

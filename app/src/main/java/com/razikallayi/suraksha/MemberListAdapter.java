@@ -42,7 +42,6 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
     private static final int VIEW_TYPE_RED_MARK_MEMBER = 1;
 
 
-    private final LayoutInflater layoutInflater;
     //Refract onListFragmentInteractionListener on ItemCLickListner
     private OnItemClickListener mOnItemClickListener;
 
@@ -63,12 +62,12 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 
     public MemberListAdapter(final Context context) {
         super();
-        this.layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public MemberListViewHolder onCreateViewHolder(final ViewGroup parent,final int viewType) {
-        final View view = this.layoutInflater.inflate(R.layout.member_list_content, parent, false);
+        final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.member_list_content, parent, false);
         view.setOnClickListener(this);
         return new MemberListViewHolder(view);
     }

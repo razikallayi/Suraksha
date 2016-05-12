@@ -6,9 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import com.razikallayi.suraksha.dummy.DummyContent;
-
-public class OfficerListActivity extends AppCompatActivity implements OfficerFragment.OnListFragmentInteractionListener {
+public class OfficerListActivity extends AppCompatActivity
+        implements OfficerFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +26,10 @@ public class OfficerListActivity extends AppCompatActivity implements OfficerFra
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Toast.makeText(OfficerListActivity.this, "Implement Method Here", Toast.LENGTH_SHORT).show();
+    public void onListFragmentInteraction(Officer officer) {
+        Toast.makeText(OfficerListActivity.this, "Implement Method for " +officer.getName() , Toast.LENGTH_SHORT).show();
     }
 }

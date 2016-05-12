@@ -113,7 +113,7 @@ public class CreateOfficerActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             //Save Member
             ContentValues values = Officer.getUserContentValues(mOfficer);
-            getApplicationContext().getContentResolver().insert(SurakshaContract.UserEntry.CONTENT_URI, values);
+            getApplicationContext().getContentResolver().insert(SurakshaContract.OfficerEntry.CONTENT_URI, values);
             return true;
         }
         @Override
@@ -121,8 +121,8 @@ public class CreateOfficerActivity extends AppCompatActivity {
             super.onPostExecute(success);
             mCreateUserTask = null;
             if (success) {
-                Toast.makeText(getApplicationContext(), getString(R.string.user_creation_successful), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),CreateOfficerActivity.class);
+                Toast.makeText(getApplicationContext(), getString(R.string.officer_creation_successful), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(),OfficerListActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -27,8 +27,8 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + SurakshaContract.TxnEntry.TABLE_NAME;
     private static final String SQL_DELETE_LOAN_PAYED_ENTRIES =
             "DROP TABLE IF EXISTS " + SurakshaContract.LoanPayedEntry.TABLE_NAME;
-    private static final String SQL_DELETE_USER_ENTRIES =
-            "DROP TABLE IF EXISTS " + SurakshaContract.UserEntry.TABLE_NAME;
+    private static final String SQL_DELETE_OFFICER_ENTRIES =
+            "DROP TABLE IF EXISTS " + SurakshaContract.OfficerEntry.TABLE_NAME;
 
     private static final String SQL_CREATE_MEMBER_ENTRIES =
             "CREATE TABLE " + SurakshaContract.MemberEntry.TABLE_NAME + " (" +
@@ -94,17 +94,17 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.LoanPayedEntry.COLUMN_UPDATED_AT               + TEXT_TYPE +
                     " )";
 
-    private static final String SQL_CREATE_USER_ENTRIES =
-            "CREATE TABLE " + SurakshaContract.UserEntry.TABLE_NAME + " (" +
-                    SurakshaContract.UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    SurakshaContract.UserEntry.COLUMN_NAME               + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.UserEntry.COLUMN_USERNAME           + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.UserEntry.COLUMN_PASSWORD           + TEXT_TYPE  + COMMA_SEP +
-                    SurakshaContract.UserEntry.COLUMN_MOBILE             + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.UserEntry.COLUMN_ADDRESS            + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.UserEntry.COLUMN_IS_ADMIN           + INT_TYPE +
-                    SurakshaContract.LoanPayedEntry.COLUMN_CREATED_AT               + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.LoanPayedEntry.COLUMN_UPDATED_AT               + TEXT_TYPE +
+    private static final String SQL_CREATE_OFFICER_ENTRIES =
+            "CREATE TABLE " + SurakshaContract.OfficerEntry.TABLE_NAME + " (" +
+                    SurakshaContract.OfficerEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    SurakshaContract.OfficerEntry.COLUMN_NAME          + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_MOBILE        + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_USERNAME      + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_PASSWORD      + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_ADDRESS       + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN      + INT_TYPE  + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_CREATED_AT    + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT    + TEXT_TYPE +
                     " )";
 
 
@@ -119,7 +119,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ACCOUNT_ENTRIES);
         db.execSQL(SQL_CREATE_TXN_ENTRIES);
         db.execSQL(SQL_CREATE_LOAN_PAYED_ENTRIES);
-        db.execSQL(SQL_CREATE_USER_ENTRIES);
+        db.execSQL(SQL_CREATE_OFFICER_ENTRIES);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -131,7 +131,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_DELETE_ACCOUNT_ENTRIES);
         db.execSQL(SQL_DELETE_TXN_ENTRIES);
         db.execSQL(SQL_DELETE_LOAN_PAYED_ENTRIES);
-        db.execSQL(SQL_DELETE_USER_ENTRIES);
+        db.execSQL(SQL_DELETE_OFFICER_ENTRIES);
         onCreate(db);
     }
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {

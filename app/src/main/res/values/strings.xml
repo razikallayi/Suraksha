@@ -59,7 +59,7 @@
     <string name="title_create_user">Create User</string>
     <string name="username_is_required">Please enter username</string>
     <string name="password_is_required">Please enter password</string>
-    <string name="user_creation_successful">User Created Successfully</string>
+    <string name="officer_creation_successful">Added New Officer</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>
