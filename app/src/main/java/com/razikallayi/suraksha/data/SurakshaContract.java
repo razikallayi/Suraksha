@@ -272,7 +272,7 @@ public class SurakshaContract {
 
 
     /* Inner class that defines the table contents */
-    //User Entry
+    //Officer Entry
     public static class UserEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_USER).build();

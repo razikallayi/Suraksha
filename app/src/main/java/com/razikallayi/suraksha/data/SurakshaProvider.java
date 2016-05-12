@@ -375,7 +375,7 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
         }
     }
     private void normalizeUserDate(ContentValues values) {
-        //User table
+        //Officer table
         // normalize the date value
         if (values.containsKey(SurakshaContract.UserEntry.COLUMN_CREATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CREATED_AT);

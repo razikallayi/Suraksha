@@ -9,7 +9,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 /**
  * Created by Razi Kallayi on 11-05-2016.
  */
-public class User {
+public class Officer {
     private Long id;
     private String name;
     private String mobile;
@@ -20,17 +20,17 @@ public class User {
     private String createdAt;
     private String updatedAt;
 
-    public User(Context context, String name, String username, int password) {
+    public Officer(Context context, String name, String username, int password) {
         this.incrementId(context);
         this.name = name;
         this.username = username;
         this.password = password;
     }
 
-    public User() {
+    public Officer() {
     }
 
-    public User(Context context, String name, String mobile, String username, int password, String address, boolean isAdmin) {
+    public Officer(Context context, String name, String mobile, String username, int password, String address, boolean isAdmin) {
         this.incrementId(context);
         this.name = name;
         this.mobile = mobile;
@@ -49,15 +49,15 @@ public class User {
         }
     }
 
-    public static ContentValues getUserContentValues(User user){
+    public static ContentValues getUserContentValues(Officer officer){
         ContentValues values= new ContentValues();
 
-        values.put(SurakshaContract.UserEntry.COLUMN_NAME,                  user.getName()              );
-        values.put(SurakshaContract.UserEntry.COLUMN_MOBILE,                 user.getMobile()             );
-        values.put(SurakshaContract.UserEntry.COLUMN_USERNAME,                user.getUsername()            );
-        values.put(SurakshaContract.UserEntry.COLUMN_PASSWORD,                user.getPassword()            );
-        values.put(SurakshaContract.UserEntry.COLUMN_ADDRESS,                user.getAddress()            );
-        values.put(SurakshaContract.UserEntry.COLUMN_IS_ADMIN,               user.isAdmin()?1:0           );
+        values.put(SurakshaContract.UserEntry.COLUMN_NAME,                  officer.getName()              );
+        values.put(SurakshaContract.UserEntry.COLUMN_MOBILE,                 officer.getMobile()             );
+        values.put(SurakshaContract.UserEntry.COLUMN_USERNAME,                officer.getUsername()            );
+        values.put(SurakshaContract.UserEntry.COLUMN_PASSWORD,                officer.getPassword()            );
+        values.put(SurakshaContract.UserEntry.COLUMN_ADDRESS,                officer.getAddress()            );
+        values.put(SurakshaContract.UserEntry.COLUMN_IS_ADMIN,               officer.isAdmin()?1:0           );
         values.put(SurakshaContract.UserEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
 
         return values;

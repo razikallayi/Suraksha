@@ -34,7 +34,7 @@ public class MemberListActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener
 {
 
-    private static final String TAG = MemberListActivity.class.getClass().getSimpleName();
+    public static final String TAG = MemberListActivity.class.getClass().getSimpleName();
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.

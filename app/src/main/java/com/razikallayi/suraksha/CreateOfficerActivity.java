@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
 
-public class CreateUserActivity extends AppCompatActivity {
+public class CreateOfficerActivity extends AppCompatActivity {
 
     private EditText txtName,txtPassword, txtUsername, txtMobile, txtAddress;
     private Switch switchIsAdmin;
@@ -55,7 +55,7 @@ public class CreateUserActivity extends AppCompatActivity {
         txtAddress          = (EditText) sv.findViewById(R.id.txtAddress);
         switchIsAdmin          = (Switch) sv.findViewById(R.id.switchIsAdmin);
 
-        //Button Create User
+        //Button Create Officer
         final Button mCreateUser = (Button) sv.findViewById(R.id.btnCreateUser);
         mCreateUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +73,9 @@ public class CreateUserActivity extends AppCompatActivity {
                 }
                 else {   //no errors in input
                     mCreateUser.setEnabled(false);
-                    User user = getUserDetailsFromInput();
+                    Officer officer = getUserDetailsFromInput();
                     //Add the member to database
-                    mCreateUserTask = new CreateUserTask(user);
+                    mCreateUserTask = new CreateUserTask(officer);
                     //Input to database using asyncTask. Which means run in background thread.
                     mCreateUserTask.execute((Void) null);
                 }
@@ -86,7 +86,7 @@ public class CreateUserActivity extends AppCompatActivity {
     }
 
 
-    private User getUserDetailsFromInput(){
+    private Officer getUserDetailsFromInput(){
         //EditText Fields
         String name                = txtName.getText().toString();
         String username            = txtUsername.getText().toString();
@@ -95,7 +95,7 @@ public class CreateUserActivity extends AppCompatActivity {
         String address             = txtAddress.getText().toString();
         boolean isAdmin             = switchIsAdmin.isChecked();
 
-        return new User(getApplicationContext(),name,mobile, username, password, address, isAdmin);
+        return new Officer(getApplicationContext(),name,mobile, username, password, address, isAdmin);
     }
 
     /**
@@ -103,16 +103,16 @@ public class CreateUserActivity extends AppCompatActivity {
      * the user.
      */
     public class CreateUserTask extends AsyncTask<Void, Void, Boolean> {
-        private final User mUser;
+        private final Officer mOfficer;
 
-        CreateUserTask(User user){
-            this.mUser = user;
+        CreateUserTask(Officer officer){
+            this.mOfficer = officer;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             //Save Member
-            ContentValues values = User.getUserContentValues(mUser);
+            ContentValues values = Officer.getUserContentValues(mOfficer);
             getApplicationContext().getContentResolver().insert(SurakshaContract.UserEntry.CONTENT_URI, values);
             return true;
         }
@@ -122,7 +122,7 @@ public class CreateUserActivity extends AppCompatActivity {
             mCreateUserTask = null;
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.user_creation_successful), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),CreateUserActivity.class);
+                Intent intent = new Intent(getApplicationContext(),CreateOfficerActivity.class);
                 startActivity(intent);
                 finish();
             }

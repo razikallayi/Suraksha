@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.dailyTxn.DailyTransactionActivity;
 import com.razikallayi.suraksha.utils.SettingsUtils;
 
 public class HomeActivity extends BaseActivity
@@ -37,7 +36,7 @@ public class HomeActivity extends BaseActivity
 //                .penaltyDeath()
 //                .build());
 
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_home);
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -79,7 +78,7 @@ public class HomeActivity extends BaseActivity
         btnCreateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),CreateUserActivity.class));
+                startActivity(new Intent(getApplicationContext(),CreateOfficerActivity.class));
             }
         });
 
@@ -150,30 +149,17 @@ public class HomeActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_register_member) {
+        if (id == R.id.nav_members) {
             // Handle the register member action
             Intent intent = new Intent(this,RegisterMemberActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_member_list) {
-            // Handle the register member action
-            // Handle the register member action
+        } else if (id == R.id.nav_reports) {
             Intent intent = new Intent(this, MemberListActivity.class);
             startActivity(intent);
-
-
-        } else if (id == R.id.nav_slideshow) {
-            startActivity(new Intent(this,TxnReportActivity.class));
-
-        } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(this,DailyTransactionActivity.class);
+        } else if (id == R.id.nav_officer) {
+            Intent intent = new Intent(this, OfficerListActivity.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_share) {
-            startActivity(new Intent(this,DebugActivity.class));
-
-        } else if (id == R.id.nav_send) {
-            startActivity(new Intent(this,DebugActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
