@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.account;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -19,6 +19,10 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.razikallayi.suraksha.member.Member;
+import com.razikallayi.suraksha.PendingDepositAdapter;
+import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.Utility;
 

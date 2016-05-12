@@ -5,18 +5,11 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
     />
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay" />
-
+    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
+        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorToolbar" />
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +19,7 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    tools:context=".OfficerListActivity">
+    tools:context=".officer.OfficerListActivity">
 
     <!--
     This layout is a two-pane layout for the Items master/detail flow.
@@ -34,7 +27,7 @@
 
     <fragment
         android:id="@+id/fragment_officer"
-        android:name="com.razikallayi.suraksha.OfficerFragment"
+        android:name="com.razikallayi.suraksha.officer.OfficerFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -47,4 +40,4 @@
         android:layout_weight="4"/>
 
 </LinearLayout>
-    </android.support.design.widget.CoordinatorLayout>
+</android.support.design.widget.CoordinatorLayout>

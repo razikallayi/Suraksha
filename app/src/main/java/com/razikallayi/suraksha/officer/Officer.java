@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.officer;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -12,6 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.member.Member;
+import com.razikallayi.suraksha.member.MemberListActivity;
+import com.razikallayi.suraksha.officer.OfficerListActivity;
+import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.txn.TxnReportActivity;
 import com.razikallayi.suraksha.utils.SettingsUtils;
 
 public class HomeActivity extends BaseActivity

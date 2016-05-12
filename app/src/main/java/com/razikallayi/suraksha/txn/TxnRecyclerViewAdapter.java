@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.txn;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.member;
 
 
 import android.app.Activity;
@@ -43,6 +43,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.SettingsActivity;
+import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.ImageUtils;
 import com.razikallayi.suraksha.utils.Utility;
@@ -88,7 +92,8 @@ public class RegisterMemberActivity extends AppCompatActivity {
 
 
         //Enable full view scroll while soft keyboard is shown
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
         txtName             = (EditText) sv.findViewById(R.id.txtName);

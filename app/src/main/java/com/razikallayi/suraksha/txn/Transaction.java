@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.txn;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.officer;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.OfficerFragment.OnListFragmentInteractionListener;
+import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.RecyclerViewCursorAdapter;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
 /**
@@ -15,9 +16,9 @@ import com.razikallayi.suraksha.data.SurakshaContract;
  */
 public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAdapter.ViewHolder> {
 
-    private final OnListFragmentInteractionListener mListener;
+    private final OfficerFragment.OnListFragmentInteractionListener mListener;
 
-    public OfficerListAdapter(OnListFragmentInteractionListener listener) {
+    public OfficerListAdapter(OfficerFragment.OnListFragmentInteractionListener listener) {
         super();
         mListener = listener;
     }

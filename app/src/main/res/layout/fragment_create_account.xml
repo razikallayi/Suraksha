@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.razikallayi.suraksha.TxnReportActivity"
+        tools:context=".txn.TxnReportActivity"
         tools:showIn="@layout/activity_txn_report"
         android:padding="16dp"
         android:background="@color/colorBackground">
@@ -136,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".RegisterMemberActivity"
+            tools:context=".member.RegisterMemberActivity"
             tools:listitem="@layout/pending_month_deposit_content"
             android:layout_margin="@dimen/text_margin"/>
 

@@ -1,10 +1,14 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.account;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.razikallayi.suraksha.member.MemberListActivity;
+import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.txn.TxnListFragment;
 
 /**
  * An activity representing a single Member detail screen. This

@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.account;
 
 
 import android.content.Context;
@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.member.Member;
+import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
 import java.util.ArrayList;

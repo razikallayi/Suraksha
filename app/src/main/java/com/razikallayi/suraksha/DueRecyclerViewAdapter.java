@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.Calendar;

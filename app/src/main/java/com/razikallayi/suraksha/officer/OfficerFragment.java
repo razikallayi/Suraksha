@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.officer;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
 /**

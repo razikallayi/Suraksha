@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.data.SurakshaDbHelper;
+import com.razikallayi.suraksha.member.Member;
 
 import java.util.Map;
 import java.util.Set;

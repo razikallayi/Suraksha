@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.txn;
 
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 

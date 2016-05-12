@@ -28,7 +28,7 @@
         android:scrollIndicators="right"
         android:layout_below="@id/tvAccountDue"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.razikallayi.suraksha.TxnListFragment"
+        tools:context=".txn.TxnListFragment"
         tools:listitem="@layout/due_list_item" />
 
 
@@ -53,7 +53,7 @@
         android:layout_below="@id/tvTransactions"
         android:layout_alignParentBottom="true"
         android:overScrollMode="always"
-        tools:context="com.razikallayi.suraksha.TxnListFragment"
+        tools:context=".txn.TxnListFragment"
         tools:listitem="@layout/txn_list_item" />
 </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

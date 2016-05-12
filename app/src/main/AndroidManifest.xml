@@ -23,14 +23,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterMemberActivity"
+            android:name=".member.RegisterMemberActivity"
             android:label="@string/title_register_member"
-            android:parentActivityName=".MemberListActivity"
+            android:parentActivityName=".member.MemberListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".EditMemberActivity"
+            android:name=".member.EditMemberActivity"
             android:label="@string/title_register_member"
-            android:parentActivityName=".MemberDetailActivity"
+            android:parentActivityName=".member.MemberDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CreateOfficerActivity"
@@ -44,11 +44,11 @@
             android:exported="false" />
 
         <activity
-            android:name=".CreateAccountActivity"
+            android:name=".account.CreateAccountActivity"
             android:noHistory="true"
-            android:parentActivityName=".MemberDetailActivity" />
+            android:parentActivityName=".member.MemberDetailActivity" />
         <activity
-            android:name=".MemberListActivity"
+            android:name=".member.MemberListActivity"
             android:label="@string/title_member_list"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -61,16 +61,16 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".MemberDetailActivity"
+            android:name=".member.MemberDetailActivity"
             android:label="@string/title_member_detail"
-            android:parentActivityName=".MemberListActivity"
+            android:parentActivityName=".member.MemberListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MemberListActivity" />
+                android:value=".member.MemberListActivity" />
         </activity>
         <activity
-            android:name=".AccountDetailActivity"
+            android:name=".account.AccountDetailActivity"
             android:label="@string/title_account_detail" />
         <activity
             android:name=".dailyTxn.DailyTransactionActivity"
@@ -90,7 +90,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".TxnReportActivity"
+            android:name=".txn.TxnReportActivity"
             android:label="@string/title_activity_txn_report"
             android:parentActivityName=".HomeActivity">
             <meta-data
@@ -105,7 +105,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".OfficerListActivity"
+        <activity android:name=".officer.OfficerListActivity"
             android:parentActivityName=".HomeActivity"></activity>
     </application>
 

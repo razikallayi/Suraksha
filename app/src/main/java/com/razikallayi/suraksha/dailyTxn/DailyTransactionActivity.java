@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.Transaction;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
 import java.util.Calendar;
