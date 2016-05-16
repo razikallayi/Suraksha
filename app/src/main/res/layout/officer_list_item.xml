@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:contentDescription="officer Image"
         android:src="@drawable/ic_account_circle_black_48dp"
         />
 
@@ -19,5 +20,4 @@
         android:textSize="@dimen/font_large"
         android:text="test"
         android:textAppearance="?attr/textAppearanceListItem" />
-
 </LinearLayout>

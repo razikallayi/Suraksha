@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,18 +18,19 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.razikallayi.suraksha.member.Member;
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.PendingDepositAdapter;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.member.Member;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CreateAccountActivity extends AppCompatActivity {
+public class CreateAccountActivity extends BaseActivity {
 
     private Member mMember;
 

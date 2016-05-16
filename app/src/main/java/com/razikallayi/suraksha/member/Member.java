@@ -51,6 +51,7 @@ public class Member implements Serializable{
     }
 
     protected void incrementId(Context context) {
+        //TODO use Max instead of count. otherwise it will be a problem when an entry is deleted
         Cursor cursor = context.getContentResolver().query(SurakshaContract.MemberEntry.CONTENT_URI, new String[]{SurakshaContract.MemberEntry._ID},null,null,null);
         if (cursor != null) {
             this.id = (long)(cursor.getCount() + 1);

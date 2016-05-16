@@ -16,7 +16,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -39,6 +38,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.SettingsActivity;
 import com.razikallayi.suraksha.data.SurakshaContract;
@@ -46,7 +46,7 @@ import com.razikallayi.suraksha.utils.ImageUtils;
 
 import java.util.concurrent.ExecutionException;
 
-public class EditMemberActivity extends AppCompatActivity {
+public class EditMemberActivity extends BaseActivity {
 
     public static final String ARG_MEMBER_ID = "member_id";
     //Intent to pick Contact
@@ -160,7 +160,7 @@ public class EditMemberActivity extends AppCompatActivity {
 
         //Button Add Member
         final Button mAddMemberButton = (Button) sv.findViewById(R.id.btnAddMember);
-        mAddMemberButton.setText("Update");
+        mAddMemberButton.setText(getString(R.string.update));
         mAddMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

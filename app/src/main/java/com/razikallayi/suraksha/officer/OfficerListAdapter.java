@@ -16,9 +16,9 @@ import com.razikallayi.suraksha.data.SurakshaContract;
  */
 public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAdapter.ViewHolder> {
 
-    private final OfficerFragment.OnListFragmentInteractionListener mListener;
+    private final OfficerFragment.OnClickOfficerListItemListener mListener;
 
-    public OfficerListAdapter(OfficerFragment.OnListFragmentInteractionListener listener) {
+    public OfficerListAdapter(OfficerFragment.OnClickOfficerListItemListener listener) {
         super();
         mListener = listener;
     }
@@ -34,7 +34,7 @@ public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAda
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_officer_item, parent, false);
+                .inflate(R.layout.officer_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -53,11 +53,12 @@ public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAda
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mOfficer);
+                    mListener.onClickOfficerListItem(holder.mOfficer);
                 }
             }
         });
     }
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

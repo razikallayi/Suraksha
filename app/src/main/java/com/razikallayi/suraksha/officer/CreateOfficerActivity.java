@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha;
+package com.razikallayi.suraksha.officer;
 
 
 import android.content.ContentValues;
@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,21 +16,21 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.razikallayi.suraksha.BaseActivity;
+import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
-import com.razikallayi.suraksha.officer.Officer;
-import com.razikallayi.suraksha.officer.OfficerListActivity;
 
-public class CreateOfficerActivity extends AppCompatActivity {
+public class CreateOfficerActivity extends BaseActivity {
 
     private EditText txtName,txtPassword, txtUsername, txtMobile, txtAddress;
     private Switch switchIsAdmin;
 
-    private CreateUserTask mCreateUserTask = null;
+    private CreateOfficerTask mCreateOfficerTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_user);
+        setContentView(R.layout.officer_create_officer_activity);
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,7 +48,7 @@ public class CreateOfficerActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 
-        NestedScrollView sv = (NestedScrollView) findViewById(R.id.create_user_form);
+        NestedScrollView sv = (NestedScrollView) findViewById(R.id.create_officer_form);
         txtName             = (EditText) sv.findViewById(R.id.txtName);
         txtUsername            = (EditText) sv.findViewById(R.id.txtUsername);
         txtPassword           = (EditText) sv.findViewById(R.id.txtPassword);
@@ -58,10 +57,11 @@ public class CreateOfficerActivity extends AppCompatActivity {
         switchIsAdmin          = (Switch) sv.findViewById(R.id.switchIsAdmin);
 
         //Button Create Officer
-        final Button mCreateUser = (Button) sv.findViewById(R.id.btnCreateUser);
-        mCreateUser.setOnClickListener(new View.OnClickListener() {
+        final Button mCreateOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
+        mCreateOfficer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String password = txtPassword.getText().toString();
                 //Validating name column
                 if (TextUtils.isEmpty(txtName.getText().toString())) {
                     txtName.setError(getString(R.string.name_is_required));
@@ -69,17 +69,23 @@ public class CreateOfficerActivity extends AppCompatActivity {
                 }else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
                     txtUsername.setError(getString(R.string.username_is_required));
                     txtUsername.requestFocus();
-                }else if (TextUtils.isEmpty(txtPassword.getText().toString())) {
+                }else if (TextUtils.isEmpty(password)) {
                     txtPassword.setError(getString(R.string.password_is_required));
+                    txtPassword.requestFocus();
+                }else if (password.length()<4) {
+                    txtPassword.setError(getString(R.string.pin_should_be_minimum_4_digits));
+                    txtPassword.requestFocus();
+                }else if (!TextUtils.isDigitsOnly(password)) {
+                    txtPassword.setError(getString(R.string.pin_should_be_a_number));
                     txtPassword.requestFocus();
                 }
                 else {   //no errors in input
-                    mCreateUser.setEnabled(false);
-                    Officer officer = getUserDetailsFromInput();
+                    mCreateOfficer.setEnabled(false);
+                    Officer officer = getOfficerDetailsFromInput();
                     //Add the member to database
-                    mCreateUserTask = new CreateUserTask(officer);
+                    mCreateOfficerTask = new CreateOfficerTask(officer);
                     //Input to database using asyncTask. Which means run in background thread.
-                    mCreateUserTask.execute((Void) null);
+                    mCreateOfficerTask.execute((Void) null);
                 }
 
 
@@ -88,11 +94,11 @@ public class CreateOfficerActivity extends AppCompatActivity {
     }
 
 
-    private Officer getUserDetailsFromInput(){
+    private Officer getOfficerDetailsFromInput(){
         //EditText Fields
         String name                = txtName.getText().toString();
         String username            = txtUsername.getText().toString();
-        int password               = Integer.parseInt(txtPassword.getText().toString());
+        String password            = txtPassword.getText().toString();
         String mobile              = txtMobile.getText().toString();
         String address             = txtAddress.getText().toString();
         boolean isAdmin             = switchIsAdmin.isChecked();
@@ -104,24 +110,24 @@ public class CreateOfficerActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class CreateUserTask extends AsyncTask<Void, Void, Boolean> {
+    public class CreateOfficerTask extends AsyncTask<Void, Void, Boolean> {
         private final Officer mOfficer;
 
-        CreateUserTask(Officer officer){
+        CreateOfficerTask(Officer officer){
             this.mOfficer = officer;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             //Save Member
-            ContentValues values = Officer.getUserContentValues(mOfficer);
+            ContentValues values = Officer.getOfficerContentValues(mOfficer);
             getApplicationContext().getContentResolver().insert(SurakshaContract.OfficerEntry.CONTENT_URI, values);
             return true;
         }
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
-            mCreateUserTask = null;
+            mCreateOfficerTask = null;
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.officer_creation_successful), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(),OfficerListActivity.class);
@@ -129,13 +135,13 @@ public class CreateOfficerActivity extends AppCompatActivity {
                 finish();
             }
             else{
-                Toast.makeText(getApplicationContext(),"Cannot create user. " , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Cannot create officer. " , Toast.LENGTH_LONG).show();
             }
         }
 
         @Override
         protected void onCancelled() {
-            mCreateUserTask = null;
+            mCreateOfficerTask = null;
 
         }
     }

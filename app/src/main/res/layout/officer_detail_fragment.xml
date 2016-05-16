@@ -1,0 +1,200 @@
+<android.support.v4.widget.NestedScrollView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:text="Administrator"
+                android:textColor="@color/white"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/font_small"
+                android:textStyle="bold"
+                android:background="@color/colorPrimaryDark"
+                android:padding="@dimen/spacing_very_tiny"
+                android:visibility="gone"
+                android:id="@+id/tvIsAdmin" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:borderlessButtonStyle"
+                android:src="@drawable/ic_edit_black_24dp"
+                android:contentDescription="Edit"
+                android:id="@+id/iv_edit_officer" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:text="Name"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:id="@+id/tvOfficerName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textIsSelectable="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:text="Mobile"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvOfficerMobile"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textIsSelectable="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:text="Address"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvOfficerAddress"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textIsSelectable="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:text="Created At"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvOfficerCreatedAt"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:gravity="center|start"
+                android:padding="10dp"
+
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:text="Updated At"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvOfficerUpdatedAt"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:gravity="center|start"
+                android:padding="10dp"
+
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

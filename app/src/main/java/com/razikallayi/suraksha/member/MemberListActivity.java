@@ -10,7 +10,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
@@ -31,7 +31,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MemberListActivity extends AppCompatActivity
+public class MemberListActivity extends BaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener
 {
 

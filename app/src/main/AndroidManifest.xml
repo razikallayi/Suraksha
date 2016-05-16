@@ -26,17 +26,20 @@
             android:name=".member.RegisterMemberActivity"
             android:label="@string/title_register_member"
             android:parentActivityName=".member.MemberListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+             />
         <activity
             android:name=".member.EditMemberActivity"
             android:label="@string/title_register_member"
             android:parentActivityName=".member.MemberDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity
-            android:name=".CreateOfficerActivity"
-            android:label="@string/title_create_user"
-            android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".officer.CreateOfficerActivity"
+            android:label="@string/title_create_officer"
+            android:parentActivityName=".officer.OfficerListActivity" />
+        <activity
+            android:name=".officer.EditOfficerActivity"
+            android:label="@string/title_edit_officer"
+            android:parentActivityName=".officer.OfficerListActivity" />
 
         <provider
             android:name=".data.SurakshaProvider"
@@ -50,8 +53,7 @@
         <activity
             android:name=".member.MemberListActivity"
             android:label="@string/title_member_list"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -63,8 +65,7 @@
         <activity
             android:name=".member.MemberDetailActivity"
             android:label="@string/title_member_detail"
-            android:parentActivityName=".member.MemberListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".member.MemberListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".member.MemberListActivity" />
@@ -100,12 +101,12 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme" />
+            android:parentActivityName=".HomeActivity"/>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".officer.OfficerListActivity"
+            android:label="@string/title_officer_list"
             android:parentActivityName=".HomeActivity"></activity>
     </application>
 

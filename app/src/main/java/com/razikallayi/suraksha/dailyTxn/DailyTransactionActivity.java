@@ -8,18 +8,18 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.txn.Transaction;
 
 import java.util.Calendar;
 
 
-public class DailyTransactionActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor>  {
+public class DailyTransactionActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>  {
 
 
     private static final int CURSOR_LOADER = 0;

@@ -107,6 +107,19 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT    + TEXT_TYPE +
                     " )";
 
+    private static final String SQL_INSERT_DEFAULT_OFFICER =
+            "INSERT INTO " + SurakshaContract.OfficerEntry.TABLE_NAME + " values ("
+                    + "NULL"                      + COMMA_SEP
+                    + "'SYS'"                        + COMMA_SEP
+                    + "'9746730324'"                 + COMMA_SEP
+                    + "'sys'"                        + COMMA_SEP
+                    + "'0797'"                       + COMMA_SEP
+                    + "'Kooriyad'"                   + COMMA_SEP
+                    + "1"                          + COMMA_SEP
+                    + "'"+System.currentTimeMillis()+"'"   + COMMA_SEP
+                    + "''"
+                    +" )";
+
 
 
 
@@ -120,6 +133,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TXN_ENTRIES);
         db.execSQL(SQL_CREATE_LOAN_PAYED_ENTRIES);
         db.execSQL(SQL_CREATE_OFFICER_ENTRIES);
+        db.execSQL(SQL_INSERT_DEFAULT_OFFICER);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

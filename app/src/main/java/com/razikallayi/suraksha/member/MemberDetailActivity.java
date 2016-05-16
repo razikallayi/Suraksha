@@ -11,13 +11,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.account.AccountListFragment;
 
@@ -31,7 +31,7 @@ import java.util.Random;
  * item details are presented side-by-side with a list of items
  * in a {@link MemberListActivity}.
  */
-public class MemberDetailActivity extends AppCompatActivity {
+public class MemberDetailActivity extends BaseActivity {
 
     public static final String ARG_MEMBER_NAME = "member_name";
     public static final String ARG_MEMBER_ID = "member_id";

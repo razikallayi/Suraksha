@@ -185,33 +185,30 @@
         android:layout_height="wrap_content"
         android:text="Transaction Report"
         android:id="@+id/btnTxnReport"
-        android:layout_margin="@dimen/text_margin"
-        android:layout_gravity="center_horizontal" />
+        style="@style/Widget.AppCompat.Button.Borderless"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Members List"
-        android:layout_margin="@dimen/text_margin"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/btnMemberList"
-        android:layout_gravity="center_horizontal" />
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create User"
-        android:layout_margin="@dimen/text_margin"
-        android:id="@+id/btnCreateUser"
+        android:text="Create Officer"
+        android:id="@+id/btnCreateOfficer"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_gravity="center_horizontal" />
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
-        android:layout_margin="@dimen/text_margin"
         android:id="@+id/btnLogout"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_gravity="center_horizontal" />
-
+        />
 </LinearLayout>

@@ -2,7 +2,6 @@ package com.razikallayi.suraksha.officer;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -11,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +27,9 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    private OnListFragmentInteractionListener mListener;
+    private OnClickOfficerListItemListener mListener;
 
+    private static final int OFFICER_LIST_LOADER = 0;
     private OfficerListAdapter mOfficerListAdapter;
 
     private static final String[] OFFICER_COLUMNS = {
@@ -52,18 +51,16 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOfficerListAdapter =new OfficerListAdapter(mListener);
-        getLoaderManager().initLoader(1,null,this);
+        getLoaderManager().initLoader(OFFICER_LIST_LOADER,null,this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_officer, container, false);
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        // Set the adapter
-        if (recyclerView instanceof RecyclerView) {
-            Context context = recyclerView.getContext();
+        View view = inflater.inflate(R.layout.officer_list_recycler_view, container, false);
+        if (view instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) view;
+            Context context = view.getContext();
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -78,11 +75,11 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnClickOfficerListItemListener) {
+            mListener = (OnClickOfficerListItemListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnClickOfficerListItemListener");
         }
     }
 
@@ -100,8 +97,6 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d("FISH","is cursor null"+String.valueOf(data.getCount()));
-        Log.d("FISH","is cursor null"+ DatabaseUtils.dumpCursorToString(data));
         mOfficerListAdapter.swapCursor(data);
     }
 
@@ -109,6 +104,8 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoaderReset(Loader<Cursor> loader) {
         mOfficerListAdapter.swapCursor(null);
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -120,8 +117,8 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnClickOfficerListItemListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Officer officer);
+        void onClickOfficerListItem(Officer officer);
     }
 }

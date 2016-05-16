@@ -19,7 +19,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
@@ -43,17 +42,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.SettingsActivity;
-import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.ImageUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.concurrent.ExecutionException;
 
-public class RegisterMemberActivity extends AppCompatActivity {
+public class RegisterMemberActivity extends BaseActivity {
 
     //Intent to pick Contact
     private static final int PICK_CONTACT_REQUEST = 1;
@@ -92,7 +92,8 @@ public class RegisterMemberActivity extends AppCompatActivity {
 
 
         //Enable full view scroll while soft keyboard is shown
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+//                          |WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
@@ -145,7 +146,8 @@ public class RegisterMemberActivity extends AppCompatActivity {
 
         //Set Total Payable amount at time of registration
 //        TextView tvTotal = (TextView) sv.findViewById(R.id.tvTotalRegistration);
-//        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount())+Utility.getRegistrationFeeAmount();
+//        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount())
+//                          +Utility.getRegistrationFeeAmount();
 //        tvTotal.setText("TOTAL : "+Utility.formatAmountInRupees(getApplicationContext(),amt));
 
 
@@ -160,14 +162,15 @@ public class RegisterMemberActivity extends AppCompatActivity {
                 // "Select Member Image"), CHOOSE_AVATAR_REQUEST);
 
                 startActivityForResult(new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), CHOOSE_AVATAR_REQUEST);
+                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI),
+                        CHOOSE_AVATAR_REQUEST);
             }
         });
 
 
 
-        final Snackbar snackbar = Snackbar.make(sv, "Please accept and terms and conditions", Snackbar.LENGTH_LONG)
-                .setAction("Action", null);
+        final Snackbar snackbar = Snackbar.make(sv, "Please accept and terms and conditions",
+                Snackbar.LENGTH_LONG).setAction("Action", null);
         isAcceptedTerms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -247,7 +250,8 @@ public class RegisterMemberActivity extends AppCompatActivity {
                     }
                     else {
                         if(imageViewAvatar!=null) {
-                            imageViewAvatar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), Member.DEFAULT_AVATAR, null));
+                            imageViewAvatar.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
+                                    Member.DEFAULT_AVATAR, null));
                         }
                     }
                 }

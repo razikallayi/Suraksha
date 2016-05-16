@@ -1,48 +1,49 @@
 package com.razikallayi.suraksha;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
-import com.razikallayi.suraksha.utils.SettingsUtils;
+import com.razikallayi.suraksha.utils.LoginUtils;
 
-public abstract class BaseActivity extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener
-{
+public abstract class BaseActivity extends AppCompatActivity {
 
-    private static int PATTERNLOCK_UNLOCK = 42;
-
+    protected static int LOCK_SCREEN_REQUEST = 100;
     protected boolean mSkipLockOnce = false;
-
     private SharedPreferences mPrefs;
-
-    private SharedPreferences.Editor mEditor;
-
     private boolean mHasLoaded = false;
+    private Context mContext;
 
+    protected static final int mMinLockTime = 5000; //5 seconds
+    protected static final int mMinOfficerLockTime = 900000; //15 minutes
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//    setTheme(R.style.Theme_Suraksha);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!SettingsUtils.isLoggedIn(getApplicationContext())) {
-            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
-            finish();
-            return;
+        mContext = getApplicationContext();
+        if (!LoginUtils.isLoggedIn(mContext)) {
+            startActivityForResult(new Intent(mContext, LoginActivity.class), LOCK_SCREEN_REQUEST);
         }
-
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        //TODO: Reset inactivity check timer
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOCK_SCREEN_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                writeLockTime();
+            } else {
+                launchLockScreen();
+            }
+        }
+    }
+
+    protected void launchLockScreen() {
+        startActivityForResult(new Intent(mContext, LoginActivity.class), LOCK_SCREEN_REQUEST);
     }
 
     @Override
@@ -77,49 +78,40 @@ public abstract class BaseActivity extends AppCompatActivity implements
         // activity was open. If it's been more than two seconds the user
         // will have to enter the lock pattern to continue.
         long currentTime = SystemClock.elapsedRealtime();
-        long lockedAt = mPrefs.getLong("locked_at", currentTime - 10000);
+        long lockedAt = mPrefs.getLong("locked_at", currentTime - 10000); //10 Seconds
         long timedif = Math.abs(currentTime - lockedAt);
-        if (timedif > 2000) {
+        if (timedif > mMinLockTime && timedif <= mMinOfficerLockTime) { //between 5seconds and 15 minutes
             mHasLoaded = false;
-            Toast.makeText(BaseActivity.this, "show pinactivity 1", Toast.LENGTH_SHORT).show();
+            launchLockScreen();
+        } else if (timedif > mMinOfficerLockTime) {//15 minutes
+            mHasLoaded = false;
+            LoginUtils.logout(mContext);
+            launchLockScreen();
         } else {
             mHasLoaded = true;
         }
     }
-
     private void writeLockTime() {
         writeLockTime(SystemClock.elapsedRealtime());
     }
-
     private void writeLockTime(long time) {
-        mEditor = mPrefs.edit();
-        mEditor.putLong("locked_at", time);
-        mEditor.commit();
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
-        if (requestCode == PATTERNLOCK_UNLOCK) {
-            if (resultCode == RESULT_OK) {
-                writeLockTime();
-            } else {
-                Toast.makeText(BaseActivity.this, "show pinactivity 2", Toast.LENGTH_SHORT).show();
-            }
-        }
+        mPrefs.edit().putLong("locked_at", time).commit();
     }
 
     protected void skipLockOnce() {
         mSkipLockOnce = true;
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key != null && key.equals(SettingsUtils.PREF_IS_LOGGED_IN)) {
-            if(!SettingsUtils.isLoggedIn(getApplicationContext())){
-                startActivity(new Intent(getApplicationContext(),LoginActivity.class));
-                finish();
-                return;
-            }
-        }
-    }
+//    @Override
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//        if (key != null && key.equals(SettingsUtils.PREF_IS_LOGGED_IN)) {
+//            if(!SettingsUtils.isLoggedIn(mContext)){
+//                Toast.makeText(BaseActivity.this, "Log in changed", Toast.LENGTH_SHORT).show();
+//                startActivity(new Intent(mContext,LoginActivity.class));
+//                finish();
+//                return;
+//            }
+//        }
+//    }
+
 }

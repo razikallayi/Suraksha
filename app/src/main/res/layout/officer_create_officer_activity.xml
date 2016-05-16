@@ -5,7 +5,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateOfficerActivity">
+    tools:context=".officer.CreateOfficerActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -23,7 +23,7 @@
 
 
     <android.support.v4.widget.NestedScrollView
-    android:id="@+id/create_user_form"
+    android:id="@+id/create_officer_form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -79,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberPassword"
                     android:id="@+id/txtPassword"
+                    android:maxLength="4"
                     android:hint="@string/prompt_password"
                     />
             </android.support.design.widget.TextInputLayout>
@@ -107,8 +108,8 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/title_create_user"
-                android:id="@+id/btnCreateUser"
+                android:text="@string/title_create_officer"
+                android:id="@+id/btnCreateOfficer"
                 android:textStyle="bold"
                 android:contentDescription="Create User"
                 style="@style/registerForm"

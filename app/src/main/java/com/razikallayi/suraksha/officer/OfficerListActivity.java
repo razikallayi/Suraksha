@@ -2,19 +2,18 @@ package com.razikallayi.suraksha.officer;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 
-public class OfficerListActivity extends AppCompatActivity
-        implements OfficerFragment.OnListFragmentInteractionListener {
+public class OfficerListActivity extends BaseActivity
+        implements OfficerFragment.OnClickOfficerListItemListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_officer_list);
+        setContentView(R.layout.officer_list_activity);
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -29,9 +28,14 @@ public class OfficerListActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
     @Override
-    public void onListFragmentInteraction(Officer officer) {
-        Toast.makeText(OfficerListActivity.this, "Implement Method for " +officer.getName() , Toast.LENGTH_SHORT).show();
+    public void onClickOfficerListItem(Officer officer) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(OfficerDetailFragment.ARG_OFFICER_ID, officer.getId());
+        OfficerDetailFragment officerDetailFragment = new OfficerDetailFragment();
+        officerDetailFragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.officer_detail_container, officerDetailFragment)
+                .commit();
     }
 }

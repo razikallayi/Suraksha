@@ -45,6 +45,7 @@
     <!-- Strings related to create account -->
     <string name="opening_balance">Opening Balance</string>
     <string name="create">Create</string>
+    <string name="update">Update</string>
     <string name="create_account">Create Account</string>
     <string name="add_account">Add Account</string>
     <string name="account_created_sms">New account created for you in Suraksha Sevana Padhadi.</string>
@@ -56,21 +57,26 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search name or account number</string>
 
-    <string name="title_create_user">Create User</string>
+    <string name="title_create_officer">Create Officer</string>
+    <string name="title_edit_officer">Edit Officer</string>
     <string name="username_is_required">Please enter username</string>
-    <string name="password_is_required">Please enter password</string>
-    <string name="officer_creation_successful">Added New Officer</string>
+    <string name="password_is_required">Please enter pin</string>
+    <string name="pin_should_be_a_number">Pin should be a number</string>
+    <string name="pin_should_be_minimum_4_digits">Pin should have at least 4 digits</string>
+    <string name="officer_creation_successful">New Officer Created</string>
+    <string name="officer_updated_successfully">Officer Details Updated Successfully</string>
 
     <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Username</string>
     <string name="prompt_password">Pin</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="error_invalid_email">This username is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_incorrect_password">This pin is incorrect</string>
+    <string name="username_field_required">Username cannot be blank</string>
+    <string name="pin_field_required">Pin should not be blank</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>

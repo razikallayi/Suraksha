@@ -7,19 +7,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
 
-public class TxnReportActivity extends AppCompatActivity implements
+public class TxnReportActivity extends BaseActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         DatePickerDialog.OnDateSetListener
          {

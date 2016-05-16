@@ -164,19 +164,6 @@ private Cursor getTxnOfAccount(Uri uri, String[] projection,String selection,
     );
 }
 
-    private Cursor getMemberDetails(Uri uri, String[] projection, String sortOrder) {
-        String id = SurakshaContract.MemberEntry.getMemberId(uri);
-        return mOpenHelper.getReadableDatabase().query(
-                SurakshaContract.MemberEntry.TABLE_NAME,
-                projection,
-                sMemberIdSelection,
-                new String[]{id},
-                null,
-                null,
-                sortOrder
-        );
-    }
-
 
     @Override
     public boolean onCreate() {
@@ -205,7 +192,16 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
             }
 
             case MEMBER_ID:{
-                retCursor = getMemberDetails(uri, projection, sortOrder);
+                String id = SurakshaContract.MemberEntry.getMemberId(uri);
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.MemberEntry.TABLE_NAME,
+                        projection,
+                        sMemberIdSelection,
+                        new String[]{id},
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             }
             case MEMBER_JOIN_ACCOUNT:{
@@ -241,6 +237,21 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                         SurakshaContract.OfficerEntry.TABLE_NAME,
                         projection,
                         selection,selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case OFFICER_ID:{
+                String id = SurakshaContract.OfficerEntry.getOfficerId(uri);
+                String idSelection =SurakshaContract.OfficerEntry.TABLE_NAME+
+                                "." + SurakshaContract.OfficerEntry._ID + " = ? ";
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.OfficerEntry.TABLE_NAME,
+                        projection,
+                        idSelection,
+                        new String[]{id},
                         null,
                         null,
                         sortOrder
