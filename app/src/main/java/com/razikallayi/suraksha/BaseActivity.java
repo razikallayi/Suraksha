@@ -28,7 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mContext = getApplicationContext();
         if (!LoginUtils.isLoggedIn(mContext)) {
-            startActivityForResult(new Intent(mContext, LoginActivity.class), LOCK_SCREEN_REQUEST);
+            launchLockScreen();
         }
     }
 
@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 writeLockTime();
             } else {
-                launchLockScreen();
+                finish();
             }
         }
     }
@@ -74,12 +74,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             mSkipLockOnce = false;
             return;
         }
+
         // If a lock pattern is set we need to check the time for when the last
-        // activity was open. If it's been more than two seconds the user
+        // activity was open. If it's been more than two seconds(Minimum time) the user
         // will have to enter the lock pattern to continue.
         long currentTime = SystemClock.elapsedRealtime();
         long lockedAt = mPrefs.getLong("locked_at", currentTime - 10000); //10 Seconds
         long timedif = Math.abs(currentTime - lockedAt);
+
         if (timedif > mMinLockTime && timedif <= mMinOfficerLockTime) { //between 5seconds and 15 minutes
             mHasLoaded = false;
             launchLockScreen();

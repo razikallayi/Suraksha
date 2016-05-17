@@ -18,9 +18,12 @@
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"
+                android:value=".member.memberListActivity"/>
         </activity>
         <activity
             android:name=".member.RegisterMemberActivity"
@@ -39,6 +42,9 @@
         <activity
             android:name=".officer.EditOfficerActivity"
             android:label="@string/title_edit_officer"
+            android:parentActivityName=".officer.OfficerListActivity" />
+        <activity
+            android:name=".officer.OfficerDetailActivity"
             android:parentActivityName=".officer.OfficerListActivity" />
 
         <provider
@@ -104,7 +110,8 @@
             android:parentActivityName=".HomeActivity"/>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            />
         <activity android:name=".officer.OfficerListActivity"
             android:label="@string/title_officer_list"
             android:parentActivityName=".HomeActivity"></activity>

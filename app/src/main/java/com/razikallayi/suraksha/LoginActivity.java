@@ -1,47 +1,38 @@
 package com.razikallayi.suraksha;
 
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.utils.LoginUtils;
 import com.razikallayi.suraksha.utils.SettingsUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity{
+//        implements LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mUsernameView;
-    private TextView mUsernameTv;
+    private EditText mUsernameView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
     private String mRecentOfficer=null;
+    private boolean isBackPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,23 +40,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         setContentView(R.layout.activity_login);
 
-        mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-
+        mUsernameView = (EditText) findViewById(R.id.username);
         mRecentOfficer = SettingsUtils.getRecentOfficer(getApplicationContext());
         if(null == mRecentOfficer) {
-            populateAutoComplete();
+//            populateAutoComplete();
+            if (mUsernameView != null) {
+                mUsernameView.setVisibility(View.VISIBLE);
+                mUsernameView.requestFocus();
+            }
         }
         else {
             mUsernameView.setVisibility(View.GONE);
-            mUsernameTv = (TextView) findViewById(R.id.tvUsername);
+            TextView mUsernameTv = (TextView) findViewById(R.id.tvUsername);
             mUsernameTv.setText(mRecentOfficer);
             mUsernameTv.setVisibility(View.VISIBLE);
             Button mSignOutButton = (Button) findViewById(R.id.sign_out_button);
+            mSignOutButton.setVisibility(View.VISIBLE);
+
             mSignOutButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mRecentOfficer = null;
                     LoginUtils.logout(getApplicationContext());
-                    setResult(RESULT_CANCELED);
+                    recreate();
                 }
             });
         }
@@ -74,14 +71,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction() == KeyEvent.ACTION_DOWN){
-                    if(mPasswordView.getText().length() >= 4){
-                        return false;
-                    }
-                }
                 if(event.getAction() == KeyEvent.ACTION_UP){
-                    if(mPasswordView.getText().length() == 4){
+                    if(mPasswordView.getText().length()  == 4 && mAuthTask == null){
                         attemptLogin();
+                        mPasswordView.setText("");
+                        return true;
                     }
                 }
                 return false;
@@ -105,14 +99,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
+    @Override
+    public void onBackPressed() {
+        if(isBackPressed) {
+            setResult(RESULT_FIRST_USER);
+            super.onBackPressed();
+            return;
+        }
+        Toast.makeText(getApplicationContext(), "Double tap to exit.", Toast.LENGTH_SHORT).show();
+        isBackPressed = true;
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isBackPressed=false;
+            }
+        }, 400);
     }
+
+
+//    private void populateAutoComplete() {
+//        getLoaderManager().initLoader(0, null, this);
+//    }
 
 
     /**
@@ -173,44 +183,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask.execute((Void) null);
         }
     }
+//
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+//        return new CursorLoader(this,
+//                SurakshaContract.OfficerEntry.CONTENT_URI, OfficerQuery.PROJECTION,
+//                null,
+//                null,
+//                SurakshaContract.OfficerEntry.COLUMN_USERNAME);
+//    }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                SurakshaContract.OfficerEntry.CONTENT_URI, OfficerQuery.PROJECTION,
-                null,
-                null,
-                SurakshaContract.OfficerEntry.COLUMN_USERNAME);
-    }
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+//        List<String> usernameList = new ArrayList<>();
+//        cursor.moveToFirst();
+//        while (!cursor.isAfterLast()) {
+//            usernameList.add(cursor.getString(OfficerQuery.COL_USERNAME));
+//            cursor.moveToNext();
+//        }
+//        cursor.close();
+//        addUsernamesToAutoComplete(usernameList);
+//    }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> usernameList = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            usernameList.add(cursor.getString(OfficerQuery.COL_USERNAME));
-            cursor.moveToNext();
-        }
-        addUsernamesToAutoComplete(usernameList);
-    }
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> cursorLoader) {}
+//
+//    private void addUsernamesToAutoComplete(List<String> usernameCollection) {
+//        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+//        ArrayAdapter<String> adapter =
+//                new ArrayAdapter<>(LoginActivity.this,
+//                        android.R.layout.simple_dropdown_item_1line, usernameCollection);
+//        mUsernameView.setAdapter(adapter);
+//    }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {}
-
-    private void addUsernamesToAutoComplete(List<String> usernameCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, usernameCollection);
-        mUsernameView.setAdapter(adapter);
-    }
-
-    private interface OfficerQuery {
-        String[] PROJECTION = {
-                SurakshaContract.OfficerEntry.COLUMN_USERNAME
-        };
-        int COL_USERNAME = 0;
-    }
+//    private interface OfficerQuery {
+//        String[] PROJECTION = {
+//                SurakshaContract.OfficerEntry.COLUMN_USERNAME
+//        };
+//        int COL_USERNAME = 0;
+//    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -240,7 +251,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 setResult(RESULT_OK);
                 finish();
             } else {
-                LoginUtils.logout(getApplicationContext());
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

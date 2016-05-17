@@ -1,6 +1,8 @@
 package com.razikallayi.suraksha.utils;
 
 import android.content.Context;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 
 /**
  * Created by Razi Kallayi on 10-05-2016.
@@ -13,6 +15,8 @@ public class LoginUtils {
     }
 
     public static void login(Context context,String username) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit().putLong("locked_at", SystemClock.elapsedRealtime()).commit();
         SettingsUtils.setLoggedIn(context,true);
         SettingsUtils.setRecentOfficer(context,username);
     }

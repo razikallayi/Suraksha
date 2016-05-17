@@ -2,6 +2,10 @@ package com.razikallayi.suraksha;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,12 +15,13 @@ import android.widget.TextView;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.member.MemberListActivity;
 import com.razikallayi.suraksha.officer.CreateOfficerActivity;
+import com.razikallayi.suraksha.officer.OfficerListActivity;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.txn.TxnReportActivity;
 import com.razikallayi.suraksha.utils.LoginUtils;
 
-public class HomeActivity extends BaseActivity{
-//        implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +50,15 @@ public class HomeActivity extends BaseActivity{
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.addDrawerListener(toggle);
-//        toggle.syncState();
-//
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         Button btnTxnReport = (Button) findViewById(R.id.btnTxnReport);
         btnTxnReport.setOnClickListener(new View.OnClickListener() {
@@ -119,15 +124,16 @@ public class HomeActivity extends BaseActivity{
         tvTotalLoanReturn.setText(getString(R.string.format_rupees, Transaction.getTotalLoanReturn(this)));
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,27 +150,27 @@ public class HomeActivity extends BaseActivity{
         return super.onOptionsItemSelected(item);
     }
 
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_members) {
-//            // Handle the register member action
-//            Intent intent = new Intent(this,MemberListActivity.class);
-//            startActivity(intent);
-//
-//        } else if (id == R.id.nav_reports) {
-//            Intent intent = new Intent(this, TxnReportActivity.class);
-//            startActivity(intent);
-//        } else if (id == R.id.nav_officer) {
-//            Intent intent = new Intent(this, OfficerListActivity.class);
-//            startActivity(intent);
-//        }
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_members) {
+            // Handle the register member action
+            Intent intent = new Intent(this,MemberListActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_reports) {
+            Intent intent = new Intent(this, TxnReportActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_officer) {
+            Intent intent = new Intent(this, OfficerListActivity.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
