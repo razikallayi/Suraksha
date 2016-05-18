@@ -141,7 +141,7 @@ public class AccountListFragment extends Fragment implements LoaderManager.Loade
             account.setMember(Member.getMemberFromId(getContext(), cursor.getLong(COL_FK_MEMBER_ID)));
             account.setInstalmentAmount(cursor.getDouble(COLUMN_INSTALMENT_AMOUNT));
             account.setOpeningBalance(cursor.getDouble(COLUMN_OPENING_BALANCE));
-            account.setIsActive(cursor.getInt(COLUMN_IS_ACTIVE));
+            account.setActive(cursor.getInt(COLUMN_IS_ACTIVE)==1?true:false);
             account.setClosedAt(cursor.getString(COLUMN_CLOSED_AT));
             account.setCreatedAt(cursor.getString(COLUMN_CREATED_AT));
             account.setUpdatedAt(cursor.getString(COLUMN_UPDATED_AT));

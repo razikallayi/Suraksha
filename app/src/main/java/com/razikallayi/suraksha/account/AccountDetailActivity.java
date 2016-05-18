@@ -1,6 +1,11 @@
 package com.razikallayi.suraksha.account;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -8,7 +13,9 @@ import android.view.MenuItem;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.member.MemberListActivity;
-import com.razikallayi.suraksha.txn.TxnListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An activity representing a single Member detail screen. This
@@ -34,14 +41,22 @@ public class AccountDetailActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.account_detail_container);
+        if (viewPager != null) {
+            int accountNumber = getIntent().getIntExtra("account_number",-1);
+            setupViewPager(viewPager,accountNumber);
+        }
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        if (viewPager != null) {
+            tabLayout.setupWithViewPager(viewPager);
+        }
 
 
-
-        int accountNumber = getIntent().getIntExtra("account_number",-1);
-        TxnListFragment txnListFragment = TxnListFragment.newInstance(accountNumber);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_txn_list, txnListFragment)
-                .commit();
+//        int accountNumber = getIntent().getIntExtra("account_number",-1);
+//        TxnListFragment txnListFragment = TxnListFragment.newInstance(accountNumber);
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_txn_list, txnListFragment)
+//                .commit();
 
         //Load RecyclerView of Due
         //getSupportLoaderManager().initLoader(1,null,this);
@@ -89,6 +104,52 @@ public class AccountDetailActivity extends BaseActivity {
 
     }
 
+    private void setupViewPager(ViewPager viewPager, int accountNumber) {
+        Adapter adapter = new Adapter(getSupportFragmentManager());
+
+        DepositFragment depositFragment = (DepositFragment)
+                getSupportFragmentManager().findFragmentByTag(DepositFragment.TAG);
+        if(null == depositFragment) {
+            Bundle arguments = new Bundle();
+            arguments.putInt(DepositFragment.ARG_ACCOUNT_NUMBER,accountNumber);
+            //AccountList
+            depositFragment = new DepositFragment();
+            depositFragment.setArguments(arguments);
+//        getFragmentManager().beginTransaction()
+//                .replace(R.id.account_list_container, accountListFragment)
+//                .commit();
+            adapter.addFragment(depositFragment, "Deposit");
+        }
+        viewPager.setAdapter(adapter);
+    }
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
+    }
 
 
     @Override

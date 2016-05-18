@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.razikallayi.suraksha.BaseActivity;
-import com.razikallayi.suraksha.PendingDepositAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
@@ -59,11 +58,11 @@ public class CreateAccountActivity extends BaseActivity {
         TextView tvMemberAddress = (TextView) layoutCreateAccount.findViewById(R.id.tvMemberAddress);
         TextView tvAccountNumber = (TextView) layoutCreateAccount.findViewById(R.id.tvAccountNumber);
         TextView tvRegistrationFee = (TextView) layoutCreateAccount.findViewById(R.id.tvRegistrationFee);
-        isAcceptedTerms     = (CheckBox) layoutCreateAccount.findViewById(R.id.accept_terms);
+        isAcceptedTerms = (CheckBox) layoutCreateAccount.findViewById(R.id.accept_terms);
 
         chkRegistrationFee = (CheckBox) layoutCreateAccount.findViewById(R.id.chkRegistrationFee);
 
-        RecyclerView rvPendingDeposit= (RecyclerView) findViewById(R.id.pending_deposit_list);
+        RecyclerView rvPendingDeposit = (RecyclerView) findViewById(R.id.pending_deposit_list);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         rvPendingDeposit.setHasFixedSize(true);
@@ -79,12 +78,12 @@ public class CreateAccountActivity extends BaseActivity {
 
         //Set Total Payable amount at time of registration
         TextView tvTotal = (TextView) findViewById(R.id.tvTotalRegistration);
-        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount())+Utility.getRegistrationFeeAmount();
-        tvTotal.setText("TOTAL : "+Utility.formatAmountInRupees(getApplicationContext(),amt));
+        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount()) + Utility.getRegistrationFeeAmount();
+        tvTotal.setText("TOTAL : " + Utility.formatAmountInRupees(getApplicationContext(), amt));
 
 
         long memberId = getIntent().getLongExtra(AccountListFragment.ARG_MEMBER_ID, 0);
-        mMember = Member.getMemberFromId(getApplicationContext(),memberId);
+        mMember = Member.getMemberFromId(getApplicationContext(), memberId);
         tvMemberName.setText(mMember.getName());
         tvMemberAddress.setText(mMember.getAddress());
         tvAccountNumber.setText(String.valueOf(Account.generateAccountNumber(getApplicationContext())));
@@ -121,7 +120,7 @@ public class CreateAccountActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void createAccount(){
+    private void createAccount() {
         View v = findViewById(R.id.layoutCreateAccount);
         if (!chkRegistrationFee.isChecked()) {
             Snackbar.make(v, "Please pay and tick the registration fee", Snackbar.LENGTH_LONG)
@@ -143,7 +142,7 @@ public class CreateAccountActivity extends BaseActivity {
     public class CreateAccountTask extends AsyncTask<Void, Void, Boolean> {
         private final Member mMember;
 
-        CreateAccountTask(Member member){
+        CreateAccountTask(Member member) {
             this.mMember = member;
         }
 
@@ -151,9 +150,9 @@ public class CreateAccountActivity extends BaseActivity {
         protected Boolean doInBackground(Void... params) {
             ContentResolver contentResolver = getApplicationContext().getContentResolver();
 
-            Account account = new Account(mMember,Utility.getOpeningDepositAmount(),1);
+            Account account = new Account(mMember, Utility.getOpeningDepositAmount(), true);
             account.setAccountNumber(Account.generateAccountNumber(getApplicationContext()));
-            Transaction registrationFeeTxn = new Transaction(account.getAccountNumber(), Utility.getRegistrationFeeAmount(),SurakshaContract.TxnEntry.RECEIPT_VOUCHER,SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER,"");
+            Transaction registrationFeeTxn = new Transaction(account.getAccountNumber(), Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER, "");
 
             ContentValues values = Account.getAccountContentValues(account);
             contentResolver.insert(SurakshaContract.AccountEntry.CONTENT_URI, values);
@@ -162,8 +161,8 @@ public class CreateAccountActivity extends BaseActivity {
             contentResolver.insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
 
             SmsManager sms = SmsManager.getDefault();
-            String phoneNumber = "121" ;//mMember.getMobile();
-            String message = getResources().getString(R.string.account_created_sms) + " Your account number is "+account.getAccountNumber();
+            String phoneNumber = "121";//mMember.getMobile();
+            String message = getResources().getString(R.string.account_created_sms) + " Your account number is " + account.getAccountNumber();
             sms.sendTextMessage(phoneNumber, null, message, null, null);
 
 
@@ -177,7 +176,7 @@ public class CreateAccountActivity extends BaseActivity {
                         SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
                         "Deposited at time of registration");
                 txnPendingMonth.setDefinedDepositDate(pendingMonths.get(i).getTimeInMillis());
-                if (txnPendingMonth.getAmount() > 0){
+                if (txnPendingMonth.getAmount() > 0) {
                     values = Transaction.getTxnContentValues(txnPendingMonth);
                     cv.add(values);
                 }
@@ -186,6 +185,7 @@ public class CreateAccountActivity extends BaseActivity {
             contentResolver.bulkInsert(SurakshaContract.TxnEntry.CONTENT_URI, cvArray);
             return true;
         }
+
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
@@ -193,8 +193,7 @@ public class CreateAccountActivity extends BaseActivity {
             if (success) {
                 finish();
                 Toast.makeText(getApplicationContext(), "Account Created Successfully. ", Toast.LENGTH_LONG).show();
-            }
-            else{
+            } else {
                 Toast.makeText(getApplicationContext(), "Account Creation Failed. ", Toast.LENGTH_LONG).show();
             }
         }
