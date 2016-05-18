@@ -47,7 +47,7 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
         //Ledger
         holder.mLedger.setText(Transaction.getLedgerName(SurakshaContract.TxnEntry.DEPOSIT_LEDGER));
         //month
-        holder.mMonthView.setText(Utility.formatPendingDepositDate(mDues.get(position).getTimeInMillis()));
+        holder.mMonthView.setText(Utility.readableDepositMonth(mDues.get(position).getTimeInMillis()));
 
         //Amount
         holder.mAmountView.setText(holder.mAmountView.getContext().getString(R.string.format_rupees, Utility.getMonthlyDepositAmount()));
@@ -61,7 +61,7 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
                 // 2. Chain together various setter methods to set the dialog characteristics
                 builder.setMessage("Deposit "+Utility.formatAmountInRupees(v.getContext(),Utility.getMonthlyDepositAmount())
                         + " in Ac/No: "+String.valueOf(mAccountNumber)
-                        +" for the month of "+Utility.formatPendingDepositDate(holder.mDue.getTimeInMillis())
+                        +" for the month of "+Utility.readableDepositMonth(holder.mDue.getTimeInMillis())
                         )
                         .setTitle("Make Deposit?")
                         .setPositiveButton("Deposit", new DialogInterface.OnClickListener() {

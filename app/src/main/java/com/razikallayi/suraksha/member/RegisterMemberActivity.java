@@ -376,7 +376,7 @@ public class RegisterMemberActivity extends BaseActivity {
 
             //Save Account for member
             int accountNumber = Account.generateAccountNumber(getApplicationContext());
-            Account account = new Account(mMember,Utility.getOpeningDepositAmount(),1);
+            Account account = new Account(mMember,Utility.getOpeningDepositAmount(),true);
             account.setAccountNumber(accountNumber);
             values = Account.getAccountContentValues(account);
             getApplicationContext().getContentResolver().insert(SurakshaContract.AccountEntry.CONTENT_URI, values);

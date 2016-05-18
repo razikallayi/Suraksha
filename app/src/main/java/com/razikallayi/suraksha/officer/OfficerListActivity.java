@@ -9,7 +9,7 @@ import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 
 public class OfficerListActivity extends BaseActivity
-        implements OfficerFragment.OnClickOfficerListItemListener {
+        implements OfficerListFragment.OnClickOfficerListItemListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet

@@ -76,7 +76,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE          + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_LEDGER                + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_NARRATION             + TEXT_TYPE + COMMA_SEP +
-                    SurakshaContract.TxnEntry.COLUMN_FK_USER_ID     + INT_TYPE + NOT_NULL  + COMMA_SEP +
+                    SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID + INT_TYPE + NOT_NULL  + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_CREATED_AT            + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_UPDATED_AT            + TEXT_TYPE +
                     " )";

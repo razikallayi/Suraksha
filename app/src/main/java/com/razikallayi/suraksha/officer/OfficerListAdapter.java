@@ -16,9 +16,9 @@ import com.razikallayi.suraksha.data.SurakshaContract;
  */
 public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAdapter.ViewHolder> {
 
-    private final OfficerFragment.OnClickOfficerListItemListener mListener;
+    private final OfficerListFragment.OnClickOfficerListItemListener mListener;
 
-    public OfficerListAdapter(OfficerFragment.OnClickOfficerListItemListener listener) {
+    public OfficerListAdapter(OfficerListFragment.OnClickOfficerListItemListener listener) {
         super();
         mListener = listener;
     }

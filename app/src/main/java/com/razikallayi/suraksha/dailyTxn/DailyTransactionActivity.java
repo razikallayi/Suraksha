@@ -70,7 +70,7 @@ public class DailyTransactionActivity extends BaseActivity implements LoaderMana
                     .commit();
         }
 */
-        mDailyTxnAdapter = new DailyTransactionAdapter(getSupportFragmentManager(), Transaction.TXN_COLUMNS,null);
+        mDailyTxnAdapter = new DailyTransactionAdapter(getSupportFragmentManager(), Transaction.TxnQuery.PROJECTION,null);
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.view_pager_container);
         mViewPager.setAdapter(mDailyTxnAdapter);
@@ -103,7 +103,7 @@ public class DailyTransactionActivity extends BaseActivity implements LoaderMana
                 return new CursorLoader(
                         this,   // Parent activity context
                         SurakshaContract.TxnEntry.buildTxnOnDate(calendar.getTimeInMillis()),// Table to query
-                        Transaction.TXN_COLUMNS,     // Projection to return
+                        Transaction.TxnQuery.PROJECTION,     // Projection to return
                         null,            // No selection clause
                         null,            // No selection arguments
                         null             // Default sort order
@@ -126,10 +126,10 @@ public class DailyTransactionActivity extends BaseActivity implements LoaderMana
      */
         mDailyTxnAdapter.swapCursor(cursor);
         if (cursor != null && cursor.moveToFirst()) {
-            Log.d("FISH", "Amount: " + cursor.getString(Transaction.COL_AMOUNT));
-            Log.d("FISH", "Account: " + cursor.getString(Transaction.COL_FK_ACCOUNT_NUMBER));
-            Log.d("FISH", "ledger: " + cursor.getString(Transaction.COL_LEDGER));
-            Log.d("FISH", "voucher type: " + cursor.getString(Transaction.COL_VOUCHER_TYPE));
+            Log.d("FISH", "Amount: " + cursor.getString(Transaction.TxnQuery.COL_AMOUNT));
+            Log.d("FISH", "Account: " + cursor.getString(Transaction.TxnQuery.COL_FK_ACCOUNT_NUMBER));
+            Log.d("FISH", "ledger: " + cursor.getString(Transaction.TxnQuery.COL_LEDGER));
+            Log.d("FISH", "voucher type: " + cursor.getString(Transaction.TxnQuery.COL_VOUCHER_TYPE));
         }
     }
 

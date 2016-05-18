@@ -5,8 +5,8 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.text.format.Time;
-import android.util.Log;
+
+import com.razikallayi.suraksha.utils.Utility;
 
 ;
 
@@ -28,6 +28,7 @@ public class SurakshaContract {
 
     // Possible paths (appended to base content URI for possible URI's)
     public static final String PATH_ACCOUNT = "account";
+    public static final String PATH_ACCOUNT_NUMBER = "account_number";
     public static final String PATH_ACCOUNT_OF_MEMBER = "account-of-member";
 
     // Possible paths (appended to base content URI for possible URI's)
@@ -127,8 +128,11 @@ public class SurakshaContract {
         public static Uri buildAccountUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+        public static Uri buildAccountUriUsingAccountNumber(int account_number) {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACCOUNT_NUMBER).appendPath(Long.toString(account_number)).build();
+        }
 
-        public static String getAccountId(Uri uri) {
+        public static String getAccountNumber(Uri uri) {
             return uri.getPathSegments().get(1);
         }
 
@@ -138,7 +142,6 @@ public class SurakshaContract {
 
 
         public static Uri buildAccountsOfMemberUri(long member_id) {
-            Log.d("buildAccountsOfMemebr", Long.toString(member_id));
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACCOUNT_OF_MEMBER).appendPath(Long.toString(member_id)).build();
         }
 
@@ -161,7 +164,7 @@ public class SurakshaContract {
         public static final String COLUMN_FK_LOAN_PAYED_ID     = "loan_payed_id";
         public static final String COLUMN_VOUCHER_TYPE         = "voucher_type";
         public static final String COLUMN_LEDGER               = "ledger";
-        public static final String COLUMN_FK_USER_ID           = "fk_user_id";
+        public static final String COLUMN_FK_OFFICER_ID        = "fk_officer_id";
         public static final String COLUMN_NARRATION            = "narration";
         public static final String COLUMN_CREATED_AT           = "created_at";
         public static final String COLUMN_UPDATED_AT           = "updated_at";
@@ -182,7 +185,8 @@ public class SurakshaContract {
         }
 
         public static Uri buildTxnOfAccountUri(int account_number) {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_OF_ACCOUNT).appendPath(String.valueOf(account_number)).build();
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_OF_ACCOUNT)
+                    .appendPath(String.valueOf(account_number)).build();
         }
 
 
@@ -196,8 +200,9 @@ public class SurakshaContract {
         public static Uri buildGetTotalDeposit() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_TOTAL_DEPOSIT).build();
         }
-        public static Uri buildGetDepositOfAccount() {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_DEPOSIT_OF_ACCOUNT).build();
+        public static Uri buildGetDepositOfAccount(int account_number) {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_DEPOSIT_OF_ACCOUNT)
+                    .appendPath(String.valueOf(account_number)).build();
         }
         public static Uri buildGetDepositOnDate() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_DEPOSIT_ON_DATE).build();
@@ -223,7 +228,7 @@ public class SurakshaContract {
 //        }
 
         public static Uri buildTxnOnDate(long date) {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_ON_DATE).appendPath(Long.toString(normalizeDate(date))).build();
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_ON_DATE).appendPath(Long.toString(Utility.normalizeDate(date))).build();
         }
 
         public static long getDateFromUri(Uri uri) {
@@ -305,15 +310,7 @@ public class SurakshaContract {
 
 
 
-    // To make it easy to query for the exact date, we normalize all dates that go into
-    // the database to the start of the the Julian day at UTC.
-    public static long normalizeDate(long startDate) {
-        // normalize the start date to the beginning of the (UTC) day
-        Time time = new Time();
-        time.set(startDate);
-        int julianDay = Time.getJulianDay(startDate, time.gmtoff);
-        return time.setJulianDay(julianDay);
-    }
+
 
 //    public static long normalizeDate(long startDate) {
 //        // normalize the start date to the beginning of the (UTC) day

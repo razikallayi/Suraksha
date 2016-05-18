@@ -20,6 +20,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -104,7 +105,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
         int accountNumber = getArguments().getInt("account_number",-1);
         return  new CursorLoader(rootView.getContext(),
                 SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
-                Transaction.TXN_COLUMNS,
+                Transaction.TxnQuery.PROJECTION,
                 SurakshaContract.TxnEntry.COLUMN_LEDGER +"= ? AND "+ SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER +"= ?",
                 new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), String.valueOf(accountNumber)},
                 null);
@@ -112,10 +113,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        ArrayList<Long> depositedDates = new ArrayList<>();
-        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            depositedDates.add(cursor.getLong(Transaction.COL_DEFINED_DEPOSIT_DATE));
-        }
+        List<Transaction> depositedDates = Transaction.getTxnFromCursor(cursor);
         cursor.close();
         RecyclerView recyclerViewDue = (RecyclerView) rootView.findViewById(R.id.due_list);
         LinearLayoutManager llm = new LinearLayoutManager(rootView.getContext());
@@ -124,7 +122,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
         recyclerViewDue.setAdapter(
                 new DueRecyclerViewAdapter(
                     getArguments().getInt("account_number",-1),
-                    Utility.getPendingDepositMonths(depositedDates)
+                    Utility.getPendingDepositMonthsFromTxn(depositedDates)
                 )
         );
     }

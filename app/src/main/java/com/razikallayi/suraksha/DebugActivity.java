@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.Calendar;
@@ -21,13 +20,13 @@ public class DebugActivity extends BaseActivity {
         String TAG="FISH";
         Calendar c = Calendar.getInstance();
         Log.d(TAG, "instantiating calendar"+ Utility.formatDate(c.getTimeInMillis()));
-        Log.d(TAG, "instantiating calendar Normalised"+ Utility.formatDate(SurakshaContract.normalizeDate(c.getTimeInMillis())));
+        Log.d(TAG, "instantiating calendar Normalised"+ Utility.formatDate(Utility.normalizeDate(c.getTimeInMillis())));
         c.set(Calendar.MONTH,Calendar.FEBRUARY);
         Log.d(TAG, "Month Set"+ Utility.formatDate(c.getTimeInMillis()));
-        Log.d(TAG, "Month Set Normalised"+ Utility.formatDate(SurakshaContract.normalizeDate(c.getTimeInMillis())));
+        Log.d(TAG, "Month Set Normalised"+ Utility.formatDate(Utility.normalizeDate(c.getTimeInMillis())));
         c.set(Calendar.YEAR,2017);
         Log.d(TAG, "Year Set"+ Utility.formatDate(c.getTimeInMillis()));
-        Log.d(TAG, "Year Set Normalised"+ Utility.formatDate(SurakshaContract.normalizeDate(c.getTimeInMillis())));
+        Log.d(TAG, "Year Set Normalised"+ Utility.formatDate(Utility.normalizeDate(c.getTimeInMillis())));
 
 
 

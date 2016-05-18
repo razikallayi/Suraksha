@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.razikallayi.suraksha.utils.Utility;
+
 
 public class SurakshaProvider extends ContentProvider {
     // The URI Matcher used by this content provider.
@@ -21,6 +23,7 @@ public class SurakshaProvider extends ContentProvider {
     static final int MEMBER_JOIN_ACCOUNT  = 110;
 
     static final int ACCOUNT = 200;
+    static final int ACCOUNT_NUMBER = 202;
     static final int ACCOUNTS_OF_MEMBER = 210;
 
     static final int TXN     = 300;
@@ -87,6 +90,7 @@ public class SurakshaProvider extends ContentProvider {
         matcher.addURI(authority, SurakshaContract.PATH_OFFICER + "/#", OFFICER_ID);
 
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT, ACCOUNT);
+        matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_NUMBER + "/#", ACCOUNT_NUMBER);
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_OF_MEMBER+"/*", ACCOUNTS_OF_MEMBER);
 
         matcher.addURI(authority, SurakshaContract.PATH_TXN, TXN);
@@ -226,6 +230,19 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
                         SurakshaContract.AccountEntry.TABLE_NAME,
                         projection,
                         selection,selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case ACCOUNT_NUMBER:{
+                String accountNumber = SurakshaContract.AccountEntry.getAccountNumber(uri);
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.AccountEntry.TABLE_NAME,
+                        projection,
+                        sAccountNumberSelection,
+                        new String[]{accountNumber},
                         null,
                         null,
                         sortOrder
@@ -373,16 +390,16 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
         // normalize the date value
         if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT);
-            values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT, Utility.normalizeDate(dateValue));
         }
 
         if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_CREATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, Utility.normalizeDate(dateValue));
         }
         if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, Utility.normalizeDate(dateValue));
         }
     }
     private void normalizeOfficerDate(ContentValues values) {
@@ -390,27 +407,27 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
         // normalize the date value
         if (values.containsKey(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, Utility.normalizeDate(dateValue));
         }
         if (values.containsKey(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT, Utility.normalizeDate(dateValue));
         }
     }
     private void normalizeAccountDate(ContentValues values) {
         // normalize the date value
         if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT);
-            values.put(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT, Utility.normalizeDate(dateValue));
         }
 
         if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CREATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.AccountEntry.COLUMN_CREATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.AccountEntry.COLUMN_CREATED_AT, Utility.normalizeDate(dateValue));
         }
         if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT, Utility.normalizeDate(dateValue));
         }
     }
 
@@ -419,18 +436,18 @@ Log.d("Fish", "Matcher Provider: "+sUriMatcher.match(uri));
         if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE)) {
             if(values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE) > 0 ) {
                 long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE);
-                values.put(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE, SurakshaContract.normalizeDate(dateValue));
+                values.put(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE, Utility.normalizeDate(dateValue));
             }
         }
 
         // normalize the date value
         if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_CREATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, Utility.normalizeDate(dateValue));
         }
         if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT)) {
             long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, SurakshaContract.normalizeDate(dateValue));
+            values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, Utility.normalizeDate(dateValue));
         }
     }
 

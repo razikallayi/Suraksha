@@ -141,9 +141,8 @@ public class Member implements Serializable{
             m.createdAt = cursor.getString(COL_CREATED_AT);
             m.updatedAt = cursor.getString(COL_UPDATED_AT);
             m.setAvatar(cursor.getBlob(COL_AVATAR));
-
-            cursor.close();
         }
+        cursor.close();
         return m;
     }
 

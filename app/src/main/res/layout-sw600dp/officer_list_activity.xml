@@ -25,7 +25,7 @@
         -->
         <fragment
             android:id="@+id/fragment_officer"
-            android:name="com.razikallayi.suraksha.officer.OfficerFragment"
+            android:name="com.razikallayi.suraksha.officer.OfficerListFragment"
             android:layout_width="0dp"
             android:divider="?android:attr/dividerHorizontal"
             android:layout_height="match_parent"

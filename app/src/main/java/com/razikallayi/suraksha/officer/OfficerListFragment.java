@@ -21,8 +21,8 @@ import com.razikallayi.suraksha.data.SurakshaContract;
  * A fragment representing a list of Items.
  * <p/>
  */
-public class OfficerFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-    public static final String TAG = OfficerFragment.class.getClass().getSimpleName();
+public class OfficerListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+    public static final String TAG = OfficerListFragment.class.getClass().getSimpleName();
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
@@ -44,7 +44,7 @@ public class OfficerFragment extends Fragment implements LoaderManager.LoaderCal
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public OfficerFragment() {
+    public OfficerListFragment() {
     }
 
     @Override

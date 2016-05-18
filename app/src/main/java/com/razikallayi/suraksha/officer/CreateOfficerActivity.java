@@ -55,7 +55,7 @@ public class CreateOfficerActivity extends BaseActivity {
         txtMobile           = (EditText) sv.findViewById(R.id.txtMobile);
         txtAddress          = (EditText) sv.findViewById(R.id.txtAddress);
         switchIsAdmin          = (Switch) sv.findViewById(R.id.switchIsAdmin);
-
+// TODO: 18-05-2016 Accept only pattern with 0-9 in pin
         //Button Create Officer
         final Button mCreateOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
         mCreateOfficer.setOnClickListener(new View.OnClickListener() {

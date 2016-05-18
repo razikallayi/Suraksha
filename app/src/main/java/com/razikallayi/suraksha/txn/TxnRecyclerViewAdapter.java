@@ -37,7 +37,7 @@ public class TxnRecyclerViewAdapter extends RecyclerView.Adapter<TxnRecyclerView
         //month
         long month = mTxns.get(position).getDefinedDepositMonth();
         if(month>0) {
-            holder.mMonthView.setText(Utility.formatPendingDepositDate(month));
+            holder.mMonthView.setText(Utility.readableDepositMonth(month));
         }else{
             holder.mMonthView.setVisibility(View.GONE);
         }
