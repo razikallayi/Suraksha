@@ -7,20 +7,26 @@ import android.preference.PreferenceManager;
 /**
  * Created by Razi Kallayi on 10-05-2016.
  */
-public class LoginUtils {
+public class AuthUtils {
 
     public static void logout(Context context) {
         SettingsUtils.setLoggedIn(context,false);
+        SettingsUtils.setAuthOfficerId(context,-1);
         SettingsUtils.setRecentOfficer(context,null);
     }
 
-    public static void login(Context context,String username) {
+    public static void login(Context context,long officerId, String username) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit().putLong("locked_at", SystemClock.elapsedRealtime()).commit();
         SettingsUtils.setLoggedIn(context,true);
+        SettingsUtils.setAuthOfficerId(context,officerId);
         SettingsUtils.setRecentOfficer(context,username);
     }
     public static boolean isLoggedIn(Context context) {
         return SettingsUtils.isLoggedIn(context);
+    }
+
+    public static long getAuthenticatedOfficerId(Context context){
+        return SettingsUtils.getAuthOfficerId(context);
     }
 }

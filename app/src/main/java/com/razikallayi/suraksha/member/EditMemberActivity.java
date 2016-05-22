@@ -134,7 +134,7 @@ public class EditMemberActivity extends BaseActivity {
 
 //        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
         // specify an adapter (see also next example)
-//        PendingDepositAdapter pendingDepositAdapter = new PendingDepositAdapter(pendingMonthsList);
+//        DepositAdapter pendingDepositAdapter = new DepositAdapter(pendingMonthsList);
 //        rvPendingDeposit.setAdapter(pendingDepositAdapter);
 
         //Set Total Payable amount at time of registration

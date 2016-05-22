@@ -7,8 +7,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,13 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.member.Member;
 
 import java.util.ArrayList;
 
-public class AccountListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class AccountListFragment extends Fragment {
     public static final String TAG = AccountListFragment.class.getSimpleName();
     /**
      * The fragment argument representing the item ID that this fragment
@@ -56,27 +54,6 @@ public class AccountListFragment extends Fragment implements LoaderManager.Loade
     private static final int COLUMN_CREATED_AT        = 7;
     private static final int COLUMN_UPDATED_AT        = 8;
 
-    private static final String[] TXN_COLUMNS = {
-            SurakshaContract.TxnEntry.TABLE_NAME +"."+SurakshaContract.TxnEntry._ID,
-            SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
-            SurakshaContract.TxnEntry.COLUMN_AMOUNT,
-            SurakshaContract.TxnEntry.COLUMN_LEDGER  ,
-            SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
-            SurakshaContract.TxnEntry.COLUMN_NARRATION,
-            SurakshaContract.TxnEntry.TABLE_NAME +"."+SurakshaContract.TxnEntry.COLUMN_CREATED_AT       ,
-            SurakshaContract.TxnEntry.TABLE_NAME +"."+SurakshaContract.TxnEntry.COLUMN_UPDATED_AT
-    };
-
-
-    private static final int COL_TXN_ID               = 0;
-    private static final int COL_FK_ACCOUNT_NUMBER    = 1;
-    private static final int COL_AMOUNT               = 2;
-    private static final int COL_LEDGER               = 3;
-    private static final int COL_VOUCHER_TYPE         = 4;
-    private static final int COL_NARRATION            = 5;
-    private static final int COLUMN_TXN_CREATED_AT    = 7;
-    private static final int COLUMN_TXN_UPDATED_AT    = 8;
-
     public AccountListFragment() {
         // Required empty public constructor
     }
@@ -93,7 +70,9 @@ public class AccountListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        if (savedInstanceState == null) {
+            setHasOptionsMenu(true);
+        }
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -141,29 +120,14 @@ public class AccountListFragment extends Fragment implements LoaderManager.Loade
             account.setMember(Member.getMemberFromId(getContext(), cursor.getLong(COL_FK_MEMBER_ID)));
             account.setInstalmentAmount(cursor.getDouble(COLUMN_INSTALMENT_AMOUNT));
             account.setOpeningBalance(cursor.getDouble(COLUMN_OPENING_BALANCE));
-            account.setActive(cursor.getInt(COLUMN_IS_ACTIVE)==1?true:false);
-            account.setClosedAt(cursor.getString(COLUMN_CLOSED_AT));
-            account.setCreatedAt(cursor.getString(COLUMN_CREATED_AT));
-            account.setUpdatedAt(cursor.getString(COLUMN_UPDATED_AT));
+            account.setActive(cursor.getInt(COLUMN_IS_ACTIVE) == 1);
+            account.setClosedAt(COLUMN_CLOSED_AT);
+            account.setCreatedAt(COLUMN_CREATED_AT);
+            account.setUpdatedAt(COLUMN_UPDATED_AT);
             arrayList.add(account);
         }
         cursor.close();
         return arrayList;
-    }
-//TODO use the loaders to load account numbers
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
 

@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.MemberDetailActivity;
 import com.razikallayi.suraksha.member.MemberListActivity;
-import com.razikallayi.suraksha.utils.Utility;
 
 /**
  * A fragment representing a single Member detail screen.
@@ -146,8 +146,8 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
                     mOfficerName.setText(data.getString(COL_NAME));
                     mOfficerMobile.setText(data.getString(COL_MOBILE));
                     mOfficerAddress.setText(data.getString(COL_ADDRESS));
-                    mOfficerCreatedAt.setText(Utility.formatDate(data.getLong(COL_CREATED_AT)));
-                    mOfficerUpdatedAt.setText(Utility.formatDate(data.getLong(COL_UPDATED_AT)));
+                    mOfficerCreatedAt.setText(CalendarUtils.formatDate(data.getLong(COL_CREATED_AT)));
+                    mOfficerUpdatedAt.setText(CalendarUtils.formatDate(data.getLong(COL_UPDATED_AT)));
                     if(data.getInt(COL_IS_ADMIN)==1?true:false){
                         mOfficerIsAdmin.setVisibility(View.VISIBLE);
                     }else {

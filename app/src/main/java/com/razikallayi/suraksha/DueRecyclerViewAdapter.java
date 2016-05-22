@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.utils.AuthUtils;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.Calendar;
@@ -47,7 +49,7 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
         //Ledger
         holder.mLedger.setText(Transaction.getLedgerName(SurakshaContract.TxnEntry.DEPOSIT_LEDGER));
         //month
-        holder.mMonthView.setText(Utility.readableDepositMonth(mDues.get(position).getTimeInMillis()));
+        holder.mMonthView.setText(CalendarUtils.readableDepositMonth(mDues.get(position).getTimeInMillis()));
 
         //Amount
         holder.mAmountView.setText(holder.mAmountView.getContext().getString(R.string.format_rupees, Utility.getMonthlyDepositAmount()));
@@ -61,7 +63,7 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
                 // 2. Chain together various setter methods to set the dialog characteristics
                 builder.setMessage("Deposit "+Utility.formatAmountInRupees(v.getContext(),Utility.getMonthlyDepositAmount())
                         + " in Ac/No: "+String.valueOf(mAccountNumber)
-                        +" for the month of "+Utility.readableDepositMonth(holder.mDue.getTimeInMillis())
+                        +" for the month of "+ CalendarUtils.readableDepositMonth(holder.mDue.getTimeInMillis())
                         )
                         .setTitle("Make Deposit?")
                         .setPositiveButton("Deposit", new DialogInterface.OnClickListener() {
@@ -121,11 +123,11 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
         @Override
         protected Boolean doInBackground(Long... months) {
             //Save Registration Fee
-            Transaction txnPayDue = new Transaction(mAccountNumber,
+            Transaction txnPayDue = new Transaction(mContext,mAccountNumber,
                     Utility.getMonthlyDepositAmount(),
                     SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
                     SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
-                    "Monthly Deposit");
+                    "Monthly Deposit", AuthUtils.getAuthenticatedOfficerId(mContext));
             txnPayDue.setDefinedDepositDate(months[0]);
             ContentValues values = Transaction.getTxnContentValues(txnPayDue);
             Cursor cursorDataExist = mContext.getContentResolver()
@@ -142,10 +144,7 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
 
             }
             cursorDataExist.close();
-            if (success != null) {
-                return true;
-            }
-            return false;
+            return success != null;
         }
 
         @Override

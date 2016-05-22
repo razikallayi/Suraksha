@@ -48,6 +48,7 @@ import com.razikallayi.suraksha.SettingsActivity;
 import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.ImageUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
@@ -55,14 +56,12 @@ import java.util.concurrent.ExecutionException;
 
 public class RegisterMemberActivity extends BaseActivity {
 
+    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 720;
     //Intent to pick Contact
     private static final int PICK_CONTACT_REQUEST = 1;
     //Intent to pick avatar from gallery
     private static final int CHOOSE_AVATAR_REQUEST = 2;
-
-    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 720;
-
-    private EditText txtName,txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
+    private EditText txtName, txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
             txtNominee, txtAddressOfNominee, txtRemarks;
 
     private CheckBox chkRegistrationFee;
@@ -97,18 +96,18 @@ public class RegisterMemberActivity extends BaseActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
-        txtName             = (EditText) sv.findViewById(R.id.txtName);
-        txtAlias            = (EditText) sv.findViewById(R.id.txtAlias);
-        txtFather           = (EditText) sv.findViewById(R.id.txtFather);
-        txtSpouse           = (EditText) sv.findViewById(R.id.txtSpouse);
-        txtOccupation       = (EditText) sv.findViewById(R.id.txtOccupation);
-        txtAge              = (EditText) sv.findViewById(R.id.txtAge);
-        txtMobile           = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress          = (EditText) sv.findViewById(R.id.txtAddress);
-        txtNominee          = (EditText) sv.findViewById(R.id.txtNominee);
+        txtName = (EditText) sv.findViewById(R.id.txtName);
+        txtAlias = (EditText) sv.findViewById(R.id.txtAlias);
+        txtFather = (EditText) sv.findViewById(R.id.txtFather);
+        txtSpouse = (EditText) sv.findViewById(R.id.txtSpouse);
+        txtOccupation = (EditText) sv.findViewById(R.id.txtOccupation);
+        txtAge = (EditText) sv.findViewById(R.id.txtAge);
+        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
+        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
+        txtNominee = (EditText) sv.findViewById(R.id.txtNominee);
         txtAddressOfNominee = (EditText) sv.findViewById(R.id.txtAddressOfNominee);
-        txtRemarks          = (EditText) sv.findViewById(R.id.txtRemarks);
-        isAcceptedTerms     = (CheckBox) sv.findViewById(R.id.accept_terms);
+        txtRemarks = (EditText) sv.findViewById(R.id.txtRemarks);
+        isAcceptedTerms = (CheckBox) sv.findViewById(R.id.accept_terms);
 
         //Spinner
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -141,7 +140,7 @@ public class RegisterMemberActivity extends BaseActivity {
 
 //        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
         // specify an adapter (see also next example)
-//        PendingDepositAdapter pendingDepositAdapter = new PendingDepositAdapter(pendingMonthsList);
+//        DepositAdapter pendingDepositAdapter = new DepositAdapter(pendingMonthsList);
 //        rvPendingDeposit.setAdapter(pendingDepositAdapter);
 
         //Set Total Payable amount at time of registration
@@ -162,11 +161,10 @@ public class RegisterMemberActivity extends BaseActivity {
                 // "Select Member Image"), CHOOSE_AVATAR_REQUEST);
 
                 startActivityForResult(new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI),
+                                android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI),
                         CHOOSE_AVATAR_REQUEST);
             }
         });
-
 
 
         final Snackbar snackbar = Snackbar.make(sv, "Please accept and terms and conditions",
@@ -174,7 +172,7 @@ public class RegisterMemberActivity extends BaseActivity {
         isAcceptedTerms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     snackbar.dismiss();
                 }
             }
@@ -216,8 +214,8 @@ public class RegisterMemberActivity extends BaseActivity {
         });
     }
 
-    private void pickContact(){
-    //Create an intent to pick contact
+    private void pickContact() {
+        //Create an intent to pick contact
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
         startActivityForResult(intent, PICK_CONTACT_REQUEST);
@@ -225,13 +223,13 @@ public class RegisterMemberActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST){
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST) {
             String[] contactsProjection = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.PHOTO_URI};
-            Cursor cursor = getContentResolver().query(data.getData(),contactsProjection,null,null,null);
+            Cursor cursor = getContentResolver().query(data.getData(), contactsProjection, null, null, null);
             if (cursor != null) {
-                if (cursor.moveToFirst()){
+                if (cursor.moveToFirst()) {
                     int indexName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
                     int indexPhone = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                     int indexPhoto = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI);
@@ -243,13 +241,12 @@ public class RegisterMemberActivity extends BaseActivity {
                     txtAlias.setText(name);
                     txtMobile.setText(phone);
 
-                    if(photo !=null) {
+                    if (photo != null) {
                         Uri uriContactPhoto = Uri.parse(photo);
                         saveAvatarTask t = new saveAvatarTask(this);
                         t.execute(uriContactPhoto);
-                    }
-                    else {
-                        if(imageViewAvatar!=null) {
+                    } else {
+                        if (imageViewAvatar != null) {
                             imageViewAvatar.setImageDrawable(ResourcesCompat.getDrawable(getResources(),
                                     Member.DEFAULT_AVATAR, null));
                         }
@@ -259,7 +256,7 @@ public class RegisterMemberActivity extends BaseActivity {
             }
         }
 
-        if(resultCode == RESULT_OK  && requestCode == CHOOSE_AVATAR_REQUEST) {
+        if (resultCode == RESULT_OK && requestCode == CHOOSE_AVATAR_REQUEST) {
             Uri uriAvatar = data.getData();
             if (uriAvatar != null) {
                 //Set it in the ImageView
@@ -269,7 +266,7 @@ public class RegisterMemberActivity extends BaseActivity {
         }
     }
 
-    private Member getMemberDetailsFromInput(){
+    private Member getMemberDetailsFromInput() {
         //Radio Button
         // get selected radio button from radioGroup
         RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
@@ -277,25 +274,25 @@ public class RegisterMemberActivity extends BaseActivity {
         RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
 
         //EditText Fields
-        String name                = txtName.getText().toString();
-        String alias               = txtAlias.getText().toString();
-        String gender              = mSelectedGenderRadioButton.getText().toString();
-        String father              = txtFather.getText().toString();
-        String spouse              = txtSpouse.getText().toString();
-        String occupation          = txtOccupation.getText().toString();
-        String age                 = txtAge.getText().toString();
-        String mobile              = txtMobile.getText().toString();
-        String address             = txtAddress.getText().toString();
-        String nominee             = txtNominee.getText().toString();
-        String addressOfNominee    = txtAddressOfNominee.getText().toString();
+        String name = txtName.getText().toString();
+        String alias = txtAlias.getText().toString();
+        String gender = mSelectedGenderRadioButton.getText().toString();
+        String father = txtFather.getText().toString();
+        String spouse = txtSpouse.getText().toString();
+        String occupation = txtOccupation.getText().toString();
+        String age = txtAge.getText().toString();
+        String mobile = txtMobile.getText().toString();
+        String address = txtAddress.getText().toString();
+        String nominee = txtNominee.getText().toString();
+        String addressOfNominee = txtAddressOfNominee.getText().toString();
         String relationWithNominee = mRelationWithNomineeSpinner.getSelectedItem().toString();
-        String remarks             = txtRemarks.getText().toString();
-        if(relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))){
+        String remarks = txtRemarks.getText().toString();
+        if (relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))) {
             relationWithNominee = "";
         }
-        Member member =  new Member(getApplicationContext(),name, alias, gender, father, spouse,
-                occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee,remarks);
-        if(memberAvatar!=null) {
+        Member member = new Member(getApplicationContext(), name, alias, gender, father, spouse,
+                occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
+        if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
         }
         return member;
@@ -306,11 +303,10 @@ public class RegisterMemberActivity extends BaseActivity {
         showExitConfirmationDialog();
     }
 
-    private void showExitConfirmationDialog(){
+    private void showExitConfirmationDialog() {
         new AlertDialog.Builder(this)
                 .setMessage("Any unsaved data will be removed. Are you sure want to close?")
-                .setPositiveButton("Close", new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -339,7 +335,7 @@ public class RegisterMemberActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             return true;
         }
 
@@ -364,7 +360,7 @@ public class RegisterMemberActivity extends BaseActivity {
     public class RegisterMemberTask extends AsyncTask<Void, Void, Boolean> {
         private final Member mMember;
 
-        RegisterMemberTask(Member member){
+        RegisterMemberTask(Member member) {
             this.mMember = member;
         }
 
@@ -376,19 +372,22 @@ public class RegisterMemberActivity extends BaseActivity {
 
             //Save Account for member
             int accountNumber = Account.generateAccountNumber(getApplicationContext());
-            Account account = new Account(mMember,Utility.getOpeningDepositAmount(),true);
+            Account account = new Account(mMember, Utility.getOpeningDepositAmount(), true);
             account.setAccountNumber(accountNumber);
             values = Account.getAccountContentValues(account);
             getApplicationContext().getContentResolver().insert(SurakshaContract.AccountEntry.CONTENT_URI, values);
 
             //Save Registration Fee
-            Transaction txnRegistrationFee = new Transaction(accountNumber, Utility.getRegistrationFeeAmount(),SurakshaContract.TxnEntry.RECEIPT_VOUCHER,SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER,"");
+            Transaction txnRegistrationFee = new Transaction(getApplicationContext(),accountNumber,
+                    Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
+                    SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER, "Registration Fee",
+                    AuthUtils.getAuthenticatedOfficerId(getApplicationContext()));
             values = Transaction.getTxnContentValues(txnRegistrationFee);
             getApplicationContext().getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            boolean sendSms = prefs.getBoolean("enable_sms",false) && prefs.getBoolean("sms_after_registration",false);
-            if(sendSms) {
+            boolean sendSms = prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_registration", false);
+            if (sendSms) {
                 SmsManager sms = SmsManager.getDefault();
                 String phoneNumber = "121";//mMember.getMobile();
                 String message = getResources().getString(R.string.member_registered_sms)
@@ -418,18 +417,18 @@ public class RegisterMemberActivity extends BaseActivity {
 
             return true;
         }
+
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
             mRegisterMemberTask = null;
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.registration_successful), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),RegisterMemberActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RegisterMemberActivity.class);
                 startActivity(intent);
                 finish();
-            }
-            else{
-                Toast.makeText(getApplicationContext(),"Insertion Failed. " , Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Insertion Failed. ", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -440,9 +439,10 @@ public class RegisterMemberActivity extends BaseActivity {
         }
     }
 
-    private class saveAvatarTask extends AsyncTask<Uri,Void,Bitmap> {
+    private class saveAvatarTask extends AsyncTask<Uri, Void, Bitmap> {
         Context mContext;
-        ProgressBar progressBar =(ProgressBar)findViewById(R.id.avatarProgress);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.avatarProgress);
+
         public saveAvatarTask(Context context) {
             mContext = context;
         }
@@ -454,15 +454,13 @@ public class RegisterMemberActivity extends BaseActivity {
                 Bitmap bitmap = Glide.with(mContext)
                         .load(uriAvatar[0])
                         .asBitmap()
-                        .skipMemoryCache( true)
-                        .diskCacheStrategy( DiskCacheStrategy.SOURCE )
-                        .into(AVATAR_IMAGE_SIZE_IN_PIXEL,AVATAR_IMAGE_SIZE_IN_PIXEL)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(AVATAR_IMAGE_SIZE_IN_PIXEL, AVATAR_IMAGE_SIZE_IN_PIXEL)
                         .get();
                 memberAvatar = ImageUtils.bitmapToByteArray(bitmap);
                 return bitmap;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
             return null;

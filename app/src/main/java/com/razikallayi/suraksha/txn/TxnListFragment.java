@@ -14,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.razikallayi.suraksha.officer.Officer;
+import com.razikallayi.suraksha.utils.AuthUtils;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.DueRecyclerViewAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
-import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,6 @@ import java.util.List;
  */
 public class TxnListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    // TODO: Customize parameter argument names
     private static final String ARG_ACCOUNT_NUMBER = "account_number";
     private View rootView;
 //    private OnItemClickListener mListener;
@@ -92,7 +93,8 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
             txn.setLoanPayedId(cursor.getInt(COL_FK_LOAN_PAYED_ID));
             txn.setAccountNumber(cursor.getInt(COL_FK_ACCOUNT_NUMBER));
             txn.setNarration(cursor.getString(COL_NARRATION));
-            txn.setCreatedAt(cursor.getString(COL_CREATED_AT));
+            txn.setOfficer(Officer.getOfficerFromId(getContext(),AuthUtils.getAuthenticatedOfficerId(getContext())));
+            txn.setCreatedAt(cursor.getLong(COL_CREATED_AT));
             listTxn.add(txn);
         }
         cursor.close();
@@ -113,7 +115,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        List<Transaction> depositedDates = Transaction.getTxnFromCursor(cursor);
+        List<Transaction> depositedDates = Transaction.getTxnFromCursor(getContext(),cursor);
         cursor.close();
         RecyclerView recyclerViewDue = (RecyclerView) rootView.findViewById(R.id.due_list);
         LinearLayoutManager llm = new LinearLayoutManager(rootView.getContext());
@@ -122,7 +124,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
         recyclerViewDue.setAdapter(
                 new DueRecyclerViewAdapter(
                     getArguments().getInt("account_number",-1),
-                    Utility.getPendingDepositMonthsFromTxn(depositedDates)
+                    CalendarUtils.getPendingDepositMonthsFromTxn(depositedDates)
                 )
         );
     }
@@ -219,7 +221,6 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
      * >Communicating with Other Fragments</a> for more information.
      */
 //    public interface OnItemClickListener {
-//        // TODO: Update argument type and name
 //        void onItemClick(DummyItem item);
 //    }
 }

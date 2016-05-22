@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.officer.Officer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 public class Transaction {
 
     public interface TxnQuery {
-        public String[] PROJECTION = new String[]{
+        String[] PROJECTION = new String[]{
                 SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry._ID,
                 SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
                 SurakshaContract.TxnEntry.COLUMN_AMOUNT,
@@ -26,18 +27,20 @@ public class Transaction {
                 SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT,
                 SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT,
                 SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
-                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID
+                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
+                SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
         };
-        public static final int COL_ID = 0;
-        public static final int COL_FK_ACCOUNT_NUMBER = 1;
-        public static final int COL_AMOUNT = 2;
-        public static final int COL_VOUCHER_TYPE = 3;
-        public static final int COL_LEDGER = 4;
-        public static final int COL_NARRATION = 5;
-        public static final int COL_CREATED_AT = 6;
-        public static final int COL_UPDATED_AT = 7;
-        public static final int COL_DEFINED_DEPOSIT_DATE = 8;
-        public static final int COL_FK_LOAN_PAYED_ID = 9;
+        int COL_ID = 0;
+        int COL_FK_ACCOUNT_NUMBER = 1;
+        int COL_AMOUNT = 2;
+        int COL_VOUCHER_TYPE = 3;
+        int COL_LEDGER = 4;
+        int COL_NARRATION = 5;
+        int COL_CREATED_AT = 6;
+        int COL_UPDATED_AT = 7;
+        int COL_DEFINED_DEPOSIT_DATE = 8;
+        int COL_FK_LOAN_PAYED_ID = 9;
+        int COL_FK_OFFICER_ID = 10;
     }
 
 
@@ -49,16 +52,19 @@ public class Transaction {
     private int voucherType;
     private int ledger;
     private String narration;
-    private String createdAt;
-    private String updatedAt;
+    private Officer officer;
+    private long createdAt;
+    private long updatedAt;
 
 
-    public Transaction(int accountNumber, double amount, int voucherType, int ledger, String narration) {
+    public Transaction(Context context, int accountNumber, double amount, int voucherType,
+                       int ledger, String narration,long officerId) {
         this.accountNumber = accountNumber;
         this.amount = amount;
         this.voucherType = voucherType;
         this.ledger = ledger;
         this.narration = narration;
+        this.officer = Officer.getOfficerFromId(context,officerId);
     }
 
     public Transaction() {
@@ -144,17 +150,18 @@ public class Transaction {
         return amount;
     }
 
-    public static List<Transaction> getTxnFromCursor(Cursor c) {
+    public static List<Transaction> getTxnFromCursor(Context context, Cursor c) {
         List<Transaction> txnList = new ArrayList<Transaction>();
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            Transaction txn = new Transaction(c.getInt(TxnQuery.COL_FK_ACCOUNT_NUMBER),
+            Transaction txn = new Transaction(context, c.getInt(TxnQuery.COL_FK_ACCOUNT_NUMBER),
                     c.getDouble(TxnQuery.COL_AMOUNT), c.getInt(TxnQuery.COL_VOUCHER_TYPE),
-                    c.getInt(TxnQuery.COL_LEDGER), c.getString(TxnQuery.COL_NARRATION));
+                    c.getInt(TxnQuery.COL_LEDGER), c.getString(TxnQuery.COL_NARRATION),
+                    c.getLong(TxnQuery.COL_FK_OFFICER_ID));
             txn.id = c.getLong(TxnQuery.COL_ID);
             txn.definedDepositDate = c.getLong(TxnQuery.COL_DEFINED_DEPOSIT_DATE);
             txn.loanPayedId = c.getInt(TxnQuery.COL_FK_LOAN_PAYED_ID);
-            txn.createdAt = c.getString(TxnQuery.COL_CREATED_AT);
-            txn.updatedAt = c.getString(TxnQuery.COL_UPDATED_AT);
+            txn.createdAt = c.getLong(TxnQuery.COL_CREATED_AT);
+            txn.updatedAt = c.getLong(TxnQuery.COL_UPDATED_AT);
             txnList.add(txn);
         }
         return txnList;
@@ -170,6 +177,7 @@ public class Transaction {
         values.put(SurakshaContract.TxnEntry.COLUMN_LEDGER, txn.getLedger());
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
         values.put(SurakshaContract.TxnEntry.COLUMN_NARRATION, txn.getNarration());
+        values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer().getId());
         values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
 
         return values;
@@ -232,20 +240,28 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Officer getOfficer() {
+        return officer;
+    }
+
+    public void setOfficer(Officer officer) {
+        this.officer = officer;
     }
 
     public String getNarration() {

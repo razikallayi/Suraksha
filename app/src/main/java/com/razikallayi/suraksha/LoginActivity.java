@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,13 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.razikallayi.suraksha.officer.Officer;
-import com.razikallayi.suraksha.utils.LoginUtils;
+import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.SettingsUtils;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
 //        implements LoaderCallbacks<Cursor> {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -31,7 +32,7 @@ public class LoginActivity extends AppCompatActivity{
     // UI references.
     private EditText mUsernameView;
     private EditText mPasswordView;
-    private String mRecentOfficer=null;
+    private String mRecentOfficer = null;
     private boolean isBackPressed = false;
 
     @Override
@@ -40,16 +41,11 @@ public class LoginActivity extends AppCompatActivity{
         // Set up the login form.
         setContentView(R.layout.activity_login);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
         mUsernameView = (EditText) findViewById(R.id.username);
         mRecentOfficer = SettingsUtils.getRecentOfficer(getApplicationContext());
-        if(null == mRecentOfficer) {
-//            populateAutoComplete();
-            if (mUsernameView != null) {
-                mUsernameView.setVisibility(View.VISIBLE);
-                mUsernameView.requestFocus();
-            }
-        }
-        else {
+        if (null != mRecentOfficer) {
             mUsernameView.setVisibility(View.GONE);
             TextView mUsernameTv = (TextView) findViewById(R.id.tvUsername);
             mUsernameTv.setText(mRecentOfficer);
@@ -61,7 +57,7 @@ public class LoginActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
                     mRecentOfficer = null;
-                    LoginUtils.logout(getApplicationContext());
+                    AuthUtils.logout(getApplicationContext());
                     recreate();
                 }
             });
@@ -71,8 +67,8 @@ public class LoginActivity extends AppCompatActivity{
         mPasswordView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction() == KeyEvent.ACTION_UP){
-                    if(mPasswordView.getText().length()  == 4 && mAuthTask == null){
+                if (event.getAction() == KeyEvent.ACTION_UP) {
+                    if (mPasswordView.getText().length() == 4 && mAuthTask == null) {
                         attemptLogin();
                         mPasswordView.setText("");
                         return true;
@@ -103,7 +99,7 @@ public class LoginActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        if(isBackPressed) {
+        if (isBackPressed) {
             setResult(RESULT_FIRST_USER);
             super.onBackPressed();
             return;
@@ -114,7 +110,7 @@ public class LoginActivity extends AppCompatActivity{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                isBackPressed=false;
+                isBackPressed = false;
             }
         }, 400);
     }
@@ -135,17 +131,17 @@ public class LoginActivity extends AppCompatActivity{
             return;
         }
 
-        if(null == mRecentOfficer) {
+        if (null == mRecentOfficer) {
             // Reset errors.
             mUsernameView.setError(null);
         }
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username=null;
-        if(null == mRecentOfficer) {
+        String username = null;
+        if (null == mRecentOfficer) {
             username = mUsernameView.getText().toString();
-        }else {
+        } else {
             username = mRecentOfficer;
         }
 
@@ -154,7 +150,7 @@ public class LoginActivity extends AppCompatActivity{
         boolean cancel = false;
         View focusView = null;
 
-        if (pin.length()<4) {
+        if (pin.length() < 4) {
             mPasswordView.setError(getString(R.string.pin_should_be_minimum_4_digits));
             focusView = mPasswordView;
             cancel = true;
@@ -229,25 +225,28 @@ public class LoginActivity extends AppCompatActivity{
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        private long mOfficerId;
         private final String mUsername;
         private final String mPin;
 
         UserLoginTask(String username, String password) {
+            mOfficerId = -1;
             mUsername = username;
             mPin = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return Officer.authenticate(getApplicationContext(), mUsername, mPin);
+            mOfficerId = Officer.authenticate(getApplicationContext(), mUsername, mPin);
+            return mOfficerId>0;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
-            if (success) {
-                LoginUtils.login(getApplicationContext(),mUsername);
+            if (success && mOfficerId>0) {
+                AuthUtils.login(getApplicationContext(),mOfficerId, mUsername);
                 setResult(RESULT_OK);
                 finish();
             } else {

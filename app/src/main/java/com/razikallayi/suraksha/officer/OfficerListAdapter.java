@@ -11,9 +11,6 @@ import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.RecyclerViewCursorAdapter;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
-/**
- * TODO: Replace the implementation with code for your data type.
- */
 public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAdapter.ViewHolder> {
 
     private final OfficerListFragment.OnClickOfficerListItemListener mListener;

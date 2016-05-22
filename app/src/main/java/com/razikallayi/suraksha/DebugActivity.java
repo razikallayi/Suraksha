@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.utils.Utility;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,14 +19,14 @@ public class DebugActivity extends BaseActivity {
 
         String TAG="FISH";
         Calendar c = Calendar.getInstance();
-        Log.d(TAG, "instantiating calendar"+ Utility.formatDate(c.getTimeInMillis()));
-        Log.d(TAG, "instantiating calendar Normalised"+ Utility.formatDate(Utility.normalizeDate(c.getTimeInMillis())));
+        Log.d(TAG, "instantiating calendar"+ CalendarUtils.formatDate(c.getTimeInMillis()));
+        Log.d(TAG, "instantiating calendar Normalised"+ CalendarUtils.formatDate(CalendarUtils.normalizeDate(c.getTimeInMillis())));
         c.set(Calendar.MONTH,Calendar.FEBRUARY);
-        Log.d(TAG, "Month Set"+ Utility.formatDate(c.getTimeInMillis()));
-        Log.d(TAG, "Month Set Normalised"+ Utility.formatDate(Utility.normalizeDate(c.getTimeInMillis())));
+        Log.d(TAG, "Month Set"+ CalendarUtils.formatDate(c.getTimeInMillis()));
+        Log.d(TAG, "Month Set Normalised"+ CalendarUtils.formatDate(CalendarUtils.normalizeDate(c.getTimeInMillis())));
         c.set(Calendar.YEAR,2017);
-        Log.d(TAG, "Year Set"+ Utility.formatDate(c.getTimeInMillis()));
-        Log.d(TAG, "Year Set Normalised"+ Utility.formatDate(Utility.normalizeDate(c.getTimeInMillis())));
+        Log.d(TAG, "Year Set"+ CalendarUtils.formatDate(c.getTimeInMillis()));
+        Log.d(TAG, "Year Set Normalised"+ CalendarUtils.formatDate(CalendarUtils.normalizeDate(c.getTimeInMillis())));
 
 
 

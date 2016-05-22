@@ -43,6 +43,7 @@ public class OfficerListActivity extends BaseActivity
             mTwoPane = true;
         }
     }
+
     @Override
     public void onClickOfficerListItem(Officer officer) {
         if (mTwoPane) {

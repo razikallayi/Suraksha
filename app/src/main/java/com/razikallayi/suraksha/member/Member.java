@@ -36,9 +36,9 @@ public class Member implements Serializable{
     private String relationWithNominee;
     private String addressOfNominee;
     private int isDeleted = 0;
-    private String closedAt;
-    private String createdAt;
-    private String updatedAt;
+    private long closedAt;
+    private long createdAt;
+    private long updatedAt;
     private List<Integer> accountNumbers = null;
 
 
@@ -50,11 +50,12 @@ public class Member implements Serializable{
         this.name = name;
     }
 
-    protected void incrementId(Context context) {
-        //TODO use Max instead of count. otherwise it will be a problem when an entry is deleted
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.MemberEntry.CONTENT_URI, new String[]{SurakshaContract.MemberEntry._ID},null,null,null);
+    private void incrementId(Context context) {
+        Cursor cursor = context.getContentResolver().query(SurakshaContract.MemberEntry.CONTENT_URI,
+                new String[]{"Max(" + SurakshaContract.MemberEntry._ID + ")"},null,null,null);
         if (cursor != null) {
-            this.id = (long)(cursor.getCount() + 1);
+            cursor.moveToFirst();
+            this.id = (long)(cursor.getInt(0) + 1);
             cursor.close();
         }
     }
@@ -75,72 +76,74 @@ public class Member implements Serializable{
         this.relationWithNominee = relationWithNominee;
         this.addressOfNominee = addressOfNominee;
     }
+    public interface MemberQuery {
+        String[] PROJECTION = {
+                SurakshaContract.MemberEntry.COLUMN_NAME,
+                SurakshaContract.MemberEntry.COLUMN_ALIAS,
+                SurakshaContract.MemberEntry.COLUMN_GENDER,
+                SurakshaContract.MemberEntry.COLUMN_FATHER,
+                SurakshaContract.MemberEntry.COLUMN_SPOUSE,
+                SurakshaContract.MemberEntry.COLUMN_OCCUPATION,
+                SurakshaContract.MemberEntry.COLUMN_AGE,
+                SurakshaContract.MemberEntry.COLUMN_MOBILE,
+                SurakshaContract.MemberEntry.COLUMN_ADDRESS,
+                SurakshaContract.MemberEntry.COLUMN_NOMINEE,
+                SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE,
+                SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE,
+                SurakshaContract.MemberEntry.COLUMN_REMARKS,
+                SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
+                SurakshaContract.MemberEntry.COLUMN_CREATED_AT,
+                SurakshaContract.MemberEntry.COLUMN_UPDATED_AT,
+                SurakshaContract.MemberEntry.COLUMN_AVATAR
+        };
 
-    public static String[] MEMBER_COLUMNS = new String[] {
-            SurakshaContract.MemberEntry.COLUMN_NAME,
-            SurakshaContract.MemberEntry.COLUMN_ALIAS,
-            SurakshaContract.MemberEntry.COLUMN_GENDER,
-            SurakshaContract.MemberEntry.COLUMN_FATHER,
-            SurakshaContract.MemberEntry.COLUMN_SPOUSE,
-            SurakshaContract.MemberEntry.COLUMN_OCCUPATION,
-            SurakshaContract.MemberEntry.COLUMN_AGE,
-            SurakshaContract.MemberEntry.COLUMN_MOBILE,
-            SurakshaContract.MemberEntry.COLUMN_ADDRESS,
-            SurakshaContract.MemberEntry.COLUMN_NOMINEE,
-            SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE,
-            SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE,
-            SurakshaContract.MemberEntry.COLUMN_REMARKS,
-            SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
-            SurakshaContract.MemberEntry.COLUMN_CREATED_AT,
-            SurakshaContract.MemberEntry.COLUMN_UPDATED_AT,
-            SurakshaContract.MemberEntry.COLUMN_AVATAR
-    };
-    // these indices must match the projection
-    public static int COL_NAME                  =  0;
-    public static int COL_ALIAS                 =  1;
-    public static int COL_GENDER                =  2;
-    public static int COL_FATHER                =  3;
-    public static int COL_SPOUSE                =  4;
-    public static int COL_OCCUPATION            =  5;
-    public static int COL_AGE                   =  6;
-    public static int COL_MOBILE                =  7;
-    public static int COL_ADDRESS               =  8;
-    public static int COL_NOMINEE               =  9;
-    public static int COL_RELATION_WITH_NOMINEE =  10;
-    public static int COL_ADDRESS_OF_NOMINEE    =  11;
-    public static int COL_REMARKS               =  12;
-    public static int COL_CLOSED_AT             =  13;
-    public static int COL_CREATED_AT            =  14;
-    public static int COL_UPDATED_AT            =  15;
-    public static int COL_AVATAR                =  16;
+        int COL_NAME = 0;
+        int COL_ALIAS = 1;
+        int COL_GENDER = 2;
+        int COL_FATHER = 3;
+        int COL_SPOUSE = 4;
+        int COL_OCCUPATION = 5;
+        int COL_AGE = 6;
+        int COL_MOBILE = 7;
+        int COL_ADDRESS = 8;
+        int COL_NOMINEE = 9;
+        int COL_RELATION_WITH_NOMINEE = 10;
+        int COL_ADDRESS_OF_NOMINEE = 11;
+        int COL_REMARKS = 12;
+        int COL_CLOSED_AT = 13;
+        int COL_CREATED_AT = 14;
+        int COL_UPDATED_AT = 15;
+        int COL_AVATAR = 16;
+
+    }
 
 
 
     public static Member getMemberFromId(Context context,long id) {
         Cursor cursor = context.getContentResolver().query(
-                SurakshaContract.MemberEntry.buildMemberUri(id), Member.MEMBER_COLUMNS,null,null,null);
+                SurakshaContract.MemberEntry.buildMemberUri(id), MemberQuery.PROJECTION,null,null,null);
         Member m = new Member();
         if (cursor != null) {
             cursor.moveToFirst();
 
             m.id = id;
-            m.name = cursor.getString(COL_NAME);
-            m.mobile = cursor.getString(COL_MOBILE);
-            m.address = cursor.getString(COL_ADDRESS);
-            m.alias = cursor.getString(COL_ALIAS);
-            m.father = cursor.getString(COL_FATHER);
-            m.spouse = cursor.getString(COL_SPOUSE);
-            m.gender = cursor.getString(COL_GENDER);
-            m.age = cursor.getString(COL_AGE);
-            m.occupation = cursor.getString(COL_OCCUPATION);
-            m.nominee = cursor.getString(COL_NOMINEE);
-            m.relationWithNominee = cursor.getString(COL_RELATION_WITH_NOMINEE);
-            m.addressOfNominee = cursor.getString(COL_ADDRESS_OF_NOMINEE);
-            m.remarks = cursor.getString(COL_REMARKS);
-            m.closedAt = cursor.getString(COL_CLOSED_AT);
-            m.createdAt = cursor.getString(COL_CREATED_AT);
-            m.updatedAt = cursor.getString(COL_UPDATED_AT);
-            m.setAvatar(cursor.getBlob(COL_AVATAR));
+            m.name = cursor.getString(MemberQuery.COL_NAME);
+            m.mobile = cursor.getString(MemberQuery.COL_MOBILE);
+            m.address = cursor.getString(MemberQuery.COL_ADDRESS);
+            m.alias = cursor.getString(MemberQuery.COL_ALIAS);
+            m.father = cursor.getString(MemberQuery.COL_FATHER);
+            m.spouse = cursor.getString(MemberQuery.COL_SPOUSE);
+            m.gender = cursor.getString(MemberQuery.COL_GENDER);
+            m.age = cursor.getString(MemberQuery.COL_AGE);
+            m.occupation = cursor.getString(MemberQuery.COL_OCCUPATION);
+            m.nominee = cursor.getString(MemberQuery.COL_NOMINEE);
+            m.relationWithNominee = cursor.getString(MemberQuery.COL_RELATION_WITH_NOMINEE);
+            m.addressOfNominee = cursor.getString(MemberQuery.COL_ADDRESS_OF_NOMINEE);
+            m.remarks = cursor.getString(MemberQuery.COL_REMARKS);
+            m.closedAt = cursor.getLong(MemberQuery.COL_CLOSED_AT);
+            m.createdAt = cursor.getLong(MemberQuery.COL_CREATED_AT);
+            m.updatedAt = cursor.getLong(MemberQuery.COL_UPDATED_AT);
+            m.setAvatar(cursor.getBlob(MemberQuery.COL_AVATAR));
         }
         cursor.close();
         return m;
@@ -361,28 +364,27 @@ public class Member implements Serializable{
         this.addressOfNominee = addressOfNominee;
     }
 
-    public String getClosedAt() {
-        return closedAt;
-    }
-
-    public void setClosedAt(String closedAt) {
-        this.closedAt = closedAt;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
+    public long getClosedAt() {
+        return closedAt;
+    }
+
+    public void setClosedAt(long closedAt) {
+        this.closedAt = closedAt;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
 }

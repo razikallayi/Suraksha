@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.Calendar;
 
@@ -85,7 +85,7 @@ public class DailyTransactionFragment extends Fragment{
         calendar.setTimeInMillis(mDate);
         Log.d("FISH", "onCreateView Date:  "+mDate);
         Log.d("FISH", "onCreateView: "+calendar.getTimeInMillis());
-        textView.setText(Utility.formatDate(calendar.getTimeInMillis()));
+        textView.setText(CalendarUtils.formatDate(calendar.getTimeInMillis()));
 
             return rootView;
     }

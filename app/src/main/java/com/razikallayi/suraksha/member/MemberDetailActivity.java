@@ -6,9 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -18,11 +15,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.razikallayi.suraksha.BaseActivity;
+import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.account.AccountListFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -93,7 +89,7 @@ public class MemberDetailActivity extends BaseActivity {
     }
 
     private void setupViewPager(ViewPager viewPager, long memberId) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
 
         AccountListFragment accountListFragment = (AccountListFragment)
                 getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
@@ -146,36 +142,6 @@ public class MemberDetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
-
-        public Adapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
-    }
 
     private class LoadAvatarTask extends AsyncTask<Long,Void,Member>{
         @Override

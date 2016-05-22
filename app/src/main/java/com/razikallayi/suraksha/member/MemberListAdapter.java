@@ -31,10 +31,10 @@ import java.util.Random;
 /**
  * Created by Razi Kallayi on 10-04-2016.
  */
+
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Member} and makes a call to the
  * specified {@link OnItemClickListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapter.MemberListViewHolder>
         implements View.OnClickListener {
@@ -46,6 +46,8 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 
     //Refract onListFragmentInteractionListener on ItemCLickListner
     private OnItemClickListener mOnItemClickListener;
+    // Start with first item selected
+    private int focusedItem = -1;
 
     private static final String[] MEMBER_COLUMNS = {
             SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
@@ -62,21 +64,23 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
     // Flag to determine if we want to use a separate view for "today".
     private boolean mRedMemberLayout = true;
 
-    public MemberListAdapter(final Context context) {
+    public MemberListAdapter() {
         super();
     }
 
     @Override
-    public MemberListViewHolder onCreateViewHolder(final ViewGroup parent,final int viewType) {
+    public MemberListViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.member_list_content, parent, false);
         view.setOnClickListener(this);
         return new MemberListViewHolder(view);
     }
-    public void setOnItemClickListener(final OnItemClickListener onItemClickListener)
-    {
+
+    public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
+
+
     /*
      * View.OnClickListener
      */
@@ -89,19 +93,20 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             int position = recyclerView.getChildLayoutPosition(view);
             if (position != RecyclerView.NO_POSITION) {
                 Cursor cursor = this.getItem(position);
-                this.mOnItemClickListener.onItemClick(cursor.getLong(COL_MEMBER_ID),cursor.getString(COL_MEMBER_NAME));
+                this.mOnItemClickListener.onItemClick(view, cursor.getLong(COL_MEMBER_ID),
+                        cursor.getString(COL_MEMBER_NAME));
             }
         }
     }
+
     @Override
     public void onBindViewHolder(final MemberListViewHolder holder, final Cursor cursor) {
+        // Set selected state; use a state list drawable to style the view
         holder.bindData(cursor);
     }
 
 
-
-
-    public class MemberListViewHolder extends RecyclerView.ViewHolder{
+    public class MemberListViewHolder extends RecyclerView.ViewHolder {
         private View mView;
         private ImageView mAvatarView;
         private TextView mNameView;
@@ -129,7 +134,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             mMember = member;
 
 
-            SetAvatarTask t = new SetAvatarTask(mView.getContext(),MemberListViewHolder.this);
+            SetAvatarTask t = new SetAvatarTask(mView.getContext(), MemberListViewHolder.this);
             t.execute(member);
 
             mNameView.setText(member.getName());
@@ -164,57 +169,58 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
                     if (null != mOnItemClickListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mOnItemClickListener.onItemClick(mMember.getId(),mMember.getName());
+                        mOnItemClickListener.onItemClick(v,mMember.getId(), mMember.getName());
                     }
                 }
             });
-    }
+        }
 
         @Override
         public String toString() {
             return super.toString() + " '" + mNameView.getText() + "'" + mAddressView.getText() + "'";
         }
     }
-        private class SetAvatarTask extends AsyncTask<Member,Void,Bitmap> {
-            Context mContext;
-            MemberListViewHolder holder;
-            int mColor;
-            public SetAvatarTask(Context context, MemberListViewHolder viewHolder) {
-                mContext = context;
-                holder = viewHolder;
 
-            }
+    private class SetAvatarTask extends AsyncTask<Member, Void, Bitmap> {
+        Context mContext;
+        MemberListViewHolder holder;
 
-            @Override
-            protected Bitmap doInBackground(Member... members) {
-                float density = mContext.getResources().getDisplayMetrics().density;
-                int avatarPixel = 56;
-                int sizeDp = (int)(avatarPixel * density);
-                Drawable drawableAvatar = null;
-                final int low = 50;
-                final int high = 200;
-                Random rnd = new Random();
-                int color = Color.rgb(rnd.nextInt(high-low) + low, rnd.nextInt(high-low) + low, rnd.nextInt(high-low) + low);
-                String firstLetter = members[0].getName().substring(0, 1).toUpperCase();
-                drawableAvatar =members[0].getAvatarDrawable();
-                if ( drawableAvatar == null) {
-                    return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(new LetterAvatar(mContext,
-                            color, firstLetter, 32),sizeDp,sizeDp),avatarPixel);
+        public SetAvatarTask(Context context, MemberListViewHolder viewHolder) {
+            mContext = context;
+            holder = viewHolder;
 
-                } else {
-                    return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,sizeDp,sizeDp),avatarPixel);
-                }
-            }
+        }
 
-            @Override
-            protected void onPostExecute(Bitmap bitmapAvatar) {
-                super.onPostExecute(bitmapAvatar);
-                holder.mAvatarView.setImageBitmap(bitmapAvatar);
+        @Override
+        protected Bitmap doInBackground(Member... members) {
+            float density = mContext.getResources().getDisplayMetrics().density;
+            int avatarPixel = 56;
+            int sizeDp = (int) (avatarPixel * density);
+            Drawable drawableAvatar = null;
+            final int low = 50;
+            final int high = 200;
+            Random rnd = new Random();
+            int color = Color.rgb(rnd.nextInt(high - low) + low, rnd.nextInt(high - low) + low, rnd.nextInt(high - low) + low);
+            String firstLetter = members[0].getName().substring(0, 1).toUpperCase();
+            drawableAvatar = members[0].getAvatarDrawable();
+            if (drawableAvatar == null) {
+                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(new LetterAvatar(mContext,
+                        color, firstLetter, 32), sizeDp, sizeDp), avatarPixel);
+
+            } else {
+                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar, sizeDp, sizeDp), avatarPixel);
             }
         }
 
+        @Override
+        protected void onPostExecute(Bitmap bitmapAvatar) {
+            super.onPostExecute(bitmapAvatar);
+            holder.mAvatarView.setImageBitmap(bitmapAvatar);
+        }
+    }
+
     public interface OnItemClickListener {
-        void onItemClick(long memberId, String memberName);
+        void onItemClick(View view, long memberId, String memberName);
     }
 
 

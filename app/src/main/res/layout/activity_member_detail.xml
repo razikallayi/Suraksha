@@ -59,12 +59,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/member_detail_container"
+    <FrameLayout
+        android:id="@+id/member_details_view_pager_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        android:animateLayoutChanges="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/member_details_view_pager" />
+    </FrameLayout>
+
 
     <!--<android.support.v4.widget.NestedScrollView-->
         <!--android:id="@+id/member_detail_container"-->

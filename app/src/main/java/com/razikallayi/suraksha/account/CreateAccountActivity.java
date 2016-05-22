@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.view.Menu;
@@ -23,11 +21,8 @@ import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.Utility;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 public class CreateAccountActivity extends BaseActivity {
 
@@ -61,25 +56,25 @@ public class CreateAccountActivity extends BaseActivity {
         isAcceptedTerms = (CheckBox) layoutCreateAccount.findViewById(R.id.accept_terms);
 
         chkRegistrationFee = (CheckBox) layoutCreateAccount.findViewById(R.id.chkRegistrationFee);
-
-        RecyclerView rvPendingDeposit = (RecyclerView) findViewById(R.id.pending_deposit_list);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        rvPendingDeposit.setHasFixedSize(true);
-
-        // use a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rvPendingDeposit.setLayoutManager(layoutManager);
-
-        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
-        // specify an adapter (see also next example)
-        PendingDepositAdapter pendingDepositAdapter = new PendingDepositAdapter(pendingMonthsList);
-        rvPendingDeposit.setAdapter(pendingDepositAdapter);
+//
+//        RecyclerView rvPendingDeposit = (RecyclerView) findViewById(R.id.pending_deposit_list);
+//        // use this setting to improve performance if you know that changes
+//        // in content do not change the layout size of the RecyclerView
+//        rvPendingDeposit.setHasFixedSize(true);
+//
+//        // use a linear layout manager
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        rvPendingDeposit.setLayoutManager(layoutManager);
+//
+//        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
+//        // specify an adapter (see also next example)
+//        DepositAdapter pendingDepositAdapter = new DepositAdapter(pendingMonthsList);
+//        rvPendingDeposit.setAdapter(pendingDepositAdapter);
 
         //Set Total Payable amount at time of registration
-        TextView tvTotal = (TextView) findViewById(R.id.tvTotalRegistration);
-        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount()) + Utility.getRegistrationFeeAmount();
-        tvTotal.setText("TOTAL : " + Utility.formatAmountInRupees(getApplicationContext(), amt));
+//        TextView tvTotal = (TextView) findViewById(R.id.tvTotalRegistration);
+//        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount()) + Utility.getRegistrationFeeAmount();
+//        tvTotal.setText("TOTAL : " + Utility.formatAmountInRupees(getApplicationContext(), amt));
 
 
         long memberId = getIntent().getLongExtra(AccountListFragment.ARG_MEMBER_ID, 0);
@@ -152,7 +147,10 @@ public class CreateAccountActivity extends BaseActivity {
 
             Account account = new Account(mMember, Utility.getOpeningDepositAmount(), true);
             account.setAccountNumber(Account.generateAccountNumber(getApplicationContext()));
-            Transaction registrationFeeTxn = new Transaction(account.getAccountNumber(), Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER, "");
+            Transaction registrationFeeTxn = new Transaction(getApplicationContext(),account.getAccountNumber(),
+                    Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
+                    SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER, "New Account",
+                    AuthUtils.getAuthenticatedOfficerId(getApplicationContext()));
 
             ContentValues values = Account.getAccountContentValues(account);
             contentResolver.insert(SurakshaContract.AccountEntry.CONTENT_URI, values);
@@ -164,25 +162,27 @@ public class CreateAccountActivity extends BaseActivity {
             String phoneNumber = "121";//mMember.getMobile();
             String message = getResources().getString(R.string.account_created_sms) + " Your account number is " + account.getAccountNumber();
             sms.sendTextMessage(phoneNumber, null, message, null, null);
-
+// TODO: 20-05-2016 remove depositing at time of account creation
 
             //Save Monthly Deposit which is pending at time of registration
-            List<Calendar> pendingMonths = Utility.getPendingDepositMonths(null);
-            List<ContentValues> cv = new ArrayList<>();
-            for (int i = 0; i < pendingMonths.size(); i++) {
-                Transaction txnPendingMonth = new Transaction(account.getAccountNumber(),
-                        Utility.getMonthlyDepositAmount(),
-                        SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
-                        SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
-                        "Deposited at time of registration");
-                txnPendingMonth.setDefinedDepositDate(pendingMonths.get(i).getTimeInMillis());
-                if (txnPendingMonth.getAmount() > 0) {
-                    values = Transaction.getTxnContentValues(txnPendingMonth);
-                    cv.add(values);
-                }
-            }
-            ContentValues[] cvArray = cv.toArray(new ContentValues[cv.size()]);
-            contentResolver.bulkInsert(SurakshaContract.TxnEntry.CONTENT_URI, cvArray);
+//            List<Calendar> pendingMonths = CalendarUtils.getPendingDepositMonths(null);
+//            List<ContentValues> cv = new ArrayList<>();
+//            Context context = getApplicationContext();
+//            Long officerId = AuthUtils.getAuthenticatedOfficerId(context);
+//            for (int i = 0; i < pendingMonths.size(); i++) {
+//                Transaction txnPendingMonth = new Transaction(context,account.getAccountNumber(),
+//                        Utility.getMonthlyDepositAmount(),
+//                        SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
+//                        SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
+//                        "Deposited at time of registration",officerId);
+//                txnPendingMonth.setDefinedDepositDate(pendingMonths.get(i).getTimeInMillis());
+//                if (txnPendingMonth.getAmount() > 0) {
+//                    values = Transaction.getTxnContentValues(txnPendingMonth);
+//                    cv.add(values);
+//                }
+//            }
+//            ContentValues[] cvArray = cv.toArray(new ContentValues[cv.size()]);
+//            contentResolver.bulkInsert(SurakshaContract.TxnEntry.CONTENT_URI, cvArray);
             return true;
         }
 

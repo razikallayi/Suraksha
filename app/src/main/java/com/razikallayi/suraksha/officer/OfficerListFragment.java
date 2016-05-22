@@ -24,7 +24,6 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 public class OfficerListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String TAG = OfficerListFragment.class.getClass().getSimpleName();
 
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 
     private OnClickOfficerListItemListener mListener;
@@ -118,7 +117,6 @@ public class OfficerListFragment extends Fragment implements LoaderManager.Loade
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnClickOfficerListItemListener {
-        // TODO: Update argument type and name
         void onClickOfficerListItem(Officer officer);
     }
 }

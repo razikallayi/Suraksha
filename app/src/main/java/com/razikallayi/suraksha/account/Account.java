@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.io.Serializable;
@@ -23,9 +24,9 @@ public class Account implements Serializable {
     private double openingBalance;
     private double instalmentAmount = 1000;
     private boolean isActive;
-    private String closedAt;
-    private String createdAt;
-    private String updatedAt;
+    private long closedAt;
+    private long createdAt;
+    private long updatedAt;
 
     public interface AccountQuery {
         String[] PROJECTION = {
@@ -74,12 +75,12 @@ public class Account implements Serializable {
             account.member = Member.getMemberFromId(context, cursor.getLong(AccountQuery.COL_MEMBER_ID));
             account.openingBalance = cursor.getDouble(AccountQuery.COL_OPENING_BALANCE);
             account.instalmentAmount = cursor.getDouble(AccountQuery.COL_INSTALMENT_AMOUNT);
-            account.isActive = cursor.getInt(AccountQuery.COL_IS_ACTIVE) == 1 ? true : false;
-            account.closedAt = cursor.getString(AccountQuery.COL_CLOSED_AT);
-            account.createdAt = cursor.getString(AccountQuery.COL_CREATED_AT);
-            account.updatedAt = cursor.getString(AccountQuery.COL_UPDATED_AT);
+            account.isActive = cursor.getInt(AccountQuery.COL_IS_ACTIVE) == 1;
+            account.closedAt = cursor.getLong(AccountQuery.COL_CLOSED_AT);
+            account.createdAt = cursor.getLong(AccountQuery.COL_CREATED_AT);
+            account.updatedAt = cursor.getLong(AccountQuery.COL_UPDATED_AT);
+            cursor.close();
         }
-        cursor.close();
         return account;
         }
 
@@ -87,6 +88,7 @@ public class Account implements Serializable {
      * Return the next account number to be inserted to database.
      *
      * @param context
+     *          Context used to getContentResolver
      * @return int
      */
     public static int generateAccountNumber(Context context) {
@@ -125,8 +127,6 @@ public class Account implements Serializable {
      *
      * @param context
      *
-     * @param accountNumber
-     *
      * @param date
      * 1st date of month, Month and Year should be set
      *
@@ -134,9 +134,10 @@ public class Account implements Serializable {
      *
      * @return Uri
      */
-    public static Uri makeDeposit(Context context, int accountNumber, long date, String remarks) {
-        Transaction txnMonthlyDeposit = new Transaction(accountNumber, Utility.getMonthlyDepositAmount(),
-                SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.DEPOSIT_LEDGER, remarks);
+    public Uri makeDeposit(Context context, long date, String remarks) {
+        Transaction txnMonthlyDeposit = new Transaction(context,accountNumber, Utility.getMonthlyDepositAmount(),
+                SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
+                remarks, AuthUtils.getAuthenticatedOfficerId(context));
         txnMonthlyDeposit.setDefinedDepositDate(date);
         ContentValues values = Transaction.getTxnContentValues(txnMonthlyDeposit);
         return context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
@@ -149,7 +150,7 @@ public class Account implements Serializable {
                 SurakshaContract.TxnEntry.COLUMN_LEDGER +"= ? AND "+ SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER +"= ?",
                 new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), String.valueOf(accountNumber)},
                 SurakshaContract.TxnEntry.COLUMN_CREATED_AT +" DESC");
-        return Transaction.getTxnFromCursor(cursor);
+        return Transaction.getTxnFromCursor(context,cursor);
     }
 
     public boolean isActive() {
@@ -200,27 +201,27 @@ public class Account implements Serializable {
         this.instalmentAmount = instalmentAmount;
     }
 
-    public String getClosedAt() {
+    public long getClosedAt() {
         return closedAt;
     }
 
-    public void setClosedAt(String closedAt) {
+    public void setClosedAt(long closedAt) {
         this.closedAt = closedAt;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 

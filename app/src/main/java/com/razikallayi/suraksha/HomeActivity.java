@@ -18,7 +18,7 @@ import com.razikallayi.suraksha.officer.CreateOfficerActivity;
 import com.razikallayi.suraksha.officer.OfficerListActivity;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.txn.TxnReportActivity;
-import com.razikallayi.suraksha.utils.LoginUtils;
+import com.razikallayi.suraksha.utils.AuthUtils;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,7 +93,7 @@ public class HomeActivity extends BaseActivity
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginUtils.logout(getApplicationContext());
+                AuthUtils.logout(getApplicationContext());
                 launchLockScreen();
             }
         });

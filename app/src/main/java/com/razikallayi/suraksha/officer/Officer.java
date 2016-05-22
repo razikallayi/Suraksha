@@ -17,8 +17,8 @@ public class Officer {
     private String password;
     private String address;
     private boolean isAdmin;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
 
     public Officer(Context context, String name, String username, String password) {
         this.incrementId(context);
@@ -30,27 +30,6 @@ public class Officer {
     public Officer() {
     }
 
-    public static String[] OFFICER_COLUMNS = new String[] {
-            SurakshaContract.OfficerEntry.COLUMN_NAME,
-            SurakshaContract.OfficerEntry.COLUMN_MOBILE,
-            SurakshaContract.OfficerEntry.COLUMN_USERNAME,
-            SurakshaContract.OfficerEntry.COLUMN_PASSWORD,
-            SurakshaContract.OfficerEntry.COLUMN_ADDRESS,
-            SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,
-            SurakshaContract.OfficerEntry.COLUMN_CREATED_AT,
-            SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT
-    };
-    // these indices must match the projection
-    public static int COL_NAME           =  0;
-    public static int COL_MOBILE         =  1;
-    public static int COL_USERNAME       =  2;
-    public static int COL_PASSWORD       =  3;
-    public static int COL_ADDRESS        =  4;
-    public static int COL_IS_ADMIN       =  5;
-    public static int COL_CREATED_AT     =  6;
-    public static int COL_UPDATED_AT     =  7;
-
-
     public Officer(Context context, String name, String mobile, String username, String password, String address, boolean isAdmin) {
         this.incrementId(context);
         this.name = name;
@@ -61,62 +40,62 @@ public class Officer {
         this.isAdmin = isAdmin;
     }
 
-    public static Officer getOfficerFromId(Context context,long id) {
+    public static Officer getOfficerFromId(Context context, long id) {
         Cursor cursor = context.getContentResolver().query(
-                SurakshaContract.OfficerEntry.buildOfficerUri(id), Officer.OFFICER_COLUMNS,null,null,null);
+                SurakshaContract.OfficerEntry.buildOfficerUri(id), OfficerQuery.PROJECTION, null, null, null);
         Officer o = new Officer();
         if (cursor != null) {
             cursor.moveToFirst();
             o.id = id;
-            o.name = cursor.getString(COL_NAME);
-            o.mobile = cursor.getString(COL_MOBILE);
-            o.username = cursor.getString(COL_USERNAME);
-            o.password = cursor.getString(COL_PASSWORD);
-            o.address = cursor.getString(COL_ADDRESS);
-            o.setAdmin(cursor.getInt(COL_IS_ADMIN)==1?true:false);
+            o.name = cursor.getString(OfficerQuery.COL_NAME);
+            o.mobile = cursor.getString(OfficerQuery.COL_MOBILE);
+            o.username = cursor.getString(OfficerQuery.COL_USERNAME);
+            o.password = cursor.getString(OfficerQuery.COL_PASSWORD);
+            o.address = cursor.getString(OfficerQuery.COL_ADDRESS);
+            o.setAdmin(cursor.getInt(OfficerQuery.COL_IS_ADMIN) == 1);
+            cursor.close();
         }
-        cursor.close();
         return o;
     }
 
-    protected void incrementId(Context context) {
-        //TODO use Max instead of count. otherwise it will be a problem when an entry is deleted
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.OfficerEntry.CONTENT_URI,
-                new String[]{SurakshaContract.OfficerEntry._ID},null,null,null);
-        if (cursor != null) {
-            this.id = (long)(cursor.getCount() + 1);
-            cursor.close();
-        }
-    }
-    public static boolean authenticate(Context context,String username, String password) {
+    public static long authenticate(Context context, String username, String password) {
         Cursor cursor = context.getContentResolver().query(SurakshaContract.OfficerEntry.CONTENT_URI,
                 new String[]{SurakshaContract.OfficerEntry._ID},
-                SurakshaContract.OfficerEntry.COLUMN_USERNAME+" = ? AND "+
-                        SurakshaContract.OfficerEntry.COLUMN_PASSWORD+" = ? ",
-                new String[]{username,password},
+                SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = ? AND " +
+                        SurakshaContract.OfficerEntry.COLUMN_PASSWORD + " = ? ",
+                new String[]{username, password},
                 null);
-        cursor.moveToFirst();
-        if (cursor != null && cursor.getCount()>0) {
-            boolean result = cursor.getCount()>0?true:false;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            long result = cursor.getLong(0);
             cursor.close();
             return result;
         }
-        return false;
+        return -1;
     }
 
+    public static ContentValues getOfficerContentValues(Officer officer) {
+        ContentValues values = new ContentValues();
 
-    public static ContentValues getOfficerContentValues(Officer officer){
-        ContentValues values= new ContentValues();
-
-        values.put(SurakshaContract.OfficerEntry.COLUMN_NAME,       officer.getName()              );
-        values.put(SurakshaContract.OfficerEntry.COLUMN_MOBILE,     officer.getMobile()             );
-        values.put(SurakshaContract.OfficerEntry.COLUMN_USERNAME,   officer.getUsername()            );
-        values.put(SurakshaContract.OfficerEntry.COLUMN_PASSWORD,   officer.getPassword()            );
-        values.put(SurakshaContract.OfficerEntry.COLUMN_ADDRESS,    officer.getAddress()            );
-        values.put(SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,   officer.isAdmin()?1:0           );
+        values.put(SurakshaContract.OfficerEntry.COLUMN_NAME, officer.getName());
+        values.put(SurakshaContract.OfficerEntry.COLUMN_MOBILE, officer.getMobile());
+        values.put(SurakshaContract.OfficerEntry.COLUMN_USERNAME, officer.getUsername());
+        values.put(SurakshaContract.OfficerEntry.COLUMN_PASSWORD, officer.getPassword());
+        values.put(SurakshaContract.OfficerEntry.COLUMN_ADDRESS, officer.getAddress());
+        values.put(SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN, officer.isAdmin() ? 1 : 0);
         values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
 
         return values;
+    }
+
+    protected void incrementId(Context context) {
+        Cursor cursor = context.getContentResolver().query(SurakshaContract.OfficerEntry.CONTENT_URI,
+                new String[]{"Max(" + SurakshaContract.OfficerEntry._ID + ")"}, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            this.id = (long) (cursor.getInt(0) + 1);
+            cursor.close();
+        }
     }
 
     public Long getId() {
@@ -175,19 +154,41 @@ public class Officer {
         isAdmin = admin;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public interface OfficerQuery {
+        String[] PROJECTION = {
+                SurakshaContract.OfficerEntry.COLUMN_NAME,
+                SurakshaContract.OfficerEntry.COLUMN_MOBILE,
+                SurakshaContract.OfficerEntry.COLUMN_USERNAME,
+                SurakshaContract.OfficerEntry.COLUMN_PASSWORD,
+                SurakshaContract.OfficerEntry.COLUMN_ADDRESS,
+                SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,
+                SurakshaContract.OfficerEntry.COLUMN_CREATED_AT,
+                SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT
+        };
+        // these indices must match the projection
+        int COL_NAME = 0;
+        int COL_MOBILE = 1;
+        int COL_USERNAME = 2;
+        int COL_PASSWORD = 3;
+        int COL_ADDRESS = 4;
+        int COL_IS_ADMIN = 5;
+        int COL_CREATED_AT = 6;
+        int COL_UPDATED_AT = 7;
     }
 }

@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.List;
 
@@ -37,13 +37,13 @@ public class TxnRecyclerViewAdapter extends RecyclerView.Adapter<TxnRecyclerView
         //month
         long month = mTxns.get(position).getDefinedDepositMonth();
         if(month>0) {
-            holder.mMonthView.setText(Utility.readableDepositMonth(month));
+            holder.mMonthView.setText(CalendarUtils.readableDepositMonth(month));
         }else{
             holder.mMonthView.setVisibility(View.GONE);
         }
         //CreatedAt
 
-        holder.mCreatedAt.setText(Utility.formatDate(Long.valueOf(mTxns.get(position).getCreatedAt())));
+        holder.mCreatedAt.setText(CalendarUtils.formatDate(Long.valueOf(mTxns.get(position).getCreatedAt())));
         //Amount
 
         holder.mAmountView.setText(holder.mAmountView.getContext().getString(R.string.format_rupees,mTxns.get(position).getAmount()));

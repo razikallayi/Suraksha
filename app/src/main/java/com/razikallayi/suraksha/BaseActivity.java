@@ -8,7 +8,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.razikallayi.suraksha.utils.LoginUtils;
+import com.razikallayi.suraksha.utils.AuthUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mContext = getApplicationContext();
-        if (!LoginUtils.isLoggedIn(mContext)) {
+        if (!AuthUtils.isLoggedIn(mContext)) {
             launchLockScreen();
         }
     }
@@ -87,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             launchLockScreen();
         } else if (timedif > mMinOfficerLockTime) {//15 minutes
             mHasLoaded = false;
-            LoginUtils.logout(mContext);
+            AuthUtils.logout(mContext);
             launchLockScreen();
         } else {
             mHasLoaded = true;

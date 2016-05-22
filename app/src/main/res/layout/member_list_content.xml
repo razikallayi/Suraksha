@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/touch_selector">
+    android:background="@drawable/touch_selector"
+    >
 
 
     <ImageView
@@ -18,8 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="testName"
-        android:layout_alignTop="@id/avatar"
         android:layout_toEndOf="@id/avatar"
+        android:layout_alignTop="@id/avatar"
+        android:layout_marginTop="@dimen/spacing_small"
         android:layout_marginRight="@dimen/spacing_small"
         android:maxLines="1"
         android:textColor="@android:color/primary_text_light"
@@ -34,6 +36,7 @@
         android:layout_alignLeft="@id/name"
         android:layout_below="@id/name"
         android:layout_marginRight="@dimen/spacing_extra_huge"
+        android:layout_marginTop="2dp"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="@dimen/font_small"
         android:maxLines="1"
@@ -45,15 +48,15 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/separatorLine"
-        android:layout_alignLeft="@id/name"
-        android:layout_alignBottom="@id/avatar"/>
+        android:layout_marginStart="76dp"
+        android:layout_below="@id/avatar"/>
 
     <LinearLayout
         android:id="@+id/llAccountNumbers"
         android:orientation="horizontal"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/spacing_very_tiny"
+        android:layout_marginRight="@dimen/spacing_very_tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     </LinearLayout>

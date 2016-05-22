@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
-import com.razikallayi.suraksha.utils.Utility;
 
 /**
  * A fragment representing a single Member detail screen.
@@ -28,6 +28,8 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
      * represents.
      */
     public static final String ARG_MEMBER_ID = "member_id";
+
+    private long mMemberId;
 
     public static final int MEMBER_DETAIL_LOADER = 0;
 
@@ -48,44 +50,6 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     private TextView mMemberCreatedAt          ;
 //    private TextView mMemberUpdatedAt          ;
 
-
-    private static final String[] MEMBER_COLUMNS = new String[] {
-            SurakshaContract.MemberEntry.COLUMN_NAME,
-            SurakshaContract.MemberEntry.COLUMN_ALIAS,
-            SurakshaContract.MemberEntry.COLUMN_GENDER,
-            SurakshaContract.MemberEntry.COLUMN_FATHER,
-            SurakshaContract.MemberEntry.COLUMN_SPOUSE,
-            SurakshaContract.MemberEntry.COLUMN_OCCUPATION,
-            SurakshaContract.MemberEntry.COLUMN_AGE,
-            SurakshaContract.MemberEntry.COLUMN_MOBILE,
-            SurakshaContract.MemberEntry.COLUMN_ADDRESS,
-            SurakshaContract.MemberEntry.COLUMN_NOMINEE,
-            SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE,
-            SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE,
-            SurakshaContract.MemberEntry.COLUMN_REMARKS,
-            SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
-            SurakshaContract.MemberEntry.COLUMN_CREATED_AT,
-            SurakshaContract.MemberEntry.COLUMN_UPDATED_AT
-    };
-
-    // these indices must match the projection
-    private static final int COL_NAME                  =  0;
-    private static final int COL_ALIAS                 =  1;
-    private static final int COL_GENDER                =  2;
-    private static final int COL_FATHER                =  3;
-    private static final int COL_SPOUSE                =  4;
-    private static final int COL_OCCUPATION            =  5;
-    private static final int COL_AGE                   =  6;
-    private static final int COL_MOBILE                =  7;
-    private static final int COL_ADDRESS               =  8;
-    private static final int COL_NOMINEE               =  9;
-    private static final int COL_RELATION_WITH_NOMINEE =  10;
-    private static final int COL_ADDRESS_OF_NOMINEE    =  11;
-    private static final int COL_REMARKS               =  12;
-    private static final int COL_CLOSED_AT             =  13;
-    private static final int COL_CREATED_AT            =  14;
-    private static final int COL_UPDATED_AT            =  15;
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -96,6 +60,8 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mMemberId = getArguments().getLong(ARG_MEMBER_ID);
 
 //        if (getArguments().containsKey(ARG_MEMBER_ID)) {
 //            Activity activity = this.getActivity();
@@ -122,7 +88,11 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
 //                .commit();
 
         super.onActivityCreated(savedInstanceState);
+    }
 
+    void onMemberChanged(long memberId){
+        mMemberId = memberId;
+        getLoaderManager().restartLoader(MEMBER_DETAIL_LOADER, null, this);
     }
 
 
@@ -159,8 +129,8 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         switch (loaderId) {
             case MEMBER_DETAIL_LOADER:
                 return new CursorLoader(getActivity(),
-                        SurakshaContract.MemberEntry.buildMemberUri(getArguments().getLong(ARG_MEMBER_ID)),
-                        MEMBER_COLUMNS,
+                        SurakshaContract.MemberEntry.buildMemberUri(mMemberId),
+                        Member.MemberQuery.PROJECTION,
                         null,
                         null,
                         null);
@@ -176,22 +146,22 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         switch (loader.getId()) {
             case MEMBER_DETAIL_LOADER:
                 if (data != null && data.moveToFirst()) {
-                    mMemberName.setText(data.getString(COL_NAME));
-                    mMemberAlias.setText(data.getString(COL_ALIAS));
-                    mMemberGender.setText(data.getString(COL_GENDER));
-                    mMemberFather.setText(data.getString(COL_FATHER));
-                    mMemberSpouse.setText(data.getString(COL_SPOUSE));
-                    mMemberOccupation.setText(data.getString(COL_OCCUPATION));
-                    mMemberAge.setText(data.getString(COL_AGE));
-                    mMemberMobile.setText(data.getString(COL_MOBILE));
-                    mMemberAddress.setText(data.getString(COL_ADDRESS));
-                    mMemberNominee.setText(data.getString(COL_NOMINEE));
-                    mMemberRelationWithNominee.setText(data.getString(COL_RELATION_WITH_NOMINEE));
-                    mMemberAddressOfNominee.setText(data.getString(COL_ADDRESS_OF_NOMINEE));
-                    mMemberRemarks.setText(data.getString(COL_REMARKS));
-//                    mMemberClosedAt.setText(Utility.formatDate(data.getLong(COL_CLOSED_AT)));
-                    mMemberCreatedAt.setText(Utility.formatDate(data.getLong(COL_CREATED_AT)));
-//                    mMemberUpdatedAt.setText(Utility.formatDate(data.getLong(COL_UPDATED_AT)));
+                    mMemberName.setText(data.getString(Member.MemberQuery.COL_NAME));
+                    mMemberAlias.setText(data.getString(Member.MemberQuery.COL_ALIAS));
+                    mMemberGender.setText(data.getString(Member.MemberQuery.COL_GENDER));
+                    mMemberFather.setText(data.getString(Member.MemberQuery.COL_FATHER));
+                    mMemberSpouse.setText(data.getString(Member.MemberQuery.COL_SPOUSE));
+                    mMemberOccupation.setText(data.getString(Member.MemberQuery.COL_OCCUPATION));
+                    mMemberAge.setText(data.getString(Member.MemberQuery.COL_AGE));
+                    mMemberMobile.setText(data.getString(Member.MemberQuery.COL_MOBILE));
+                    mMemberAddress.setText(data.getString(Member.MemberQuery.COL_ADDRESS));
+                    mMemberNominee.setText(data.getString(Member.MemberQuery.COL_NOMINEE));
+                    mMemberRelationWithNominee.setText(data.getString(Member.MemberQuery.COL_RELATION_WITH_NOMINEE));
+                    mMemberAddressOfNominee.setText(data.getString(Member.MemberQuery.COL_ADDRESS_OF_NOMINEE));
+                    mMemberRemarks.setText(data.getString(Member.MemberQuery.COL_REMARKS));
+//                    mMemberClosedAt.setText(Utility.formatDate(data.getLong(Member.MemberQuery.COL_CLOSED_AT)));
+                    mMemberCreatedAt.setText(CalendarUtils.formatDate(data.getLong(Member.MemberQuery.COL_CREATED_AT)));
+//                    mMemberUpdatedAt.setText(Utility.formatDate(data.getLong(Member.MemberQuery.COL_UPDATED_AT)));
                 }
                 break;
         }

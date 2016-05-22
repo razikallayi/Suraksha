@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,9 +20,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.razikallayi.suraksha.BaseActivity;
+import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.account.AccountListFragment;
 import com.razikallayi.suraksha.data.SurakshaContract;
 
 /**
@@ -32,8 +38,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
  * item details side-by-side using two vertical panes.
  */
 public class MemberListActivity extends BaseActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener
-{
+        implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener {
 
     public static final String TAG = MemberListActivity.class.getClass().getSimpleName();
     /**
@@ -53,7 +58,7 @@ public class MemberListActivity extends BaseActivity
     private static final int MEMBER_LIST_LOADER = 0;
 
     private static final String[] MEMBER_COLUMNS = {
-            SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry._ID,
+            SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
             SurakshaContract.MemberEntry.COLUMN_NAME,
             SurakshaContract.MemberEntry.COLUMN_ADDRESS,
             SurakshaContract.MemberEntry.COLUMN_AVATAR,
@@ -67,7 +72,7 @@ public class MemberListActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_list);
+        setContentView(R.layout.member_list_activity);
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -94,22 +99,49 @@ public class MemberListActivity extends BaseActivity
             });
         }
 
+        if (findViewById(R.id.member_details_view_pager_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            mTwoPane = true;
+        }
+
+
         // The MemberListAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
-        mMemberListAdapter = new MemberListAdapter(getApplicationContext());
+        mMemberListAdapter = new MemberListAdapter();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
 
         mMemberListAdapter.setOnItemClickListener(new MemberListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(long memberId, String memberName) {
+            public void onItemClick(View view, long memberId, String memberName) {
                 if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putLong(MemberDetailFragment.ARG_MEMBER_ID, memberId);
-                    MemberDetailFragment fragment = new MemberDetailFragment();
-                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.member_detail_container, fragment)
-                            .commit();
+                    ViewPager viewPager = (ViewPager) findViewById(R.id.member_detail_container);
+                    if (viewPager != null) {
+                        ViewGroup root = (ViewGroup) view.getParent();
+                        for (int i = 0; i < root.getChildCount(); i++) {
+                            View child = root.getChildAt(i);
+                            if ((child instanceof RelativeLayout)) {
+                                child.setActivated(false);
+                            }
+                        }
+                        view.setActivated(true);
+                        setupViewPager(viewPager, memberId);
+                    }
+                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+                    if (viewPager != null) {
+                        tabLayout.setupWithViewPager(viewPager);
+                    }
+
+
+//                    Bundle arguments = new Bundle();
+//                    arguments.putLong(MemberDetailFragment.ARG_MEMBER_ID, memberId);
+//                    MemberDetailFragment fragment = new MemberDetailFragment();
+//                    fragment.setArguments(arguments);
+//                    getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.member_detail_container, fragment)
+//                            .commit();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MemberDetailActivity.class);
                     intent.putExtra(MemberDetailFragment.ARG_MEMBER_ID, memberId);
@@ -126,22 +158,47 @@ public class MemberListActivity extends BaseActivity
 
         //setupRecyclerView((RecyclerView) recyclerView);
 
-        if (findViewById(R.id.member_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
+        getSupportLoaderManager().initLoader(MEMBER_LIST_LOADER, null, this);
+    }
+
+    private void setupViewPager(ViewPager viewPager, long memberId) {
+        FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
+        AccountListFragment accountListFragment = (AccountListFragment)
+                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
+        if (null == accountListFragment) {
+            Bundle arguments = new Bundle();
+            //AccountList
+            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
+            accountListFragment = new AccountListFragment();
+            accountListFragment.setArguments(arguments);
+//        getFragmentManager().beginTransaction()
+//                .replace(R.id.account_list_container, accountListFragment)
+//                .commit();
+            adapter.addFragment(accountListFragment, "Accounts");
         }
 
-        getSupportLoaderManager().initLoader(MEMBER_LIST_LOADER,null,this);
+        MemberDetailFragment memberDetailFragment = (MemberDetailFragment)
+                getSupportFragmentManager().findFragmentByTag(MemberDetailFragment.TAG);
+        if (memberDetailFragment == null) {
+            Bundle arguments = new Bundle();
+            //MemberDetails
+            arguments.putLong(MemberDetailFragment.ARG_MEMBER_ID, memberId);
+            memberDetailFragment = new MemberDetailFragment();
+            memberDetailFragment.setArguments(arguments);
+            adapter.addFragment(memberDetailFragment, "Personal");
+            //        getSupportFragmentManager().beginTransaction()
+            //                .add(R.id.member_detail_container, fragment)
+            //                .commit();
+        }
+        viewPager.setAdapter(adapter);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the options menu from XML
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.search_menu, menu);
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -167,12 +224,19 @@ public class MemberListActivity extends BaseActivity
         if (mCurFilter != null && mCurFilter.equals(newFilter)) {
             return true;
         }
+        //When search is blank load all list
+        if (mCurFilter != null && newFilter == null) {
+            mCurFilter = newFilter;
+            getSupportLoaderManager().restartLoader(MEMBER_LIST_LOADER, null, this);
+            return true;
+        }
         mCurFilter = newFilter;
         Bundle queryBundle = new Bundle();
-        queryBundle.putString("query",mCurFilter);
+        queryBundle.putString("query", mCurFilter);
         getSupportLoaderManager().restartLoader(MEMBER_LIST_LOADER, queryBundle, this);
         return true;
     }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         // Don't care about this.
@@ -219,22 +283,21 @@ public class MemberListActivity extends BaseActivity
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (args != null) {
+            //Used for searching
             return new CursorLoader(getApplicationContext(),
                     SurakshaContract.MemberEntry.buildMemberJoinAccount(),
                     MEMBER_COLUMNS, SurakshaContract.MemberEntry.COLUMN_NAME
-                    +" LIKE ? OR "+SurakshaContract.MemberEntry.COLUMN_ADDRESS
-                    +" LIKE ? OR "+ SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER +"=?",
-                    new String[]{String.valueOf("%"+args.get("query")+"%"),String.valueOf("%"+args.get("query")+"%"),String.valueOf(args.get("query"))},
-                    SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry._ID +" COLLATE NOCASE");
-        }
-        else {
+                    + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ADDRESS
+                    + " LIKE ? OR " + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + "=?",
+                    new String[]{String.valueOf("%" + args.get("query") + "%"), String.valueOf("%" + args.get("query") + "%"), String.valueOf(args.get("query"))},
+                    SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID + " COLLATE NOCASE");
+        } else {
             return new CursorLoader(getApplicationContext(),
                     SurakshaContract.MemberEntry.CONTENT_URI,
                     MEMBER_COLUMNS, null, null,
                     SurakshaContract.MemberEntry._ID.concat(" COLLATE NOCASE"));
         }
     }
-
 
 
     @Override

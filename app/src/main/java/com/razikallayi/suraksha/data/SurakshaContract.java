@@ -6,7 +6,7 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.razikallayi.suraksha.utils.Utility;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 ;
 
@@ -228,7 +228,7 @@ public class SurakshaContract {
 //        }
 
         public static Uri buildTxnOnDate(long date) {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_ON_DATE).appendPath(Long.toString(Utility.normalizeDate(date))).build();
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_ON_DATE).appendPath(Long.toString(CalendarUtils.normalizeDate(date))).build();
         }
 
         public static long getDateFromUri(Uri uri) {
