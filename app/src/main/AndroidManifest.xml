@@ -9,32 +9,43 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
 
+    <!-- To access Google+ APIs: -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
+        android:backupAgent=".SurakshaBackup"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Suraksha">
+        android:theme="@style/Theme.Suraksha"
+        android:windowActionBar="false"
+        >
+
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIXLdGA5rk3lp3lLaWC1PloaufdO7kqJZDike-Mg" />
+
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"
-                android:value=".member.memberListActivity"/>
+                android:value=".member.memberListActivity" />
         </activity>
         <activity
             android:name=".member.RegisterMemberActivity"
             android:label="@string/title_register_member"
-            android:parentActivityName=".member.MemberListActivity"
-             />
+            android:parentActivityName=".member.MemberListActivity" />
         <activity
             android:name=".member.EditMemberActivity"
             android:label="@string/title_register_member"
-            android:parentActivityName=".member.MemberDetailActivity"
-            />
+            android:parentActivityName=".member.MemberDetailActivity" />
         <activity
             android:name=".officer.CreateOfficerActivity"
             android:label="@string/title_create_officer"
@@ -107,14 +118,14 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".HomeActivity"/>
+            android:parentActivityName=".HomeActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            />
-        <activity android:name=".officer.OfficerListActivity"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".officer.OfficerListActivity"
             android:label="@string/title_officer_list"
-            android:parentActivityName=".HomeActivity"></activity>
+            android:parentActivityName=".HomeActivity" />
     </application>
 
 </manifest>

@@ -93,7 +93,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             int position = recyclerView.getChildLayoutPosition(view);
             if (position != RecyclerView.NO_POSITION) {
                 Cursor cursor = this.getItem(position);
-                this.mOnItemClickListener.onItemClick(view, cursor.getLong(COL_MEMBER_ID),
+                this.mOnItemClickListener.onItemClick(cursor.getLong(COL_MEMBER_ID),
                         cursor.getString(COL_MEMBER_NAME));
             }
         }
@@ -133,15 +133,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             member.fetchAccountNumbers(mView.getContext());
             mMember = member;
 
-
-            SetAvatarTask t = new SetAvatarTask(mView.getContext(), MemberListViewHolder.this);
-            t.execute(member);
-
-            mNameView.setText(member.getName());
-            mAddressView.setText(member.getAddress());
-
-            List<Integer> accountNumbers = mMember.getAccountNumbers();
-
+            List<Integer> accountNumbers = member.getAccountNumbers();
             //Remove all views, else account numbers will get repopulated in a random order
             mAccountNumbersView.removeAllViews();
             for (int accountNumber : accountNumbers) {
@@ -163,13 +155,20 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
                 mAccountNumbersView.addView(tvAccountNumber, params);
             }
 
+            SetAvatarTask t = new SetAvatarTask(mView.getContext(), MemberListViewHolder.this);
+            t.execute(member);
+
+            mNameView.setText(member.getName());
+            mAddressView.setText(member.getAddress());
+
+
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (null != mOnItemClickListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mOnItemClickListener.onItemClick(v,mMember.getId(), mMember.getName());
+                        mOnItemClickListener.onItemClick(mMember.getId(), mMember.getName());
                     }
                 }
             });
@@ -181,9 +180,10 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         }
     }
 
+
     private class SetAvatarTask extends AsyncTask<Member, Void, Bitmap> {
-        Context mContext;
-        MemberListViewHolder holder;
+        private  Context mContext;
+        private MemberListViewHolder holder;
 
         public SetAvatarTask(Context context, MemberListViewHolder viewHolder) {
             mContext = context;
@@ -220,116 +220,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, long memberId, String memberName);
+        void onItemClick(long memberId, String memberName);
     }
-
 
 }
-
-
-
-
-/*
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        // Choose the layout type
-        int viewType = getItemViewType(cursor.getPosition());
-        int layoutId = -1;
-        switch (viewType) {
-            case VIEW_TYPE_NORMAL_MEMBER: {
-                layoutId = R.layout.member_list_content;
-                break;
-            }
-            case VIEW_TYPE_RED_MARK_MEMBER: {
-                layoutId = R.layout.member_list_content_red;
-                break;
-            }
-        }
-
-        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
-
-        MemberListViewHolder viewHolder = new MemberListViewHolder(view);
-        view.setTag(viewHolder);
-
-        return view;
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-
-        MemberListViewHolder viewHolder = (MemberListViewHolder) view.getTag();
-        final MemberListViewHolder holder = viewHolder;
-
-        int viewType = getItemViewType(cursor.getPosition());
-        switch (viewType) {
-            case VIEW_TYPE_NORMAL_MEMBER: {
-                // Get weather icon
-//                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
-//                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
-                break;
-            }
-            case VIEW_TYPE_RED_MARK_MEMBER: {
-                // Get weather icon
-//                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
-//                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
-                break;
-            }
-        }
-
-        Member member = new Member();
-        // The Cursor is now set to the right position
-        member.setId(cursor.getLong(COL_MEMBER_ID));
-        member.setName(cursor.getString(COL_MEMBER_NAME));
-        member.setAddress(cursor.getString(COL_MEMBER_ADDRESS));
-        member.setAvatar(cursor.getBlob(COL_MEMBER_AVATAR));
-        member.fetchAccountNumbers(context);
-
-
-//
-//
-////        holder.mAccountNumbersView.removeAllViews();
-////        int count = 0;
-//        for (int accountNumber: accountNumbers) {
-////                //Show maximum of 5 account numbers
-////                if(++count>5){
-////                    break;
-////                }
-//
-//            TextView tvAccountNumber = new TextView(getApplicationContext());
-//            tvAccountNumber.setText(String.valueOf(accountNumber));
-//            tvAccountNumber.setTextSize(COMPLEX_UNIT_PX,
-//                    getResources().getDimension(R.dimen.font_small));
-//            tvAccountNumber.setTypeface(null, Typeface.BOLD);
-//
-//            tvAccountNumber.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-//            tvAccountNumber.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_circle,null));
-//            tvAccountNumber.setGravity(Gravity.CENTER);
-//            //set Padding
-//            int sidePaddingPixel = 2;
-//            int sidePaddingDp = (int)(sidePaddingPixel * getApplicationContext().getResources().getDisplayMetrics().density);
-//            LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT);
-//            params.setMargins(sidePaddingDp,sidePaddingDp,sidePaddingDp,sidePaddingDp);
-//            holder.mAccountNumbersView.addView(tvAccountNumber,params);
-//        }
-//
-//        SetAvatarTask t = new SetAvatarTask(getApplicationContext(),holder);
-//        t.execute(holder.mMember);
-
-        holder.mNameView.setText(holder.mMember.getName());
-        holder.mAddressView.setText(holder.mMember.getAddress());
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (null != mOnItemClickListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mOnItemClickListener.onItemClick(holder.mMember.getId());
-                }
-            }
-        });
-    }
-
-*/

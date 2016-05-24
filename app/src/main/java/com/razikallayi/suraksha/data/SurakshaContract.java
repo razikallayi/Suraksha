@@ -8,8 +8,6 @@ import android.provider.BaseColumns;
 
 import com.razikallayi.suraksha.utils.CalendarUtils;
 
-;
-
 public class SurakshaContract {
 
     // The "Content authority" is a name for the entire content provider, similar to the

@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:fitsSystemWindows="true"
+    tools:context=".member.MemberListActivity">
 
-    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
-        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
-        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorToolbar" />
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/toolbar" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:layout_collapseMode="pin"
-        />
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_gravity="top"
+        app:layout_collapseMode="pin" />
 
-    <android.support.v4.view.ViewPager
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.view.ViewPager xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/account_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/officer_list_recycler_view"
+        android:layout_marginTop="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        tools:layout="@layout/officer_list_recycler_view" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabMakeDeposit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="Make new Deposit"
+        android:src="@drawable/ic_add_white_24dp" />
+
 
     <!--<FrameLayout-->
-        <!--android:id="@+id/fragment_txn_list"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="@dimen/text_margin"-->
-        <!--/>-->
-</LinearLayout>
+    <!--android:id="@+id/fragment_txn_list"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="@dimen/text_margin"-->
+    <!--/>-->
+</android.support.design.widget.CoordinatorLayout>

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,8 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Set up the login form.
         setContentView(R.layout.activity_login);
-
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         mUsernameView = (EditText) findViewById(R.id.username);
         mRecentOfficer = SettingsUtils.getRecentOfficer(getApplicationContext());
@@ -88,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
-        mSignInButton.setOnClickListener(new OnClickListener() {
+        Button signInButton = (Button) findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -114,11 +111,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }, 400);
     }
-
-
-//    private void populateAutoComplete() {
-//        getLoaderManager().initLoader(0, null, this);
-//    }
 
 
     /**
@@ -179,45 +171,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask.execute((Void) null);
         }
     }
-//
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-//        return new CursorLoader(this,
-//                SurakshaContract.OfficerEntry.CONTENT_URI, OfficerQuery.PROJECTION,
-//                null,
-//                null,
-//                SurakshaContract.OfficerEntry.COLUMN_USERNAME);
-//    }
 
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-//        List<String> usernameList = new ArrayList<>();
-//        cursor.moveToFirst();
-//        while (!cursor.isAfterLast()) {
-//            usernameList.add(cursor.getString(OfficerQuery.COL_USERNAME));
-//            cursor.moveToNext();
-//        }
-//        cursor.close();
-//        addUsernamesToAutoComplete(usernameList);
-//    }
-
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> cursorLoader) {}
-//
-//    private void addUsernamesToAutoComplete(List<String> usernameCollection) {
-//        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-//        ArrayAdapter<String> adapter =
-//                new ArrayAdapter<>(LoginActivity.this,
-//                        android.R.layout.simple_dropdown_item_1line, usernameCollection);
-//        mUsernameView.setAdapter(adapter);
-//    }
-
-//    private interface OfficerQuery {
-//        String[] PROJECTION = {
-//                SurakshaContract.OfficerEntry.COLUMN_USERNAME
-//        };
-//        int COL_USERNAME = 0;
-//    }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate

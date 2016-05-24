@@ -113,7 +113,8 @@
                 android:hint="@string/name"/>
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/registerForm"
                 >
@@ -336,7 +337,7 @@
                 android:id="@+id/btnAddMember"
                 android:textColor="@android:color/primary_text_dark_nodisable"
                 android:textStyle="bold"
-                android:background="@color/colorButton"
+                android:background="@color/colorSecondaryAccent"
                 android:contentDescription="Add Member"
                 style="@style/registerForm"
                 />

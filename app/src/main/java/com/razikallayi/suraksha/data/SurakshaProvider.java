@@ -125,17 +125,6 @@ public class SurakshaProvider extends ContentProvider {
                     SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
 
 
-    private Cursor getAccountsOfMember(Uri uri, String[] projection, String sortOrder) {
-        String memberId = SurakshaContract.AccountEntry.getMemberIdFromUri(uri);
-        return sAccountsOfMemberQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sMemberIdSelection,
-                new String[]{memberId},
-                null,
-                null,
-                sortOrder
-        );
-    }
     private Cursor getTxnsOnDate(Uri uri, String[] projection,String selection,String[] selectionArgs, String sortOrder) {
         final long date = SurakshaContract.TxnEntry.getDateFromUri(uri);
 
@@ -222,7 +211,15 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 break;
             }
             case ACCOUNTS_OF_MEMBER:{
-                retCursor = getAccountsOfMember(uri, projection, sortOrder);
+                String memberId = SurakshaContract.AccountEntry.getMemberIdFromUri(uri);
+                retCursor =  sAccountsOfMemberQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                        projection,
+                        sMemberIdSelection,
+                        new String[]{memberId},
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             }
             case ACCOUNT:{

@@ -16,12 +16,13 @@ import android.view.ViewGroup;
 
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.AuthUtils;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
  */
-public class OfficerListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class OfficerListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String TAG = OfficerListFragment.class.getClass().getSimpleName();
 
     private int mColumnCount = 1;
@@ -32,7 +33,7 @@ public class OfficerListFragment extends Fragment implements LoaderManager.Loade
     private OfficerListAdapter mOfficerListAdapter;
 
     private static final String[] OFFICER_COLUMNS = {
-            SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry._ID,
+            SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
             SurakshaContract.OfficerEntry.COLUMN_NAME,
     };
 
@@ -49,8 +50,8 @@ public class OfficerListFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mOfficerListAdapter =new OfficerListAdapter(mListener);
-        getLoaderManager().initLoader(OFFICER_LIST_LOADER,null,this);
+        mOfficerListAdapter = new OfficerListAdapter(mListener);
+        getLoaderManager().initLoader(OFFICER_LIST_LOADER, null, this);
     }
 
     @Override
@@ -90,8 +91,17 @@ public class OfficerListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(),
-                SurakshaContract.OfficerEntry.CONTENT_URI,OFFICER_COLUMNS,null,null,null);
+        boolean isAdmin = AuthUtils.isAdmin(getContext());
+        String authOfficerId = String.valueOf(AuthUtils.getAuthenticatedOfficerId(getContext()));
+        if (isAdmin) {
+            return new CursorLoader(getContext(),
+                    SurakshaContract.OfficerEntry.CONTENT_URI, OFFICER_COLUMNS, null, null, null);
+        } else {
+            return new CursorLoader(getContext(),
+                    SurakshaContract.OfficerEntry.CONTENT_URI, OFFICER_COLUMNS,
+                    SurakshaContract.OfficerEntry._ID + " = ? ",
+                    new String[]{authOfficerId}, null);
+        }
     }
 
     @Override
@@ -103,7 +113,6 @@ public class OfficerListFragment extends Fragment implements LoaderManager.Loade
     public void onLoaderReset(Loader<Cursor> loader) {
         mOfficerListAdapter.swapCursor(null);
     }
-
 
 
     /**

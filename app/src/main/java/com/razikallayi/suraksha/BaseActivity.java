@@ -7,29 +7,32 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.razikallayi.suraksha.utils.AuthUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected static int LOCK_SCREEN_REQUEST = 100;
-    protected boolean mSkipLockOnce = false;
+    //    protected boolean mSkipLockOnce = false;
     private SharedPreferences mPrefs;
     private boolean mHasLoaded = false;
     private Context mContext;
 
     protected static final int mMinLockTime = 5000; //5 seconds
+    //    protected static final int mMinOfficerLockTime = 15000; //15 sec
     protected static final int mMinOfficerLockTime = 900000; //15 minutes
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mContext = getApplicationContext();
-        if (!AuthUtils.isLoggedIn(mContext)) {
-            launchLockScreen();
-        }
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -37,9 +40,34 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 writeLockTime();
             } else {
-                finish();
+                finish(); //Finish on user double tap back button
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+// Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.base, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("FISH", "onOptionsItemSelected: ");
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     protected void launchLockScreen() {
@@ -70,18 +98,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSkipLockOnce) {
-            mSkipLockOnce = false;
-            return;
-        }
+//        if (mSkipLockOnce) {
+//            mSkipLockOnce = false;
+//            return;
+//        }
 
         // If a lock pattern is set we need to check the time for when the last
         // activity was open. If it's been more than two seconds(Minimum time) the user
         // will have to enter the lock pattern to continue.
-        long currentTime = SystemClock.elapsedRealtime();
-        long lockedAt = mPrefs.getLong("locked_at", currentTime - 10000); //10 Seconds
-        long timedif = Math.abs(currentTime - lockedAt);
-
+        long timedif = AuthUtils.getTimeDiffInMillis(mContext);
         if (timedif > mMinLockTime && timedif <= mMinOfficerLockTime) { //between 5seconds and 15 minutes
             mHasLoaded = false;
             launchLockScreen();
@@ -89,20 +114,25 @@ public abstract class BaseActivity extends AppCompatActivity {
             mHasLoaded = false;
             AuthUtils.logout(mContext);
             launchLockScreen();
+        } else if (!AuthUtils.isLoggedIn(mContext)) {//if not logged In
+            mHasLoaded = false;
+            launchLockScreen();
         } else {
             mHasLoaded = true;
         }
     }
+
     private void writeLockTime() {
         writeLockTime(SystemClock.elapsedRealtime());
     }
+
     private void writeLockTime(long time) {
         mPrefs.edit().putLong("locked_at", time).commit();
     }
 
-    protected void skipLockOnce() {
-        mSkipLockOnce = true;
-    }
+//    protected void skipLockOnce() {
+//        mSkipLockOnce = true;
+//    }
 
 //    @Override
 //    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

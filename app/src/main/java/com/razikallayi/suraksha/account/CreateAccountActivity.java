@@ -191,9 +191,11 @@ public class CreateAccountActivity extends BaseActivity {
             super.onPostExecute(success);
             mCreateAccountTask = null;
             if (success) {
+                setResult(RESULT_OK);
                 finish();
                 Toast.makeText(getApplicationContext(), "Account Created Successfully. ", Toast.LENGTH_LONG).show();
             } else {
+                setResult(RESULT_CANCELED);
                 Toast.makeText(getApplicationContext(), "Account Creation Failed. ", Toast.LENGTH_LONG).show();
             }
         }

@@ -6,13 +6,40 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     >
-    <CheckBox
+    <TextView
         android:id="@+id/depositMonth"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/font_larger"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
         android:text="Pending Deposits"
         android:accessibilityLiveRegion="polite"
-        android:padding="@dimen/spacing_normal"
+        android:paddingTop="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_tiny"
+        />
+    <TextView
+        android:id="@+id/depositCreatedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="June 01 2016"
+        android:textSize="@dimen/font_smaller"
+        android:accessibilityLiveRegion="polite"
+        android:layout_below="@id/depositMonth"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/depositOfficer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="officer"
+        android:textSize="@dimen/font_smaller"
+        android:accessibilityLiveRegion="polite"
+        android:layout_toRightOf="@id/depositCreatedAt"
+        android:layout_marginRight="@dimen/spacing_very_tiny"
+        android:layout_marginLeft="@dimen/spacing_very_tiny"
+        android:layout_below="@id/depositMonth"
+        android:textStyle="bold"
         />
 
     <TextView
@@ -33,36 +60,13 @@
         android:text="holder.mRemarksTextView.setVisibility(View.GONE);holder.mRemarksTextView.setVisibility(View.GONE\nholder.mRemarksTextView.setVisibility(View.GONE););"
         android:textSize="@dimen/font_smaller"
         android:accessibilityLiveRegion="polite"
-        android:layout_below="@id/depositMonth"
+        android:layout_below="@id/depositCreatedAt"
         />
     <View
         android:id="@+id/depositListItemBottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/depositRemarks"
-        android:background="@color/separatorLine"
-        />
-    <TextView
-        android:id="@+id/depositOfficer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="officer"
-        android:textSize="@dimen/font_smaller"
-        android:accessibilityLiveRegion="polite"
-        android:layout_alignRight="@+id/depositAmount"
-        android:layout_above="@id/depositListItemBottomLine"
-        android:textStyle="bold"
-        />
-    <TextView
-        android:id="@+id/depositCreatedAt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="June 01 2016"
-        android:textSize="@dimen/font_smaller"
-        android:accessibilityLiveRegion="polite"
-        android:layout_marginRight="@dimen/spacing_very_tiny"
-        android:layout_toLeftOf="@id/depositOfficer"
-        android:layout_above="@id/depositListItemBottomLine"
-        android:textStyle="bold"
+        android:background="@color/colorSeparatorLine"
         />
 </RelativeLayout>

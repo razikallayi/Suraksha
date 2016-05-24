@@ -4,6 +4,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -20,14 +22,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.account.AccountListFragment;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.LetterAvatar;
+
+import java.util.Random;
 
 /**
  * An activity representing a list of Members. This activity
@@ -41,33 +46,25 @@ public class MemberListActivity extends BaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener {
 
     public static final String TAG = MemberListActivity.class.getClass().getSimpleName();
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
-
-    private MemberListAdapter mMemberListAdapter;
-    // The SearchView for doing filtering.
-    private SearchView mSearchView;
-
-    // If non-null, this is the current filter the user has provided.
-    private String mCurFilter;
-
-
     private static final int MEMBER_LIST_LOADER = 0;
-
     private static final String[] MEMBER_COLUMNS = {
             SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
             SurakshaContract.MemberEntry.COLUMN_NAME,
             SurakshaContract.MemberEntry.COLUMN_ADDRESS,
             SurakshaContract.MemberEntry.COLUMN_AVATAR,
     };
-
     private static final int COL_MEMBER_ID = 0;
     private static final int COL_MEMBER_NAME = 1;
     private static final int COL_MEMBER_ADDRESS = 2;
     private static final int COL_MEMBER_AVATAR = 3;
+    /**
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
+     * device.
+     */
+    private boolean mTwoPane;
+    private MemberListAdapter mMemberListAdapter;
+    // If non-null, this is the current filter the user has provided.
+    private String mCurFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,36 +112,28 @@ public class MemberListActivity extends BaseActivity
 
         mMemberListAdapter.setOnItemClickListener(new MemberListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, long memberId, String memberName) {
+            public void onItemClick(long memberId, String memberName) {
                 if (mTwoPane) {
+                    View rootView = findViewById(R.id.member_details_view_pager_container);
+                    TextView nameTextView = (TextView) rootView.findViewById(R.id.nameMember);
+                    nameTextView.setText(memberName);
+                    //Load Avatar
+                    LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
+                    loadAvatarTask.execute(memberId);
+
+
                     ViewPager viewPager = (ViewPager) findViewById(R.id.member_detail_container);
                     if (viewPager != null) {
-                        ViewGroup root = (ViewGroup) view.getParent();
-                        for (int i = 0; i < root.getChildCount(); i++) {
-                            View child = root.getChildAt(i);
-                            if ((child instanceof RelativeLayout)) {
-                                child.setActivated(false);
-                            }
-                        }
-                        view.setActivated(true);
                         setupViewPager(viewPager, memberId);
                     }
                     TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-                    if (viewPager != null) {
+                    if (viewPager != null && tabLayout != null) {
                         tabLayout.setupWithViewPager(viewPager);
                     }
 
-
-//                    Bundle arguments = new Bundle();
-//                    arguments.putLong(MemberDetailFragment.ARG_MEMBER_ID, memberId);
-//                    MemberDetailFragment fragment = new MemberDetailFragment();
-//                    fragment.setArguments(arguments);
-//                    getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.member_detail_container, fragment)
-//                            .commit();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), MemberDetailActivity.class);
-                    intent.putExtra(MemberDetailFragment.ARG_MEMBER_ID, memberId);
+                    intent.putExtra(MemberDetailActivity.ARG_MEMBER_ID, memberId);
                     intent.putExtra(MemberDetailActivity.ARG_MEMBER_NAME, memberName);
                     startActivity(intent);
                 }
@@ -156,9 +145,15 @@ public class MemberListActivity extends BaseActivity
             recyclerView.setAdapter(mMemberListAdapter);
         }
 
-        //setupRecyclerView((RecyclerView) recyclerView);
-
         getSupportLoaderManager().initLoader(MEMBER_LIST_LOADER, null, this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode != LOCK_SCREEN_REQUEST) {
+            getSupportLoaderManager().restartLoader(MEMBER_LIST_LOADER, null, this);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setupViewPager(ViewPager viewPager, long memberId) {
@@ -171,9 +166,6 @@ public class MemberListActivity extends BaseActivity
             arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
             accountListFragment = new AccountListFragment();
             accountListFragment.setArguments(arguments);
-//        getFragmentManager().beginTransaction()
-//                .replace(R.id.account_list_container, accountListFragment)
-//                .commit();
             adapter.addFragment(accountListFragment, "Accounts");
         }
 
@@ -186,9 +178,6 @@ public class MemberListActivity extends BaseActivity
             memberDetailFragment = new MemberDetailFragment();
             memberDetailFragment.setArguments(arguments);
             adapter.addFragment(memberDetailFragment, "Personal");
-            //        getSupportFragmentManager().beginTransaction()
-            //                .add(R.id.member_detail_container, fragment)
-            //                .commit();
         }
         viewPager.setAdapter(adapter);
     }
@@ -202,12 +191,12 @@ public class MemberListActivity extends BaseActivity
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
         mSearchView.setOnQueryTextListener(this);
         // Assumes current activity is the searchable activity
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -226,7 +215,7 @@ public class MemberListActivity extends BaseActivity
         }
         //When search is blank load all list
         if (mCurFilter != null && newFilter == null) {
-            mCurFilter = newFilter;
+            mCurFilter = null;
             getSupportLoaderManager().restartLoader(MEMBER_LIST_LOADER, null, this);
             return true;
         }
@@ -252,34 +241,36 @@ public class MemberListActivity extends BaseActivity
                 return true;
         }
 
-        return (super.onOptionsItemSelected(item));
+        return super.onOptionsItemSelected(item);
     }
 
-    /*
-
-        private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-            Cursor cursorMembers = getApplicationContext().getContentResolver().query(
-                    SurakshaContract.MemberEntry.CONTENT_URI, MEMBER_COLUMNS, null, null,
-                    SurakshaContract.MemberEntry.COLUMN_NAME.concat(" COLLATE NOCASE"));
-            recyclerView.setAdapter(new MemberRecyclerViewAdapter(setListAdapter(cursorMembers)));
+    private class LoadAvatarTask extends AsyncTask<Long, Void, Member> {
+        @Override
+        protected Member doInBackground(Long[] memberId) {
+            return Member.getMemberFromId(getApplicationContext(), memberId[0]);
         }
 
-        private ArrayList<Member> setListAdapter(Cursor cursor) {
-            ArrayList<Member> listMember = new ArrayList<>();
-            while(cursor.moveToNext()) {
-                Member member = new Member();
-                // The Cursor is now set to the right position
-                member.setId(cursor.getLong(COL_MEMBER_ID));
-                member.setName(cursor.getString(COL_MEMBER_NAME));
-                member.setAddress(cursor.getString(COL_MEMBER_ADDRESS));
-                member.setAvatar(cursor.getBlob(COL_MEMBER_AVATAR));
-                member.fetchAccountNumbers(getApplicationContext());
-                listMember.add(member);
+        @Override
+        protected void onPostExecute(Member member) {
+            super.onPostExecute(member);
+            TextView tvMobile = (TextView) findViewById(R.id.mobileMember);
+            String mobileOrAddress = member.getMobile().isEmpty()?member.getAddress():member.getMobile();
+            tvMobile.setText(mobileOrAddress);
+
+            ImageView ivAvatar = (ImageView) findViewById(R.id.avatarMember);
+            if (member.getAvatarDrawable() != null) {
+                ivAvatar.setImageDrawable(member.getAvatarDrawable());
+            } else {
+                Random rnd = new Random();
+                int Low = 50;
+                int High = 200;
+                int color = Color.rgb(rnd.nextInt(High - Low) + Low,rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
+                ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
+                        color, member.getName().substring(0, 1).toUpperCase(), 24));
             }
-            cursor.close();
-            return listMember;
         }
-    */
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (args != null) {
@@ -289,8 +280,10 @@ public class MemberListActivity extends BaseActivity
                     MEMBER_COLUMNS, SurakshaContract.MemberEntry.COLUMN_NAME
                     + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ADDRESS
                     + " LIKE ? OR " + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + "=?",
-                    new String[]{String.valueOf("%" + args.get("query") + "%"), String.valueOf("%" + args.get("query") + "%"), String.valueOf(args.get("query"))},
-                    SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID + " COLLATE NOCASE");
+                    new String[]{String.valueOf("%" + args.get("query") + "%"), String.valueOf("%"
+                            + args.get("query") + "%"), String.valueOf(args.get("query"))},
+                    SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID
+                            + " COLLATE NOCASE");
         } else {
             return new CursorLoader(getApplicationContext(),
                     SurakshaContract.MemberEntry.CONTENT_URI,
@@ -309,152 +302,4 @@ public class MemberListActivity extends BaseActivity
     public void onLoaderReset(Loader<Cursor> loader) {
         mMemberListAdapter.swapCursor(null);
     }
-
-/*
-    public class MemberRecyclerViewAdapter
-            extends RecyclerView.Adapter<MemberRecyclerViewAdapter.ViewHolder> {
-
-        private List<Member> mMemberArray;
-
-        public MemberRecyclerViewAdapter(List<Member> members) {
-            mMemberArray = members;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.member_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mMemberArray.size();
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mMember = mMemberArray.get(position);
-
-            List<Integer> accountNumbers = holder.mMember.getAccountNumbers();
-            holder.mAccountNumbersView.removeAllViews();
-            int count = 0;
-            for (int accountNumber: accountNumbers) {
-                //Show maximum of 5 account numbers
-//                if(++count>5){
-//                    break;
-//                }
-
-                TextView tvAccountNumber = new TextView(getApplicationContext());
-                tvAccountNumber.setText(String.valueOf(accountNumber));
-                tvAccountNumber.setTextSize(COMPLEX_UNIT_PX,
-                        getResources().getDimension(R.dimen.font_small));
-                tvAccountNumber.setTypeface(null,Typeface.BOLD);
-
-                tvAccountNumber.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-                tvAccountNumber.setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_circle,null));
-                tvAccountNumber.setGravity(Gravity.CENTER);
-                //set Padding
-                int sidePaddingPixel = 2;
-                int sidePaddingDp = (int)(sidePaddingPixel * getApplicationContext().getResources().getDisplayMetrics().density);
-                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(sidePaddingDp,sidePaddingDp,sidePaddingDp,sidePaddingDp);
-                holder.mAccountNumbersView.addView(tvAccountNumber,params);
-            }
-
-            SetAvatarTask t = new SetAvatarTask(getApplicationContext(),holder);
-            t.execute(holder.mMember);
-
-            holder.mNameView.setText(holder.mMember.getName());
-            holder.mAddressView.setText(holder.mMember.getAddress());
-
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putLong(MemberDetailFragment.ARG_MEMBER_ID, holder.mMember.getId());
-                        MemberDetailFragment fragment = new MemberDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.member_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, MemberDetailActivity.class);
-                        intent.putExtra(MemberDetailFragment.ARG_MEMBER_ID, holder.mMember.getId());
-                        intent.putExtra(MemberDetailActivity.ARG_MEMBER_NAME, holder.mMember.getName());
-
-                        context.startActivity(intent);
-                    }
-                }
-            });
-
-
-        }
-
-        private class SetAvatarTask extends AsyncTask<Member,Void,Drawable> {
-            Context mContext;
-            ViewHolder holder;
-            public SetAvatarTask(Context context,ViewHolder viewHolder) {
-                mContext = context;
-                holder = viewHolder;
-            }
-
-            @Override
-            protected Drawable doInBackground(Member... members) {
-                Drawable drawableAvatar = null;
-                final int Low = 50;
-                final int High = 200;
-                Random rnd = new Random();
-                int color = Color.rgb(rnd.nextInt(High-Low) + Low, rnd.nextInt(High-Low) + Low, rnd.nextInt(High-Low) + Low);
-                for (Member member:members) {
-                    drawableAvatar =member.getAvatarDrawable();
-                    if ( drawableAvatar == null) {
-                        return new LetterAvatar(getApplicationContext(),
-                                color, member.getName().substring(0, 1).toUpperCase(), 24);
-
-                    } else {
-                        return drawableAvatar;
-                    }
-                }
-                return ResourcesCompat.getDrawable(getResources(), Member.DEFAULT_AVATAR, null);
-            }
-
-            @Override
-            protected void onPostExecute(Drawable drawableAvatar) {
-                super.onPostExecute(drawableAvatar);
-                float density = getApplicationContext().getResources().getDisplayMetrics().density;
-                int sizeDp = (int)(48 * density);
-                holder.mAvatarView.setImageBitmap(ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,sizeDp,sizeDp),48));
-//                holder.mAvatarView.setImageDrawable(drawableAvatar);
-            }
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final ImageView mAvatarView;
-            public final TextView mNameView;
-            public final TextView mAddressView;
-            public final LinearLayout mAccountNumbersView;
-            public Member mMember;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mAvatarView = (ImageView) view.findViewById(R.id.avatar);
-                mNameView = (TextView) view.findViewById(R.id.name);
-                mAddressView = (TextView) view.findViewById(R.id.address);
-                mAccountNumbersView = (LinearLayout) view.findViewById(R.id.llAccountNumbers);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mNameView.getText() + "'" + mAddressView.getText() + "'";
-            }
-        }
-    }
-
-    */
 }

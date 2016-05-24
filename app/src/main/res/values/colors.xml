@@ -7,22 +7,23 @@
     <!--<color name="colorAccent">#ffffff</color>-->
 
     <color name="colorPrimary">#f50057</color>
-    <color name="colorPrimaryLight">#f48fb1</color>
+    <color name="colorPrimaryLight">#cd4a64</color>
     <color name="colorPrimaryDark">#880e4f</color>
     <color name="colorAccent">#ffd600</color>
 
     <color name="colorSecondary">#6a03bf</color>
     <color name="colorSecondaryLight">#9a76ff</color>
-    <color name="colorSecondaryDark">#2b067a</color>
-    <color name="colorSecondaryAccent">#00e5ff</color>
+    <color name="colorSecondaryDark">#3a067a</color>
+    <color name="colorSecondaryAccent">#2d929f</color>
 
     <!--<color name="colorWindowBackground">#eeeeee</color>-->
     <!--<color name="colorTextPrimary">#455a64</color>-->
 
-    <color name="colorToolbar">#1e000000</color>
-    <color name="colorButton">#00b0ff</color>
+    <!--<color name="colorToolbar">#1e000000</color>-->
     <color name="colorBackground">#e0e0e0</color>
-    <color name="separatorLine">#28b8b8b8</color>
+    <color name="colorSeparatorLine">#28b8b8b8</color>
+
+    <color name="blueGray">#546e7a</color>
 
     <!-- grayscale -->
     <color name="white"     >#FFFFFF</color>

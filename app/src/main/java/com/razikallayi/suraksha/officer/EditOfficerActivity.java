@@ -105,7 +105,9 @@ public class EditOfficerActivity extends BaseActivity {
         String address             = txtAddress.getText().toString();
         boolean isAdmin             = switchIsAdmin.isChecked();
 
-        return new Officer(getApplicationContext(),name,mobile, username, password, address, isAdmin);
+        Officer officer = new Officer(getApplicationContext(),name,mobile, username, password, address, isAdmin);
+        officer.setUpdatedAt(System.currentTimeMillis());
+        return officer;
     }
 
     private Officer setOfficerDetailsFromId(long officerId) {

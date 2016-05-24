@@ -78,7 +78,7 @@ public class Member implements Serializable{
     }
     public interface MemberQuery {
         String[] PROJECTION = {
-                SurakshaContract.MemberEntry.COLUMN_NAME,
+                SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry.COLUMN_NAME,
                 SurakshaContract.MemberEntry.COLUMN_ALIAS,
                 SurakshaContract.MemberEntry.COLUMN_GENDER,
                 SurakshaContract.MemberEntry.COLUMN_FATHER,
@@ -90,10 +90,10 @@ public class Member implements Serializable{
                 SurakshaContract.MemberEntry.COLUMN_NOMINEE,
                 SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE,
                 SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE,
-                SurakshaContract.MemberEntry.COLUMN_REMARKS,
-                SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
-                SurakshaContract.MemberEntry.COLUMN_CREATED_AT,
-                SurakshaContract.MemberEntry.COLUMN_UPDATED_AT,
+                SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry.COLUMN_REMARKS,
+                SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
+                SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry.COLUMN_CREATED_AT,
+                SurakshaContract.MemberEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry.COLUMN_UPDATED_AT,
                 SurakshaContract.MemberEntry.COLUMN_AVATAR
         };
 
@@ -177,32 +177,51 @@ public class Member implements Serializable{
     public static ContentValues getMemberContentValues(Member member){
         ContentValues values= new ContentValues();
 
-        values.put(SurakshaContract.MemberEntry.COLUMN_NAME,                  member.getName()              );
-        values.put(SurakshaContract.MemberEntry.COLUMN_ALIAS,                 member.getAlias()             );
-        values.put(SurakshaContract.MemberEntry.COLUMN_GENDER,                member.getGender()            );
-        values.put(SurakshaContract.MemberEntry.COLUMN_FATHER,                member.getFather()            );
-        values.put(SurakshaContract.MemberEntry.COLUMN_SPOUSE,                member.getSpouse()            );
-        values.put(SurakshaContract.MemberEntry.COLUMN_OCCUPATION,            member.getOccupation()        );
+        values.put(SurakshaContract.MemberEntry.COLUMN_NAME,                  member.name                   );
+        values.put(SurakshaContract.MemberEntry.COLUMN_ALIAS,                 member.alias                  );
+        values.put(SurakshaContract.MemberEntry.COLUMN_GENDER,                member.gender                 );
+        values.put(SurakshaContract.MemberEntry.COLUMN_FATHER,                member.father                 );
+        values.put(SurakshaContract.MemberEntry.COLUMN_SPOUSE,                member.spouse                 );
+        values.put(SurakshaContract.MemberEntry.COLUMN_OCCUPATION,            member.occupation             );
         values.put(SurakshaContract.MemberEntry.COLUMN_AVATAR,                member.getAvatar()            );
-        values.put(SurakshaContract.MemberEntry.COLUMN_AGE,                   member.getAge()               );
-        values.put(SurakshaContract.MemberEntry.COLUMN_MOBILE,                member.getMobile()            );
-        values.put(SurakshaContract.MemberEntry.COLUMN_ADDRESS,               member.getAddress()           );
-        values.put(SurakshaContract.MemberEntry.COLUMN_NOMINEE,               member.getNominee()           );
-        values.put(SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE, member.getRelationWithNominee());
-        values.put(SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE,    member.getAddressOfNominee());
-        values.put(SurakshaContract.MemberEntry.COLUMN_REMARKS,               member.getRemarks()           );
-        values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        values.put(SurakshaContract.MemberEntry.COLUMN_AGE,                   member.age                    );
+        values.put(SurakshaContract.MemberEntry.COLUMN_MOBILE,                member.mobile                 );
+        values.put(SurakshaContract.MemberEntry.COLUMN_ADDRESS,               member.address                );
+        values.put(SurakshaContract.MemberEntry.COLUMN_NOMINEE,               member.nominee                );
+        values.put(SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE, member.relationWithNominee    );
+        values.put(SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE,    member.addressOfNominee       );
+        values.put(SurakshaContract.MemberEntry.COLUMN_REMARKS,               member.remarks                );
+        values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,             member.closedAt                );
+        values.put(SurakshaContract.MemberEntry.COLUMN_IS_DELETED,            member.isDeleted                );
+        values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT,            member.createdAt              );
+        values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT,            member.updatedAt              );
 
         return values;
     }
 
+    public static List<Integer> fetchAccountNumbers(Context context, long memberId) {
+        List<Integer> acNumbers = new ArrayList<>();
+        //Fetching accountNumbers
+        Cursor cursorAccountNumbers = context.getContentResolver().query(
+                SurakshaContract.AccountEntry.buildAccountsOfMemberUri(memberId),new String[]{
+                        SurakshaContract.AccountEntry.TABLE_NAME+"."
+                                +SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER}, null, null, null);
+        if (cursorAccountNumbers != null) {
+            while (cursorAccountNumbers.moveToNext()){
+                acNumbers.add(cursorAccountNumbers.getInt(0));
+            }
+            cursorAccountNumbers.close();
+        }
+        return acNumbers;
+    }
 
     public List<Integer> fetchAccountNumbers(Context context) {
         List<Integer> acNumbers = new ArrayList<>();
         //Fetching accountNumbers
-        Cursor cursorAccountNumbers = context.getContentResolver().query(SurakshaContract.AccountEntry
-                        .buildAccountsOfMemberUri(this.id),
-                new String[]{SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER}, null, null, null);
+        Cursor cursorAccountNumbers = context.getContentResolver().query(
+                SurakshaContract.AccountEntry.buildAccountsOfMemberUri(this.id),new String[]{
+                        SurakshaContract.AccountEntry.TABLE_NAME+"."
+                                +SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER}, null, null, null);
         if (cursorAccountNumbers != null) {
             while (cursorAccountNumbers.moveToNext()){
                 acNumbers.add(cursorAccountNumbers.getInt(0));

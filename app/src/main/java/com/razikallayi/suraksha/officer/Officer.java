@@ -63,7 +63,7 @@ public class Officer {
                 new String[]{SurakshaContract.OfficerEntry._ID},
                 SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = ? AND " +
                         SurakshaContract.OfficerEntry.COLUMN_PASSWORD + " = ? ",
-                new String[]{username, password},
+                new String[]{username.trim(), password},
                 null);
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -172,14 +172,14 @@ public class Officer {
 
     public interface OfficerQuery {
         String[] PROJECTION = {
-                SurakshaContract.OfficerEntry.COLUMN_NAME,
-                SurakshaContract.OfficerEntry.COLUMN_MOBILE,
-                SurakshaContract.OfficerEntry.COLUMN_USERNAME,
-                SurakshaContract.OfficerEntry.COLUMN_PASSWORD,
-                SurakshaContract.OfficerEntry.COLUMN_ADDRESS,
-                SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,
-                SurakshaContract.OfficerEntry.COLUMN_CREATED_AT,
-                SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_NAME,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_MOBILE,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_USERNAME,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_PASSWORD,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_ADDRESS,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_CREATED_AT,
+                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT
         };
         // these indices must match the projection
         int COL_NAME = 0;

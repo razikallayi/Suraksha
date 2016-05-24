@@ -25,6 +25,8 @@ import java.util.List;
  */
 public class AccountDetailActivity extends BaseActivity {
 
+    int mAccountNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +45,15 @@ public class AccountDetailActivity extends BaseActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.account_detail_container);
         if (viewPager != null) {
-            int accountNumber = getIntent().getIntExtra("account_number",-1);
-            setupViewPager(viewPager,accountNumber);
+            mAccountNumber = getIntent().getIntExtra("account_number", -1);
+            setupViewPager(viewPager, mAccountNumber);
         }
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        if (viewPager != null) {
+        if (viewPager != null && tabLayout != null) {
             tabLayout.setupWithViewPager(viewPager);
         }
+
+
 
 
 //        int accountNumber = getIntent().getIntExtra("account_number",-1);
@@ -109,9 +113,9 @@ public class AccountDetailActivity extends BaseActivity {
 
         DepositFragment depositFragment = (DepositFragment)
                 getSupportFragmentManager().findFragmentByTag(DepositFragment.TAG);
-        if(null == depositFragment) {
+        if (null == depositFragment) {
             Bundle arguments = new Bundle();
-            arguments.putInt(DepositFragment.ARG_ACCOUNT_NUMBER,accountNumber);
+            arguments.putInt(DepositFragment.ARG_ACCOUNT_NUMBER, accountNumber);
             //AccountList
             depositFragment = new DepositFragment();
             depositFragment.setArguments(arguments);
@@ -122,6 +126,7 @@ public class AccountDetailActivity extends BaseActivity {
         }
         viewPager.setAdapter(adapter);
     }
+
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();

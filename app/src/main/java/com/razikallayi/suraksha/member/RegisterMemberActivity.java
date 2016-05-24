@@ -44,7 +44,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.SettingsActivity;
 import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.txn.Transaction;
@@ -274,24 +273,25 @@ public class RegisterMemberActivity extends BaseActivity {
         RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
 
         //EditText Fields
-        String name = txtName.getText().toString();
-        String alias = txtAlias.getText().toString();
+        String name = txtName.getText().toString().trim();
+        String alias = txtAlias.getText().toString().trim();
         String gender = mSelectedGenderRadioButton.getText().toString();
-        String father = txtFather.getText().toString();
-        String spouse = txtSpouse.getText().toString();
-        String occupation = txtOccupation.getText().toString();
-        String age = txtAge.getText().toString();
-        String mobile = txtMobile.getText().toString();
-        String address = txtAddress.getText().toString();
-        String nominee = txtNominee.getText().toString();
-        String addressOfNominee = txtAddressOfNominee.getText().toString();
+        String father = txtFather.getText().toString().trim();
+        String spouse = txtSpouse.getText().toString().trim();
+        String occupation = txtOccupation.getText().toString().trim();
+        String age = txtAge.getText().toString().trim();
+        String mobile = txtMobile.getText().toString().trim();
+        String address = txtAddress.getText().toString().trim();
+        String nominee = txtNominee.getText().toString().trim();
+        String addressOfNominee = txtAddressOfNominee.getText().toString().trim();
         String relationWithNominee = mRelationWithNomineeSpinner.getSelectedItem().toString();
-        String remarks = txtRemarks.getText().toString();
+        String remarks = txtRemarks.getText().toString().trim();
         if (relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))) {
             relationWithNominee = "";
         }
         Member member = new Member(getApplicationContext(), name, alias, gender, father, spouse,
                 occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
+        member.setCreatedAt(System.currentTimeMillis());
         if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
         }
@@ -323,7 +323,7 @@ public class RegisterMemberActivity extends BaseActivity {
         //getMenuInflater().inflate(R.menu.base, menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.register_member_options, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -332,12 +332,6 @@ public class RegisterMemberActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-            return true;
-        }
 
         if (id == android.R.id.home) {
             showExitConfirmationDialog();

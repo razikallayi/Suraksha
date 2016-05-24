@@ -1,11 +1,10 @@
 package com.razikallayi.suraksha.account;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,17 +20,15 @@ import java.util.List;
  */
 public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHolder> {
 
-    private final OnCheckedChangeListener mListener;
+    private Context mContext;
     private List<Transaction> mDepositedTxnList;
-    private List<Calendar> mDepositCalendarFromStart;
     private Account mAccount;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public DepositAdapter(List<Transaction> depositTransaction, Account account, OnCheckedChangeListener listener) {
-        mDepositedTxnList = depositTransaction;
-        mListener = listener;
+    public DepositAdapter(Context context, Account account) {
         mAccount = account;
-        mDepositCalendarFromStart = CalendarUtils.getAllDepositMonthsFromStart();
+        mContext = context;
+        mDepositedTxnList = account.fetchDeposits(context);;
     }
 
     // Create new views (invoked by the layout manager)
@@ -53,41 +49,21 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         // - replace the contents of the view with that element
         holder.mAmountTextView.setText(Utility.formatAmountInRupees(holder.mAmountTextView.getContext(),
                 Utility.getMonthlyDepositAmount()));
-        String monthAndYear = CalendarUtils.readableDepositMonth(mDepositCalendarFromStart.get(position));
+        Transaction deposited = mDepositedTxnList.get(position);
+        String monthAndYear = CalendarUtils.readableDepositMonth(deposited.getDefinedDepositMonth());
         holder.mMonthCheckbox.setText(monthAndYear);
-        holder.mMonthCheckbox.setChecked(false);
-        holder.mMonthCheckbox.setEnabled(true);
-        holder.mOfficerTextView.setVisibility(View.GONE);
-        holder.mCreatedAtTextView.setVisibility(View.GONE);
-        holder.mRemarksTextView.setVisibility(View.GONE);
-        for (Transaction deposited : mDepositedTxnList) {
-            //if month and year of checkbox == deposited month and year
-            if (monthAndYear.equals(CalendarUtils.readableDepositMonth(
-                    deposited.getDefinedDepositMonth()))) {
-
-                holder.mCreatedAtTextView.setText(CalendarUtils.formatDate(deposited.getCreatedAt()));
-                holder.mCreatedAtTextView.setVisibility(View.VISIBLE);
-
-                holder.mOfficerTextView.setText(deposited.getOfficer().getName());
-                holder.mOfficerTextView.setVisibility(View.VISIBLE);
-
-                holder.mRemarksTextView.setText(deposited.getNarration());
-                holder.mRemarksTextView.setVisibility(View.VISIBLE);
-
-                holder.mMonthCheckbox.setEnabled(false);
-                holder.mMonthCheckbox.setChecked(true);
-            }
-        }
+        holder.mCreatedAtTextView.setText(CalendarUtils.formatDate(deposited.getCreatedAt()));
+        holder.mCreatedAtTextView.setVisibility(View.VISIBLE);
+        holder.mOfficerTextView.setText(deposited.getOfficer().getName());
+        holder.mOfficerTextView.setVisibility(View.VISIBLE);
+        holder.mRemarksTextView.setText(deposited.getNarration());
+        holder.mRemarksTextView.setVisibility(View.VISIBLE);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDepositCalendarFromStart.size();
-    }
-
-    public interface OnCheckedChangeListener {
-        void onCheckedChangedDepositMonth(View checkbox, String month, boolean isChecked);
+        return mDepositedTxnList.size();
     }
 
     // Provide a reference to the views for each data item
@@ -100,28 +76,23 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         public TextView mCreatedAtTextView;
         public TextView mOfficerTextView;
         public TextView mRemarksTextView;
-        public CheckBox mMonthCheckbox;
+        public TextView mMonthCheckbox;
 
         public ViewHolder(View v) {
             super(v);
             mDepositItemLayout = (RelativeLayout) v.findViewById(R.id.deposit_item_layout);
-            mMonthCheckbox = (CheckBox) mDepositItemLayout.findViewById(R.id.depositMonth);
+            mMonthCheckbox = (TextView) mDepositItemLayout.findViewById(R.id.depositMonth);
             mAmountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositAmount);
             mCreatedAtTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositCreatedAt);
             mOfficerTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositOfficer);
             mRemarksTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositRemarks);
-            mMonthCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
-                    if (null != mListener) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onCheckedChangedDepositMonth(buttonView,
-                                mMonthCheckbox.getText().toString(), isChecked);
-                    }
-                }
-            });
-
         }
     }
+
+    public void makeDeposit(long depositMonth, String remarks){
+        mAccount.makeDeposit(mContext, depositMonth, remarks);
+        notifyDataSetChanged();
+    }
+
+
 }

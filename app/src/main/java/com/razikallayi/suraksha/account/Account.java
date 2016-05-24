@@ -34,11 +34,11 @@ public class Account implements Serializable {
                 SurakshaContract.AccountEntry.COLUMN_MEMBER_ID        ,
                 SurakshaContract.AccountEntry.COLUMN_OPENING_BALANCE  ,
                 SurakshaContract.AccountEntry.COLUMN_INSTALMENT_AMOUNT,
-                SurakshaContract.AccountEntry.COLUMN_IS_ACTIVE        ,
-                SurakshaContract.AccountEntry.COLUMN_CLOSED_AT        ,
-                SurakshaContract.AccountEntry.COLUMN_CREATED_AT       ,
-                SurakshaContract.AccountEntry.COLUMN_UPDATED_AT       ,
-                SurakshaContract.AccountEntry._ID   ,
+                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_IS_ACTIVE        ,
+                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_CLOSED_AT        ,
+                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_CREATED_AT       ,
+                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_UPDATED_AT       ,
+                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry._ID   ,
         };
         int COL_ACCOUNT_NUMBER      =0;
         int COL_MEMBER_ID           =1;

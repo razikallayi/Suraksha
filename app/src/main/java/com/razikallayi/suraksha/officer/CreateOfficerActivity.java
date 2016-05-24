@@ -22,7 +22,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 
 public class CreateOfficerActivity extends BaseActivity {
 
-    private EditText txtName,txtPassword, txtUsername, txtMobile, txtAddress;
+    private EditText txtName, txtPassword, txtUsername, txtMobile, txtAddress;
     private Switch switchIsAdmin;
 
     private CreateOfficerTask mCreateOfficerTask = null;
@@ -45,16 +45,16 @@ public class CreateOfficerActivity extends BaseActivity {
         }
 
         //Enable full view scroll while soft keyboard is shown
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.create_officer_form);
-        txtName             = (EditText) sv.findViewById(R.id.txtName);
-        txtUsername            = (EditText) sv.findViewById(R.id.txtUsername);
-        txtPassword           = (EditText) sv.findViewById(R.id.txtPassword);
-        txtMobile           = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress          = (EditText) sv.findViewById(R.id.txtAddress);
-        switchIsAdmin          = (Switch) sv.findViewById(R.id.switchIsAdmin);
+        txtName = (EditText) sv.findViewById(R.id.txtName);
+        txtUsername = (EditText) sv.findViewById(R.id.txtUsername);
+        txtPassword = (EditText) sv.findViewById(R.id.txtPassword);
+        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
+        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
+        switchIsAdmin = (Switch) sv.findViewById(R.id.switchIsAdmin);
 // TODO: 18-05-2016 Accept only pattern with 0-9 in pin
         //Button Create Officer
         final Button mCreateOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
@@ -66,20 +66,19 @@ public class CreateOfficerActivity extends BaseActivity {
                 if (TextUtils.isEmpty(txtName.getText().toString())) {
                     txtName.setError(getString(R.string.name_is_required));
                     txtName.requestFocus();
-                }else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
+                } else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
                     txtUsername.setError(getString(R.string.username_is_required));
                     txtUsername.requestFocus();
-                }else if (TextUtils.isEmpty(password)) {
+                } else if (TextUtils.isEmpty(password)) {
                     txtPassword.setError(getString(R.string.password_is_required));
                     txtPassword.requestFocus();
-                }else if (password.length()<4) {
+                } else if (password.length() < 4) {
                     txtPassword.setError(getString(R.string.pin_should_be_minimum_4_digits));
                     txtPassword.requestFocus();
-                }else if (!TextUtils.isDigitsOnly(password)) {
+                } else if (!TextUtils.isDigitsOnly(password)) {
                     txtPassword.setError(getString(R.string.pin_should_be_a_number));
                     txtPassword.requestFocus();
-                }
-                else {   //no errors in input
+                } else {   //no errors in input
                     mCreateOfficer.setEnabled(false);
                     Officer officer = getOfficerDetailsFromInput();
                     //Add the member to database
@@ -94,16 +93,18 @@ public class CreateOfficerActivity extends BaseActivity {
     }
 
 
-    private Officer getOfficerDetailsFromInput(){
+    private Officer getOfficerDetailsFromInput() {
         //EditText Fields
-        String name                = txtName.getText().toString();
-        String username            = txtUsername.getText().toString();
-        String password            = txtPassword.getText().toString();
-        String mobile              = txtMobile.getText().toString();
-        String address             = txtAddress.getText().toString();
-        boolean isAdmin             = switchIsAdmin.isChecked();
+        String name = txtName.getText().toString().trim();
+        String username = txtUsername.getText().toString().trim();
+        String password = txtPassword.getText().toString();
+        String mobile = txtMobile.getText().toString().trim();
+        String address = txtAddress.getText().toString().trim();
+        boolean isAdmin = switchIsAdmin.isChecked();
 
-        return new Officer(getApplicationContext(),name,mobile, username, password, address, isAdmin);
+        Officer officer = new Officer(getApplicationContext(), name, mobile, username, password, address, isAdmin);
+        officer.setCreatedAt(System.currentTimeMillis());
+        return officer;
     }
 
     /**
@@ -113,7 +114,7 @@ public class CreateOfficerActivity extends BaseActivity {
     public class CreateOfficerTask extends AsyncTask<Void, Void, Boolean> {
         private final Officer mOfficer;
 
-        CreateOfficerTask(Officer officer){
+        CreateOfficerTask(Officer officer) {
             this.mOfficer = officer;
         }
 
@@ -124,18 +125,18 @@ public class CreateOfficerActivity extends BaseActivity {
             getApplicationContext().getContentResolver().insert(SurakshaContract.OfficerEntry.CONTENT_URI, values);
             return true;
         }
+
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
             mCreateOfficerTask = null;
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.officer_creation_successful), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),OfficerListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), OfficerListActivity.class);
                 startActivity(intent);
                 finish();
-            }
-            else{
-                Toast.makeText(getApplicationContext(),"Cannot create officer. " , Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Cannot create officer. ", Toast.LENGTH_LONG).show();
             }
         }
 

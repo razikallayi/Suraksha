@@ -73,20 +73,25 @@ public class HomeActivity extends BaseActivity
         btnMemberList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),MemberListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MemberListActivity.class);
                 startActivity(intent);
             }
         });
 
 
-
         Button btnCreateUser = (Button) findViewById(R.id.btnCreateOfficer);
-        btnCreateUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),CreateOfficerActivity.class));
-            }
-        });
+        btnCreateUser.setVisibility(View.GONE);
+        boolean isAdmin = AuthUtils.isAdmin(getApplicationContext());
+
+        if (isAdmin) {
+            btnCreateUser.setVisibility(View.VISIBLE);
+            btnCreateUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), CreateOfficerActivity.class));
+                }
+            });
+        }
 
 
         Button btnLogout = (Button) findViewById(R.id.btnLogout);
@@ -99,10 +104,6 @@ public class HomeActivity extends BaseActivity
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override
     protected void onResume() {
@@ -134,22 +135,6 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -158,7 +143,7 @@ public class HomeActivity extends BaseActivity
 
         if (id == R.id.nav_members) {
             // Handle the register member action
-            Intent intent = new Intent(this,MemberListActivity.class);
+            Intent intent = new Intent(this, MemberListActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_reports) {

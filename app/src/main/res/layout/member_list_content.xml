@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/touch_selector"
+    android:background="@android:drawable/list_selector_background"
     >
 
 
@@ -47,7 +47,7 @@
         android:id="@+id/member_list_separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separatorLine"
+        android:background="@color/colorSeparatorLine"
         android:layout_marginStart="76dp"
         android:layout_below="@id/avatar"/>
 

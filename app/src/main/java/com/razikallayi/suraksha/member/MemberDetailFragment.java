@@ -1,5 +1,6 @@
 package com.razikallayi.suraksha.member;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,13 +8,17 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.AuthUtils;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 /**
  * A fragment representing a single Member detail screen.
@@ -34,20 +39,20 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     public static final int MEMBER_DETAIL_LOADER = 0;
 
     private TextView mMemberName;
-    private TextView mMemberAlias              ;
-    private TextView mMemberGender             ;
-    private TextView mMemberFather             ;
-    private TextView mMemberSpouse             ;
-    private TextView mMemberOccupation         ;
-    private TextView mMemberAge                ;
-    private TextView mMemberMobile             ;
-    private TextView mMemberAddress            ;
-    private TextView mMemberNominee            ;
+    private TextView mMemberAlias;
+    private TextView mMemberGender;
+    private TextView mMemberFather;
+    private TextView mMemberSpouse;
+    private TextView mMemberOccupation;
+    private TextView mMemberAge;
+    private TextView mMemberMobile;
+    private TextView mMemberAddress;
+    private TextView mMemberNominee;
     private TextView mMemberRelationWithNominee;
-    private TextView mMemberAddressOfNominee   ;
-    private TextView mMemberRemarks            ;
-//    private TextView mMemberClosedAt           ;
-    private TextView mMemberCreatedAt          ;
+    private TextView mMemberAddressOfNominee;
+    private TextView mMemberRemarks;
+    //    private TextView mMemberClosedAt           ;
+    private TextView mMemberCreatedAt;
 //    private TextView mMemberUpdatedAt          ;
 
     /**
@@ -58,9 +63,30 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_activity_member_details, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.edit_member) {
+            Intent intent = new Intent(getContext(), EditMemberActivity.class);
+            intent.putExtra(EditMemberActivity.ARG_MEMBER_ID, mMemberId);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (AuthUtils.isAdmin(getContext())) {
+            setHasOptionsMenu(true);
+        }
         mMemberId = getArguments().getLong(ARG_MEMBER_ID);
 
 //        if (getArguments().containsKey(ARG_MEMBER_ID)) {
@@ -72,6 +98,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
 //            }
 //        }
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MEMBER_DETAIL_LOADER, null, this);
@@ -90,35 +117,29 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onMemberChanged(long memberId){
-        mMemberId = memberId;
-        getLoaderManager().restartLoader(MEMBER_DETAIL_LOADER, null, this);
-    }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_member_detail, container, false);
 
 
-        mMemberName                 = (TextView) rootView.findViewById(R.id.tvMemberName);
-        mMemberAlias                = (TextView) rootView.findViewById(R.id.tvMemberAlias);
-        mMemberGender               = (TextView) rootView.findViewById(R.id.tvMemberGender);
-        mMemberFather               = (TextView) rootView.findViewById(R.id.tvMemberFather);
-        mMemberSpouse               = (TextView) rootView.findViewById(R.id.tvMemberSpouse);
-        mMemberOccupation           = (TextView) rootView.findViewById(R.id.tvMemberOccupation);
-        mMemberAge                  = (TextView) rootView.findViewById(R.id.tvMemberAge);
-        mMemberMobile               = (TextView) rootView.findViewById(R.id.tvMemberMobile  );
-        mMemberAddress              = (TextView) rootView.findViewById(R.id.tvMemberAddress );
-        mMemberNominee              = (TextView) rootView.findViewById(R.id.tvMemberNominee );
-        mMemberRelationWithNominee  = (TextView) rootView.findViewById(R.id.tvMemberRelationWithNominee);
-        mMemberAddressOfNominee     = (TextView) rootView.findViewById(R.id.tvMemberAddressOfNominee   );
-        mMemberRemarks              = (TextView) rootView.findViewById(R.id.tvMemberRemarks            );
+        mMemberName = (TextView) rootView.findViewById(R.id.tvMemberName);
+        mMemberAlias = (TextView) rootView.findViewById(R.id.tvMemberAlias);
+        mMemberGender = (TextView) rootView.findViewById(R.id.tvMemberGender);
+        mMemberFather = (TextView) rootView.findViewById(R.id.tvMemberFather);
+        mMemberSpouse = (TextView) rootView.findViewById(R.id.tvMemberSpouse);
+        mMemberOccupation = (TextView) rootView.findViewById(R.id.tvMemberOccupation);
+        mMemberAge = (TextView) rootView.findViewById(R.id.tvMemberAge);
+        mMemberMobile = (TextView) rootView.findViewById(R.id.tvMemberMobile);
+        mMemberAddress = (TextView) rootView.findViewById(R.id.tvMemberAddress);
+        mMemberNominee = (TextView) rootView.findViewById(R.id.tvMemberNominee);
+        mMemberRelationWithNominee = (TextView) rootView.findViewById(R.id.tvMemberRelationWithNominee);
+        mMemberAddressOfNominee = (TextView) rootView.findViewById(R.id.tvMemberAddressOfNominee);
+        mMemberRemarks = (TextView) rootView.findViewById(R.id.tvMemberRemarks);
 //        mMemberClosedAt             = (TextView) rootView.findViewById(R.id.tvMemberClosedAt           );
-        mMemberCreatedAt            = (TextView) rootView.findViewById(R.id.tvMemberCreatedAt          );
+        mMemberCreatedAt = (TextView) rootView.findViewById(R.id.tvMemberCreatedAt);
 //        mMemberUpdatedAt            = (TextView) rootView.findViewById(R.id.tvMemberUpdatedAt          );
 
         return rootView;
