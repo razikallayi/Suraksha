@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
-import com.razikallayi.suraksha.officer.Officer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,33 +51,37 @@ public class Transaction {
     private int voucherType;
     private int ledger;
     private String narration;
-    private Officer officer;
+    private long officer_id;
     private long createdAt;
     private long updatedAt;
+    //private Officer officer;
 
 
     public Transaction(Context context, int accountNumber, double amount, int voucherType,
-                       int ledger, String narration,long officerId) {
+                       int ledger, String narration, long officerId) {
         this.accountNumber = accountNumber;
         this.amount = amount;
         this.voucherType = voucherType;
         this.ledger = ledger;
         this.narration = narration;
-        this.officer = Officer.getOfficerFromId(context,officerId);
+        this.officer_id = officerId;
     }
 
     public Transaction() {
     }
 
     public static final String getLedgerName(int ledger) {
+        //Change in SurakshaContract.TxnEntry, if you make any change here
         switch (ledger) {
             case 1://REGISTRATION_FEE_LEDGER
                 return "REGISTRATION FEE";
             case 2://DEPOSIT_LEDGER
                 return "DEPOSIT";
-            case 3://LOAN
-                return "LOAN";
-            case 4://WORKING COST
+            case 3://LOAN PAYED
+                return "LOAN PAYED";
+            case 4://LOAN RETURN
+                return "LOAN RETURN";
+            case 5://WORKING COST
                 return "WORKING COST";
             default:
                 return "UNKNOWN";
@@ -86,10 +89,11 @@ public class Transaction {
     }
 
     public static final String getVoucherName(int ledger) {
+        //Change in SurakshaContract.TxnEntry, if you make any change here
         switch (ledger) {
-            case 0://REGISTRATION_FEE_LEDGER
+            case 100://REGISTRATION_FEE_LEDGER
                 return "PAYED";
-            case 1://DEPOSIT_LEDGER
+            case 101://DEPOSIT_LEDGER
                 return "RECEIVED";
             default:
                 return "UNKNOWN";
@@ -152,11 +156,15 @@ public class Transaction {
 
     public static List<Transaction> getTxnFromCursor(Context context, Cursor c) {
         List<Transaction> txnList = new ArrayList<Transaction>();
+        if (c.getCount() <= 0) {
+            return txnList;
+        }
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             Transaction txn = new Transaction(context, c.getInt(TxnQuery.COL_FK_ACCOUNT_NUMBER),
                     c.getDouble(TxnQuery.COL_AMOUNT), c.getInt(TxnQuery.COL_VOUCHER_TYPE),
                     c.getInt(TxnQuery.COL_LEDGER), c.getString(TxnQuery.COL_NARRATION),
                     c.getLong(TxnQuery.COL_FK_OFFICER_ID));
+
             txn.id = c.getLong(TxnQuery.COL_ID);
             txn.definedDepositDate = c.getLong(TxnQuery.COL_DEFINED_DEPOSIT_DATE);
             txn.loanPayedId = c.getInt(TxnQuery.COL_FK_LOAN_PAYED_ID);
@@ -177,7 +185,7 @@ public class Transaction {
         values.put(SurakshaContract.TxnEntry.COLUMN_LEDGER, txn.getLedger());
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
         values.put(SurakshaContract.TxnEntry.COLUMN_NARRATION, txn.getNarration());
-        values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer().getId());
+        values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer_id());
         values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
 
         return values;
@@ -188,6 +196,10 @@ public class Transaction {
         return voucherType;
     }
 
+    public String getVoucherName() {
+        return Transaction.getVoucherName(voucherType);
+    }
+
     public void setVoucherType(int voucherType) {
         this.voucherType = voucherType;
     }
@@ -195,6 +207,11 @@ public class Transaction {
     public int getLedger() {
         return ledger;
     }
+
+    public String getLedgerName() {
+        return Transaction.getLedgerName(ledger);
+    }
+
 
     public void setLedger(int ledger) {
         this.ledger = ledger;
@@ -240,6 +257,14 @@ public class Transaction {
         this.amount = amount;
     }
 
+    public long getOfficer_id() {
+        return officer_id;
+    }
+
+    public void setOfficer_id(long officer_id) {
+        this.officer_id = officer_id;
+    }
+
     public long getCreatedAt() {
         return createdAt;
     }
@@ -254,14 +279,6 @@ public class Transaction {
 
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Officer getOfficer() {
-        return officer;
-    }
-
-    public void setOfficer(Officer officer) {
-        this.officer = officer;
     }
 
     public String getNarration() {

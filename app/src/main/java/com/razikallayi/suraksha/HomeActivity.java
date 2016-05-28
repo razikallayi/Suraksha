@@ -79,21 +79,6 @@ public class HomeActivity extends BaseActivity
         });
 
 
-        Button btnCreateUser = (Button) findViewById(R.id.btnCreateOfficer);
-        btnCreateUser.setVisibility(View.GONE);
-        boolean isAdmin = AuthUtils.isAdmin(getApplicationContext());
-
-        if (isAdmin) {
-            btnCreateUser.setVisibility(View.VISIBLE);
-            btnCreateUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getApplicationContext(), CreateOfficerActivity.class));
-                }
-            });
-        }
-
-
         Button btnLogout = (Button) findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +93,23 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        Button btnCreateUser = (Button) findViewById(R.id.btnCreateOfficer);
+        if (btnCreateUser != null) {
+            btnCreateUser.setVisibility(View.GONE);
+            boolean isAdmin = AuthUtils.isAdmin(getApplicationContext());
+            if (isAdmin) {
+                btnCreateUser.setVisibility(View.VISIBLE);
+                btnCreateUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getApplicationContext(), CreateOfficerActivity.class));
+                    }
+                });
+            }
+        }
+
+
         //Set content for content_base layout. This view is first seen when app is opened.
         TextView tvActiveMembersCount = (TextView) findViewById(R.id.tvActiveMembers);
         tvActiveMembersCount.setText(String.valueOf(Member.getActiveMembersCount(getApplicationContext())));

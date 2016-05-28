@@ -3,7 +3,6 @@ package com.razikallayi.suraksha.account;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
@@ -30,25 +29,25 @@ public class Account implements Serializable {
 
     public interface AccountQuery {
         String[] PROJECTION = {
-                SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER   ,
-                SurakshaContract.AccountEntry.COLUMN_MEMBER_ID        ,
-                SurakshaContract.AccountEntry.COLUMN_OPENING_BALANCE  ,
+                SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER,
+                SurakshaContract.AccountEntry.COLUMN_MEMBER_ID,
+                SurakshaContract.AccountEntry.COLUMN_OPENING_BALANCE,
                 SurakshaContract.AccountEntry.COLUMN_INSTALMENT_AMOUNT,
-                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_IS_ACTIVE        ,
-                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_CLOSED_AT        ,
-                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_CREATED_AT       ,
-                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry.COLUMN_UPDATED_AT       ,
-                SurakshaContract.AccountEntry.TABLE_NAME+"."+SurakshaContract.AccountEntry._ID   ,
+                SurakshaContract.AccountEntry.TABLE_NAME + "." + SurakshaContract.AccountEntry.COLUMN_IS_ACTIVE,
+                SurakshaContract.AccountEntry.TABLE_NAME + "." + SurakshaContract.AccountEntry.COLUMN_CLOSED_AT,
+                SurakshaContract.AccountEntry.TABLE_NAME + "." + SurakshaContract.AccountEntry.COLUMN_CREATED_AT,
+                SurakshaContract.AccountEntry.TABLE_NAME + "." + SurakshaContract.AccountEntry.COLUMN_UPDATED_AT,
+                SurakshaContract.AccountEntry.TABLE_NAME + "." + SurakshaContract.AccountEntry._ID,
         };
-        int COL_ACCOUNT_NUMBER      =0;
-        int COL_MEMBER_ID           =1;
-        int COL_OPENING_BALANCE     =2;
-        int COL_INSTALMENT_AMOUNT   =3;
-        int COL_IS_ACTIVE           =4;
-        int COL_CLOSED_AT           =5;
-        int COL_CREATED_AT          =6;
-        int COL_UPDATED_AT          =7;
-        int COL_ID                  =8;
+        int COL_ACCOUNT_NUMBER = 0;
+        int COL_MEMBER_ID = 1;
+        int COL_OPENING_BALANCE = 2;
+        int COL_INSTALMENT_AMOUNT = 3;
+        int COL_IS_ACTIVE = 4;
+        int COL_CLOSED_AT = 5;
+        int COL_CREATED_AT = 6;
+        int COL_UPDATED_AT = 7;
+        int COL_ID = 8;
     }
 
 
@@ -65,7 +64,7 @@ public class Account implements Serializable {
         Cursor cursor = context.getContentResolver().query(
                 SurakshaContract.AccountEntry.buildAccountUriUsingAccountNumber
                         (accountNumber),
-                AccountQuery.PROJECTION, SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER +" = ? ",
+                AccountQuery.PROJECTION, SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ",
                 new String[]{String.valueOf(accountNumber)}, null);
         Account account = new Account();
         if (cursor != null) {
@@ -82,13 +81,12 @@ public class Account implements Serializable {
             cursor.close();
         }
         return account;
-        }
+    }
 
     /**
      * Return the next account number to be inserted to database.
      *
-     * @param context
-     *          Context used to getContentResolver
+     * @param context Context used to getContentResolver
      * @return int
      */
     public static int generateAccountNumber(Context context) {
@@ -117,40 +115,38 @@ public class Account implements Serializable {
         values.put(SurakshaContract.AccountEntry.COLUMN_MEMBER_ID, account.getMember().getId());
         values.put(SurakshaContract.AccountEntry.COLUMN_INSTALMENT_AMOUNT, account.getInstalmentAmount());
         values.put(SurakshaContract.AccountEntry.COLUMN_OPENING_BALANCE, account.getOpeningBalance());
-        values.put(SurakshaContract.AccountEntry.COLUMN_IS_ACTIVE, account.isActive()?1:0);
+        values.put(SurakshaContract.AccountEntry.COLUMN_IS_ACTIVE, account.isActive() ? 1 : 0);
         values.put(SurakshaContract.AccountEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
 
         return values;
     }
+
     /**
      * return contentValues from account object
      *
      * @param context
-     *
-     * @param date
-     * 1st date of month, Month and Year should be set
-     *
+     * @param date    1st date of month, Month and Year should be set
      * @param remarks
-     *
      * @return Uri
      */
-    public Uri makeDeposit(Context context, long date, String remarks) {
-        Transaction txnMonthlyDeposit = new Transaction(context,accountNumber, Utility.getMonthlyDepositAmount(),
+    public Transaction makeDeposit(Context context, long date, String remarks) {
+        Transaction txnMonthlyDeposit = new Transaction(context, accountNumber, Utility.getMonthlyDepositAmount(),
                 SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
                 remarks, AuthUtils.getAuthenticatedOfficerId(context));
         txnMonthlyDeposit.setDefinedDepositDate(date);
         ContentValues values = Transaction.getTxnContentValues(txnMonthlyDeposit);
-        return context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
+        context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
+        return txnMonthlyDeposit;
     }
 
     public List<Transaction> fetchDeposits(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
                 Transaction.TxnQuery.PROJECTION,
-                SurakshaContract.TxnEntry.COLUMN_LEDGER +"= ? AND "+ SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER +"= ?",
+                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND " + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
                 new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), String.valueOf(accountNumber)},
-                SurakshaContract.TxnEntry.COLUMN_CREATED_AT +" DESC");
-        return Transaction.getTxnFromCursor(context,cursor);
+                SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " DESC");
+        return Transaction.getTxnFromCursor(context, cursor);
     }
 
     public boolean isActive() {

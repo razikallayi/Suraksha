@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mUsernameView = (EditText) findViewById(R.id.username);
-        mRecentOfficer = SettingsUtils.getRecentOfficer(getApplicationContext());
+        mRecentOfficer = SettingsUtils.getOfficerUsername(getApplicationContext());
         if (null != mRecentOfficer) {
             mUsernameView.setVisibility(View.GONE);
             TextView mUsernameTv = (TextView) findViewById(R.id.tvUsername);
@@ -129,12 +129,10 @@ public class LoginActivity extends AppCompatActivity {
         }
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
-        String username = null;
-        if (null == mRecentOfficer) {
+        //get username from input text
+        String username = mRecentOfficer;
+        if(username==null) {
             username = mUsernameView.getText().toString();
-        } else {
-            username = mRecentOfficer;
         }
 
         String pin = mPasswordView.getText().toString();
@@ -191,16 +189,14 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            mOfficerId = Officer.authenticate(getApplicationContext(), mUsername, mPin);
-            return mOfficerId>0;
+            return Officer.authenticate(getApplicationContext(), mUsername, mPin);
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
-            if (success && mOfficerId>0) {
-                AuthUtils.login(getApplicationContext(),mOfficerId, mUsername);
+            if (success) {
                 setResult(RESULT_OK);
                 finish();
             } else {

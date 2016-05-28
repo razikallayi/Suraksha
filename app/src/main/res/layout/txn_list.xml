@@ -9,40 +9,15 @@
     android:layout_height="match_parent"
     android:layout_width="wrap_content">
 
-    <TextView
-        android:id="@+id/tvAccountDue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Account Due"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="@dimen/font_large"
-        android:layout_centerHorizontal="true"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/due_list"
         android:name="com.razikallayi.suraksha.TxnListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="always"
-        android:scrollIndicators="right"
-        android:layout_below="@id/tvAccountDue"
         app:layoutManager="LinearLayoutManager"
         tools:context=".txn.TxnListFragment"
         tools:listitem="@layout/due_list_item" />
-
-
-
-    <TextView
-        android:id="@+id/tvTransactions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Transactions"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="@dimen/font_large"
-        android:layout_below="@id/due_list"
-        android:layout_centerHorizontal="true"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
@@ -50,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
-        android:layout_below="@id/tvTransactions"
+        android:layout_below="@id/due_list"
         android:layout_alignParentBottom="true"
         android:overScrollMode="always"
         tools:context=".txn.TxnListFragment"

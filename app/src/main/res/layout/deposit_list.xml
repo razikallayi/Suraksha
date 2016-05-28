@@ -6,5 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".member.RegisterMemberActivity"
+    tools:context=".account.AccountDetailActivity"
     tools:listitem="@layout/pending_month_deposit_content" />

@@ -169,14 +169,17 @@ public class SurakshaContract {
 
 
     //Ledger
+    //Change in Transaction, if you make any change here
         public static final int REGISTRATION_FEE_LEDGER  = 1;
         public static final int DEPOSIT_LEDGER  = 2;
-        public static final int LOAN_LEDGER  = 3;
-        public static final int WORKING_COST_LEDGER  = 4;
+        public static final int LOAN_PAYED_LEDGER  = 3;
+        public static final int LOAN_RETURN_LEDGER  = 4;
+        public static final int WORKING_COST_LEDGER  = 5;
 
         //Voucher_type
-        public static final int PAYMENT_VOUCHER  = 0;
-        public static final int RECEIPT_VOUCHER  = 1;
+        //Change in Transaction, if you make any change here
+        public static final int PAYMENT_VOUCHER  = 100;
+        public static final int RECEIPT_VOUCHER  = 101;
 
         public static Uri buildTxnUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

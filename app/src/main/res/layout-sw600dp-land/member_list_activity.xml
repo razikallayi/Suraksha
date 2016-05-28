@@ -54,12 +54,8 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:animateLayoutChanges="true"
+            android:background="@color/gray_light"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/gray_light" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -71,7 +67,7 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:src="@drawable/ic_account_circle_black_48dp"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerCrop"
                     />
 
                 <LinearLayout

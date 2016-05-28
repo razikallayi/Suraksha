@@ -1,32 +1,31 @@
 <resources>
 
-    <style name="Theme.Suraksha" parent="AppTheme">
-        <!--<item name="android:windowBackground">@color/colorWindowBackground</item>-->
-        <!--<item name="android:textColorPrimary">@color/colorTextPrimary</item>-->
-        <!--<item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless</item>-->
-    </style>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/foreground_material_dark</item>
     </style>
 
-    <!--<style name="AppTheme.NoActionBar" parent="AppTheme">-->
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
-    <!--</style>-->
-    <!--<style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
-    <!--<style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
-
-
-    <style name="registerForm" parent="AppTheme">
-        <item name="android:layout_marginTop">@dimen/edit_text_top_margin_register_member</item>
-        <item name="android:layout_marginBottom">@dimen/edit_text_top_margin_register_member</item>
-        <item name="android:layout_marginLeft">@dimen/edit_text_side_margin_register_member</item>
-        <item name="android:layout_marginRight">@dimen/edit_text_side_margin_register_member</item>
+    <style name="SurakshaLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <!--Night Mode-->
+    <style name="SurakshaNight" parent="Theme.AppCompat.NoActionBar" />
+
+
+    <style name="Suraksha.InputField" parent="Widget.Design.TextInputLayout">
+        <item name="android:layout_marginTop">@dimen/spacing_tiny</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_tiny</item>
+    </style>
+
+
+
+
 
 </resources>

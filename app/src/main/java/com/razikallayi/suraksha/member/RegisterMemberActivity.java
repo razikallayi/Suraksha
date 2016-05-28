@@ -22,11 +22,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -63,8 +65,6 @@ public class RegisterMemberActivity extends BaseActivity {
     private EditText txtName, txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
             txtNominee, txtAddressOfNominee, txtRemarks;
 
-    private CheckBox chkRegistrationFee;
-
     private ImageView imageViewAvatar;
     private byte[] memberAvatar = null;
     private Spinner mRelationWithNomineeSpinner;
@@ -92,7 +92,7 @@ public class RegisterMemberActivity extends BaseActivity {
         //Enable full view scroll while soft keyboard is shown
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 //                          |WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
         txtName = (EditText) sv.findViewById(R.id.txtName);
@@ -118,10 +118,24 @@ public class RegisterMemberActivity extends BaseActivity {
         mRelationWithNomineeSpinner = (Spinner) sv.findViewById(R.id.spnRelationWithNominee);
         mRelationWithNomineeSpinner.setAdapter(adapter);
 
+        txtNominee.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    hideKeyboard();
+                    textView.clearFocus();
+                    mRelationWithNomineeSpinner.requestFocus();
+                    mRelationWithNomineeSpinner.performClick();
+                }
+                txtAddressOfNominee.requestFocus();
+                return true;
+            }
+        });
+
+
+
         TextView tvAccountNumber = (TextView) sv.findViewById(R.id.tvAccountNumber);
         TextView tvRegistrationFee = (TextView) sv.findViewById(R.id.tvRegistrationFee);
-
-        chkRegistrationFee = (CheckBox) sv.findViewById(R.id.chkRegistrationFee);
 
 
         tvAccountNumber.setText(String.valueOf(Account.generateAccountNumber(getApplicationContext())));
@@ -188,17 +202,7 @@ public class RegisterMemberActivity extends BaseActivity {
                     txtName.requestFocus();
                 } else if (!isAcceptedTerms.isChecked()) {
                     snackbar.show();
-                    //isAcceptedTerms.setError("Please accept and pay registration fee of ₹"+REGISTRATION_FEE_AMOUNT);
-                } else if (!chkRegistrationFee.isChecked()) {
-
-                    Snackbar.make(v, "Please pay and tick the registration fee", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    //isAcceptedTerms.setError("Please accept and pay registration fee of ₹"+REGISTRATION_FEE_AMOUNT);
                 }
-//                else if (!chkPendingDeposits.isChecked()) {
-//                    Snackbar.make(v, "Please pay and tick the pending deposits", Snackbar.LENGTH_LONG)
-//                            .setAction("Action", null).show();
-//                }
                 else {   //no errors in input
                     mAddMemberButton.setEnabled(false);
                     Member member = getMemberDetailsFromInput();
@@ -211,6 +215,11 @@ public class RegisterMemberActivity extends BaseActivity {
 
             }
         });
+    }
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void pickContact() {
@@ -372,7 +381,7 @@ public class RegisterMemberActivity extends BaseActivity {
             getApplicationContext().getContentResolver().insert(SurakshaContract.AccountEntry.CONTENT_URI, values);
 
             //Save Registration Fee
-            Transaction txnRegistrationFee = new Transaction(getApplicationContext(),accountNumber,
+            Transaction txnRegistrationFee = new Transaction(getApplicationContext(), accountNumber,
                     Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
                     SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER, "Registration Fee",
                     AuthUtils.getAuthenticatedOfficerId(getApplicationContext()));

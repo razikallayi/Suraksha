@@ -3,20 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/deposit_item_layout"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    >
+    android:background="@android:drawable/list_selector_background"
+    android:focusable="true">
     <TextView
         android:id="@+id/depositMonth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_larger"
+        android:textSize="@dimen/font_normal"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="bold"
         android:text="Pending Deposits"
         android:accessibilityLiveRegion="polite"
         android:paddingTop="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_tiny"
+        android:paddingBottom="@dimen/spacing_very_tiny"
         />
     <TextView
         android:id="@+id/depositCreatedAt"

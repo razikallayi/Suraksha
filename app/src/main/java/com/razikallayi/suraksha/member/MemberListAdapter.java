@@ -182,7 +182,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 
 
     private class SetAvatarTask extends AsyncTask<Member, Void, Bitmap> {
-        private  Context mContext;
+        private Context mContext;
         private MemberListViewHolder holder;
 
         public SetAvatarTask(Context context, MemberListViewHolder viewHolder) {
@@ -222,5 +222,4 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
     public interface OnItemClickListener {
         void onItemClick(long memberId, String memberName);
     }
-
 }

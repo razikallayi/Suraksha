@@ -14,12 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.razikallayi.suraksha.officer.Officer;
-import com.razikallayi.suraksha.utils.AuthUtils;
-import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.DueRecyclerViewAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.AuthUtils;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +92,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
             txn.setLoanPayedId(cursor.getInt(COL_FK_LOAN_PAYED_ID));
             txn.setAccountNumber(cursor.getInt(COL_FK_ACCOUNT_NUMBER));
             txn.setNarration(cursor.getString(COL_NARRATION));
-            txn.setOfficer(Officer.getOfficerFromId(getContext(),AuthUtils.getAuthenticatedOfficerId(getContext())));
+            txn.setOfficer_id(AuthUtils.getAuthenticatedOfficerId(getContext()));
             txn.setCreatedAt(cursor.getLong(COL_CREATED_AT));
             listTxn.add(txn);
         }
@@ -132,18 +131,6 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnItemClickListener) {
-//            mListener = (OnItemClickListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnItemClickListener");
-//        }
     }
 
     @Override

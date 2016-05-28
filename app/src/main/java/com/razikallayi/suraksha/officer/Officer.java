@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.SettingsUtils;
 
 /**
  * Created by Razi Kallayi on 11-05-2016.
@@ -41,6 +42,10 @@ public class Officer {
     }
 
     public static Officer getOfficerFromId(Context context, long id) {
+        if (id <= 0) {
+            return null;
+        }
+
         Cursor cursor = context.getContentResolver().query(
                 SurakshaContract.OfficerEntry.buildOfficerUri(id), OfficerQuery.PROJECTION, null, null, null);
         Officer o = new Officer();
@@ -54,11 +59,12 @@ public class Officer {
             o.address = cursor.getString(OfficerQuery.COL_ADDRESS);
             o.setAdmin(cursor.getInt(OfficerQuery.COL_IS_ADMIN) == 1);
             cursor.close();
+            return o;
         }
-        return o;
+        return null;
     }
 
-    public static long authenticate(Context context, String username, String password) {
+    public static boolean authenticate(Context context, String username, String password) {
         Cursor cursor = context.getContentResolver().query(SurakshaContract.OfficerEntry.CONTENT_URI,
                 new String[]{SurakshaContract.OfficerEntry._ID},
                 SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = ? AND " +
@@ -67,11 +73,12 @@ public class Officer {
                 null);
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            long result = cursor.getLong(0);
+            long officer_id = cursor.getLong(0);
+            SettingsUtils.setAuthOfficer(context, getOfficerFromId(context, officer_id));
             cursor.close();
-            return result;
+            return true;
         }
-        return -1;
+        return false;
     }
 
     public static ContentValues getOfficerContentValues(Officer officer) {
@@ -172,14 +179,14 @@ public class Officer {
 
     public interface OfficerQuery {
         String[] PROJECTION = {
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_NAME,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_MOBILE,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_USERNAME,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_PASSWORD,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_ADDRESS,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_CREATED_AT,
-                SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_NAME,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_MOBILE,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_USERNAME,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_PASSWORD,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_ADDRESS,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_CREATED_AT,
+                SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT
         };
         // these indices must match the projection
         int COL_NAME = 0;

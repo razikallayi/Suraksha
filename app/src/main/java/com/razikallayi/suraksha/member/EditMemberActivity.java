@@ -28,10 +28,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,8 +114,8 @@ public class EditMemberActivity extends BaseActivity {
         mRelationWithNomineeSpinner = (Spinner) sv.findViewById(R.id.spnRelationWithNominee);
         mRelationWithNomineeSpinner.setAdapter(adapter);
 
-        RelativeLayout rlRegistrationFee = (RelativeLayout) sv.findViewById(R.id.rlRegistrationFeeChkBx);
-        rlRegistrationFee.setVisibility(View.GONE);
+        LinearLayout llRegistrationFee = (LinearLayout) sv.findViewById(R.id.RegistrationFeeLinearLayout);
+        llRegistrationFee.setVisibility(View.GONE);
 
 //        chkRegistrationFee = (CheckBox) sv.findViewById(R.id.chkRegistrationFee);
 

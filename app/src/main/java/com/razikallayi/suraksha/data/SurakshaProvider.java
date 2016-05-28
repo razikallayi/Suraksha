@@ -333,7 +333,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                         SurakshaContract.TxnEntry.TABLE_NAME,
                         new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"} ,
                         SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND "+SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE +" = ?",
-                        new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_LEDGER), String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)},
+                        new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER), String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)},
                         null,
                         null,
                         null
@@ -345,7 +345,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                         SurakshaContract.TxnEntry.TABLE_NAME,
                         new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"} ,
                         SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND "+SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE +" = ?",
-                        new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_LEDGER), String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER)},
+                        new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER), String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER)},
                         null,
                         null,
                         null
