@@ -78,11 +78,11 @@ public class TxnRecyclerViewAdapter extends RecyclerView.Adapter<TxnRecyclerView
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mLedger = (TextView) view.findViewById(R.id.ledger);
-            mMonthView = (TextView) view.findViewById(R.id.month);
-            mCreatedAt = (TextView) view.findViewById(R.id.createdAt);
-            mAmountView = (TextView) view.findViewById(R.id.amount);
-            mVoucherName = (TextView) view.findViewById(R.id.voucherName);
+            mLedger = (TextView) view.findViewById(R.id.txnLedger);
+            mMonthView = (TextView) view.findViewById(R.id.txnMonth);
+            mCreatedAt = (TextView) view.findViewById(R.id.txnCreatedAt);
+            mAmountView = (TextView) view.findViewById(R.id.txnAmount);
+            mVoucherName = (TextView) view.findViewById(R.id.txnVoucherName);
         }
 
         @Override

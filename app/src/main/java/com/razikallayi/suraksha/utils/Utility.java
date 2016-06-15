@@ -1,6 +1,8 @@
 package com.razikallayi.suraksha.utils;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.TypedValue;
 
 import com.razikallayi.suraksha.R;
 
@@ -16,19 +18,34 @@ public class Utility {
     }
 
 
-    public static double getMonthlyDepositAmount(){
+    public static double getMonthlyDepositAmount() {
         return (double) 1000;
     }
 
-    public static double getRegistrationFeeAmount(){
+    public static double getRegistrationFeeAmount() {
         return (double) 250;
     }
 
-    public static double getOpeningDepositAmount(){
-        Calendar currentDate =Calendar.getInstance();
+    public static double getOpeningDepositAmount() {
+        Calendar currentDate = Calendar.getInstance();
         // TODO: 20-05-2016 Bug fix. Year not calculated here.
-        int unpaidMonths = currentDate.get(Calendar.MONTH)- CalendarUtils.getSurakshaStartDate().get(Calendar.MONTH)+1;
+        int unpaidMonths = currentDate.get(Calendar.MONTH) - CalendarUtils.getSurakshaStartDate().get(Calendar.MONTH) + 1;
         return unpaidMonths * Utility.getMonthlyDepositAmount();
+    }
+
+    public static int getActionBarHeight(Context context) {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv,
+                    true))
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(
+                        tv.data, context.getResources().getDisplayMetrics());
+        } else {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+                    context.getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
     }
 
 
@@ -70,7 +87,6 @@ public class Utility {
 //        }
 //        return 0;
 //    }
-
 
 
 }

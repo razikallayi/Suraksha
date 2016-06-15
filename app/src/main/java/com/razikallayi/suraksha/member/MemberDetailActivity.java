@@ -1,5 +1,6 @@
 package com.razikallayi.suraksha.member;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -8,8 +9,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 
+import com.razikallayi.suraksha.AvatarActivity;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
@@ -30,6 +33,8 @@ public class MemberDetailActivity extends BaseActivity {
 
     private String mMemberName;
     private long mMemberId;
+
+    private int mColor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,13 @@ public class MemberDetailActivity extends BaseActivity {
             mMemberId = getIntent().getLongExtra(ARG_MEMBER_ID,-1);
             mMemberName = getIntent().getStringExtra(ARG_MEMBER_NAME);
         }
+
+
+        Random rnd = new Random();
+        int Low = 50;
+        int High = 200;
+        int mColor = Color.rgb(rnd.nextInt(High-Low) + Low,
+                rnd.nextInt(High-Low) + Low, rnd.nextInt(High-Low) + Low);
         
         //Load Avatar
         LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
@@ -128,17 +140,23 @@ public class MemberDetailActivity extends BaseActivity {
             return Member.getMemberFromId(getApplicationContext(),memberId[0]);
         }
         @Override
-        protected void onPostExecute(Member member) {
+        protected void onPostExecute(final Member member) {
             super.onPostExecute(member);
             ImageView ivAvatar = (ImageView)findViewById(R.id.ivAvatarMemberDetailActivity);
             if (member.getAvatarDrawable() != null) {
                 ivAvatar.setImageDrawable(member.getAvatarDrawable());
+                ivAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), AvatarActivity.class);
+                        intent.putExtra("avatar",member.getAvatar());
+                        startActivity(intent);
+                    }
+                });
             }else{
-                Random rnd = new Random();
-                int Low = 50;
-                int High = 200;
 
-                ivAvatar.setImageDrawable(new ColorDrawable(Color.rgb(rnd.nextInt(High-Low) + Low, rnd.nextInt(High-Low) + Low, rnd.nextInt(High-Low) + Low)));
+                ivAvatar.setImageDrawable(new ColorDrawable(mColor));
+
 //                ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
 //                        R.color.blue, member.getName().substring(0, 1).toUpperCase(), 24));
             }

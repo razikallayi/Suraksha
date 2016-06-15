@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.SmsUtils;
 
 public class CreateOfficerActivity extends BaseActivity {
 
@@ -55,7 +56,7 @@ public class CreateOfficerActivity extends BaseActivity {
         txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
         txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
         switchIsAdmin = (Switch) sv.findViewById(R.id.switchIsAdmin);
-// TODO: 18-05-2016 Accept only pattern with 0-9 in pin
+
         //Button Create Officer
         final Button mCreateOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
         mCreateOfficer.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +67,9 @@ public class CreateOfficerActivity extends BaseActivity {
                 if (TextUtils.isEmpty(txtName.getText().toString())) {
                     txtName.setError(getString(R.string.name_is_required));
                     txtName.requestFocus();
+                } else if (!TextUtils.isEmpty(txtMobile.getText().toString()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString())) {
+                    txtMobile.setError(getString(R.string.invalid_mobile_number));
+                    txtMobile.requestFocus();
                 } else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
                     txtUsername.setError(getString(R.string.username_is_required));
                     txtUsername.requestFocus();

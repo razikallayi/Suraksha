@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
+import com.razikallayi.suraksha.utils.SmsUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.Calendar;
@@ -67,7 +70,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
     public DepositAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.pending_month_deposit_content, parent, false);
+                .inflate(R.layout.deposited_list_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         return new ViewHolder(v);
     }
@@ -137,8 +140,19 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
     }
 
     public void makeDeposit(long depositMonth, String remarks) {
-        mAccount.makeDeposit(mContext, depositMonth, remarks);
+        Transaction txn = mAccount.makeDeposit(mContext, depositMonth, remarks);
         mDepositedTxnList = mAccount.fetchDeposits(mContext);
         notifyDataSetChanged();
+        if (SmsUtils.smsEnabledAfterCreateAccount(mContext)) {
+            Member member = mAccount.getMember();
+            String phoneNumber = member.getMobile();
+            String message = "Your suraksha account "+mAccount.getAccountNumber()
+                    +" is credited with a deposit of "+Utility.formatAmountInRupees(mContext,txn.getAmount())
+                    +" for the month of "+CalendarUtils.readableDepositMonth(txn.getDefinedDepositMonth());
+            boolean result = SmsUtils.sendSms(message,phoneNumber);
+            if(result) {
+                Toast.makeText(mContext, "SMS sent to " + member.getName(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

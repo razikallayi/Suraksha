@@ -6,13 +6,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
@@ -20,13 +18,13 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -51,6 +49,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.ImageUtils;
+import com.razikallayi.suraksha.utils.SmsUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.concurrent.ExecutionException;
@@ -92,7 +91,7 @@ public class RegisterMemberActivity extends BaseActivity {
         //Enable full view scroll while soft keyboard is shown
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 //                          |WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
         txtName = (EditText) sv.findViewById(R.id.txtName);
@@ -133,35 +132,12 @@ public class RegisterMemberActivity extends BaseActivity {
         });
 
 
-
         TextView tvAccountNumber = (TextView) sv.findViewById(R.id.tvAccountNumber);
         TextView tvRegistrationFee = (TextView) sv.findViewById(R.id.tvRegistrationFee);
 
 
         tvAccountNumber.setText(String.valueOf(Account.generateAccountNumber(getApplicationContext())));
         tvRegistrationFee.setText(getString(R.string.format_rupees, Utility.getRegistrationFeeAmount()));
-        //tvPendingDeposits.setText(getString(R.string.format_rupees, Utility.getOpeningDepositAmount()));
-
-//         RecyclerView rvPendingDeposit= (RecyclerView) sv.findViewById(R.id.pending_deposit_list);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-//        rvPendingDeposit.setHasFixedSize(true);
-
-        // use a linear layout manager
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        rvPendingDeposit.setLayoutManager(layoutManager);
-
-//        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
-        // specify an adapter (see also next example)
-//        DepositAdapter pendingDepositAdapter = new DepositAdapter(pendingMonthsList);
-//        rvPendingDeposit.setAdapter(pendingDepositAdapter);
-
-        //Set Total Payable amount at time of registration
-//        TextView tvTotal = (TextView) sv.findViewById(R.id.tvTotalRegistration);
-//        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount())
-//                          +Utility.getRegistrationFeeAmount();
-//        tvTotal.setText("TOTAL : "+Utility.formatAmountInRupees(getApplicationContext(),amt));
-
 
         imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
         imageViewAvatar.setOnClickListener(new View.OnClickListener() {
@@ -200,10 +176,12 @@ public class RegisterMemberActivity extends BaseActivity {
                 if (TextUtils.isEmpty(txtName.getText().toString())) {
                     txtName.setError(getString(R.string.name_is_required));
                     txtName.requestFocus();
+                } else if (!TextUtils.isEmpty(txtMobile.getText().toString()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString())) {
+                    txtMobile.setError(getString(R.string.invalid_mobile_number));
+                    txtMobile.requestFocus();
                 } else if (!isAcceptedTerms.isChecked()) {
                     snackbar.show();
-                }
-                else {   //no errors in input
+                } else {   //no errors in input
                     mAddMemberButton.setEnabled(false);
                     Member member = getMemberDetailsFromInput();
                     //Add the member to database
@@ -216,6 +194,7 @@ public class RegisterMemberActivity extends BaseActivity {
             }
         });
     }
+
     private void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),
@@ -388,36 +367,12 @@ public class RegisterMemberActivity extends BaseActivity {
             values = Transaction.getTxnContentValues(txnRegistrationFee);
             getApplicationContext().getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            boolean sendSms = prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_registration", false);
-            if (sendSms) {
-                SmsManager sms = SmsManager.getDefault();
-                String phoneNumber = "121";//mMember.getMobile();
+            if (SmsUtils.smsEnabledAfterRegistration(getApplicationContext())) {
+                String phoneNumber = mMember.getMobile();
                 String message = getResources().getString(R.string.member_registered_sms)
                         + " Your account number is " + account.getAccountNumber();
-                sms.sendTextMessage(phoneNumber, null, message, null, null);
+                SmsUtils.sendSms(message, phoneNumber);
             }
-
-
-            //Save Monthly Deposit which is pending at time of registration
-//            List<Calendar> pendingMonths = Utility.getPendingDepositMonths(null);
-//            List<ContentValues> cv = new ArrayList<>();
-//            for (int i = 0; i < pendingMonths.size(); i++) {
-//                Transaction txnPendingMonth = new Transaction(accountNumber,
-//                        Utility.getMonthlyDepositAmount(),
-//                        SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
-//                        SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
-//                        "Deposited at time of registration");
-//                txnPendingMonth.setDefinedDepositDate(pendingMonths.get(i).getTimeInMillis());
-//                if (txnPendingMonth.getAmount() > 0){
-//                    values = Transaction.getTxnContentValues(txnPendingMonth);
-//                    cv.add(values);
-//                    //getApplicationContext().getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
-//                }
-//            }
-//            ContentValues[] cvArray = cv.toArray(new ContentValues[cv.size()]);
-//            getApplicationContext().getContentResolver().bulkInsert(SurakshaContract.TxnEntry.CONTENT_URI, cvArray);
-
             return true;
         }
 
@@ -427,6 +382,7 @@ public class RegisterMemberActivity extends BaseActivity {
             mRegisterMemberTask = null;
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.registration_successful), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "SMS sent to " + mMember.getName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), RegisterMemberActivity.class);
                 startActivity(intent);
                 finish();

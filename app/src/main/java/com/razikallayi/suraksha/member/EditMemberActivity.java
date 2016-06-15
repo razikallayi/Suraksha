@@ -43,6 +43,7 @@ import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.SettingsActivity;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.ImageUtils;
+import com.razikallayi.suraksha.utils.SmsUtils;
 
 import java.util.concurrent.ExecutionException;
 
@@ -56,7 +57,7 @@ public class EditMemberActivity extends BaseActivity {
 
     public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 512;
 
-    private EditText txtName,txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
+    private EditText txtName, txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
             txtNominee, txtAddressOfNominee, txtRemarks;
 
 //    private CheckBox chkRegistrationFee;
@@ -71,6 +72,8 @@ public class EditMemberActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_member);
+
+        setupNavDrawer();
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,21 +90,21 @@ public class EditMemberActivity extends BaseActivity {
 
 
         //Enable full view scroll while soft keyboard is shown
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
-        txtName             = (EditText) sv.findViewById(R.id.txtName);
-        txtAlias            = (EditText) sv.findViewById(R.id.txtAlias);
-        txtFather           = (EditText) sv.findViewById(R.id.txtFather);
-        txtSpouse           = (EditText) sv.findViewById(R.id.txtSpouse);
-        txtOccupation       = (EditText) sv.findViewById(R.id.txtOccupation);
-        txtAge              = (EditText) sv.findViewById(R.id.txtAge);
-        txtMobile           = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress          = (EditText) sv.findViewById(R.id.txtAddress);
-        txtNominee          = (EditText) sv.findViewById(R.id.txtNominee);
+        txtName = (EditText) sv.findViewById(R.id.txtName);
+        txtAlias = (EditText) sv.findViewById(R.id.txtAlias);
+        txtFather = (EditText) sv.findViewById(R.id.txtFather);
+        txtSpouse = (EditText) sv.findViewById(R.id.txtSpouse);
+        txtOccupation = (EditText) sv.findViewById(R.id.txtOccupation);
+        txtAge = (EditText) sv.findViewById(R.id.txtAge);
+        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
+        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
+        txtNominee = (EditText) sv.findViewById(R.id.txtNominee);
         txtAddressOfNominee = (EditText) sv.findViewById(R.id.txtAddressOfNominee);
-        txtRemarks          = (EditText) sv.findViewById(R.id.txtRemarks);
-        isAcceptedTerms     = (CheckBox) sv.findViewById(R.id.accept_terms);
+        txtRemarks = (EditText) sv.findViewById(R.id.txtRemarks);
+        isAcceptedTerms = (CheckBox) sv.findViewById(R.id.accept_terms);
         isAcceptedTerms.setVisibility(View.GONE);
 
         //Spinner
@@ -117,33 +120,9 @@ public class EditMemberActivity extends BaseActivity {
         LinearLayout llRegistrationFee = (LinearLayout) sv.findViewById(R.id.RegistrationFeeLinearLayout);
         llRegistrationFee.setVisibility(View.GONE);
 
-//        chkRegistrationFee = (CheckBox) sv.findViewById(R.id.chkRegistrationFee);
-
-
-//        tvAccountNumber.setText(String.valueOf(Account.generateAccountNumber(getApplicationContext())));
-        //tvPendingDeposits.setText(getString(R.string.format_rupees, Utility.getOpeningDepositAmount()));
-
-//         RecyclerView rvPendingDeposit= (RecyclerView) sv.findViewById(R.id.pending_deposit_list);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-//        rvPendingDeposit.setHasFixedSize(true);
-
-        // use a linear layout manager
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        rvPendingDeposit.setLayoutManager(layoutManager);
-
-//        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
-        // specify an adapter (see also next example)
-//        DepositAdapter pendingDepositAdapter = new DepositAdapter(pendingMonthsList);
-//        rvPendingDeposit.setAdapter(pendingDepositAdapter);
-
-        //Set Total Payable amount at time of registration
-//        TextView tvTotal = (TextView) sv.findViewById(R.id.tvTotalRegistration);
-//        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount())+Utility.getRegistrationFeeAmount();
-//        tvTotal.setText("TOTAL : "+Utility.formatAmountInRupees(getApplicationContext(),amt));
 
         imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
-        setMemberDetailsFromId(getIntent().getLongExtra(ARG_MEMBER_ID,-1));
+        setMemberDetailsFromId(getIntent().getLongExtra(ARG_MEMBER_ID, -1));
 
 
         imageViewAvatar.setOnClickListener(new View.OnClickListener() {
@@ -153,39 +132,26 @@ public class EditMemberActivity extends BaseActivity {
 //                intent.setType("image/*");
 //                intent.setAction(Intent.ACTION_GET_CONTENT);
 //                startActivityForResult(Intent.createChooser(intent, "Select Member Image"), CHOOSE_AVATAR_REQUEST);
-            startActivityForResult(new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI),CHOOSE_AVATAR_REQUEST);
+                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), CHOOSE_AVATAR_REQUEST);
             }
         });
 
 
         //Button Add Member
-        final Button mAddMemberButton = (Button) sv.findViewById(R.id.btnAddMember);
-        mAddMemberButton.setText(getString(R.string.update));
-        mAddMemberButton.setOnClickListener(new View.OnClickListener() {
+        final Button mUpdateMemberButton = (Button) sv.findViewById(R.id.btnAddMember);
+        mUpdateMemberButton.setText(getString(R.string.update));
+        mUpdateMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Validating name column
                 if (TextUtils.isEmpty(txtName.getText().toString())) {
                     txtName.setError(getString(R.string.name_is_required));
                     txtName.requestFocus();
-                }
-//                else if (!isAcceptedTerms.isChecked()) {
-//
-//                    Snackbar.make(v, "Please accept and terms and conditions", Snackbar.LENGTH_LONG)
-//                            .setAction("Action", null).show();
-//                    //isAcceptedTerms.setError("Please accept and pay registration fee of ₹"+REGISTRATION_FEE_AMOUNT);
-//                } else if (!chkRegistrationFee.isChecked()) {
-//
-//                    Snackbar.make(v, "Please pay and tick the registration fee", Snackbar.LENGTH_LONG)
-//                            .setAction("Action", null).show();
-//                    //isAcceptedTerms.setError("Please accept and pay registration fee of ₹"+REGISTRATION_FEE_AMOUNT);
-//                }
-//                else if (!chkPendingDeposits.isChecked()) {
-//                    Snackbar.make(v, "Please pay and tick the pending deposits", Snackbar.LENGTH_LONG)
-//                            .setAction("Action", null).show();
-//                }
-                else {   //no errors in input
-                    mAddMemberButton.setEnabled(false);
+                } else if (!TextUtils.isEmpty(txtMobile.getText().toString()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString())) {
+                    txtMobile.setError(getString(R.string.invalid_mobile_number));
+                    txtMobile.requestFocus();
+                } else {   //no errors in input
+                    mUpdateMemberButton.setEnabled(false);
                     Member member = getMemberDetailsFromInput();
                     //Add the member to database
                     mRegisterMemberTask = new RegisterMemberTask(member);
@@ -196,8 +162,8 @@ public class EditMemberActivity extends BaseActivity {
         });
     }
 
-    private void pickContact(){
-    //Create an intent to pick contact
+    private void pickContact() {
+        //Create an intent to pick contact
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers
         startActivityForResult(intent, PICK_CONTACT_REQUEST);
@@ -205,13 +171,13 @@ public class EditMemberActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST){
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST) {
             String[] contactsProjection = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.PHOTO_URI};
-            Cursor cursor = getContentResolver().query(data.getData(),contactsProjection,null,null,null);
+            Cursor cursor = getContentResolver().query(data.getData(), contactsProjection, null, null, null);
             if (cursor != null) {
-                if (cursor.moveToFirst()){
+                if (cursor.moveToFirst()) {
                     int indexName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
                     int indexPhone = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                     int indexPhoto = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI);
@@ -223,14 +189,13 @@ public class EditMemberActivity extends BaseActivity {
                     txtAlias.setText(name);
                     txtMobile.setText(phone);
 
-                    if(photo !=null) {
+                    if (photo != null) {
                         Uri uriContactPhoto = Uri.parse(photo);
                         //imageViewAvatar.setImageURI(uriContactPhoto);
                         saveAvatarTask t = new saveAvatarTask(this);
                         t.execute(uriContactPhoto);
-                    }
-                    else {
-                        if(imageViewAvatar!=null) {
+                    } else {
+                        if (imageViewAvatar != null) {
                             imageViewAvatar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), Member.DEFAULT_AVATAR, null));
                         }
                     }
@@ -239,7 +204,7 @@ public class EditMemberActivity extends BaseActivity {
             }
         }
 
-        if(resultCode == RESULT_OK  && requestCode == CHOOSE_AVATAR_REQUEST) {
+        if (resultCode == RESULT_OK && requestCode == CHOOSE_AVATAR_REQUEST) {
             Uri uriAvatar = data.getData();
             if (uriAvatar != null) {
                 //Set it in the ImageView
@@ -249,46 +214,45 @@ public class EditMemberActivity extends BaseActivity {
         }
     }
 
-private Member getMemberDetailsFromInput(){
+    private Member getMemberDetailsFromInput() {
         //Radio Button
         // get selected radio button from radioGroup
-    RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
+        RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
         // find the radio button by returned id
-    RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
+        RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
 
         //EditText Fields
-        String name                = txtName.getText().toString();
-        String alias               = txtAlias.getText().toString();
-        String gender              = mSelectedGenderRadioButton.getText().toString();
-        String father              = txtFather.getText().toString();
-        String spouse              = txtSpouse.getText().toString();
-        String occupation          = txtOccupation.getText().toString();
-        String age                 = txtAge.getText().toString();
-        String mobile              = txtMobile.getText().toString();
-        String address             = txtAddress.getText().toString();
-        String nominee             = txtNominee.getText().toString();
-        String addressOfNominee    = txtAddressOfNominee.getText().toString();
+        String name = txtName.getText().toString();
+        String alias = txtAlias.getText().toString();
+        String gender = mSelectedGenderRadioButton.getText().toString();
+        String father = txtFather.getText().toString();
+        String spouse = txtSpouse.getText().toString();
+        String occupation = txtOccupation.getText().toString();
+        String age = txtAge.getText().toString();
+        String mobile = txtMobile.getText().toString();
+        String address = txtAddress.getText().toString();
+        String nominee = txtNominee.getText().toString();
+        String addressOfNominee = txtAddressOfNominee.getText().toString();
         String relationWithNominee = mRelationWithNomineeSpinner.getSelectedItem().toString();
-        String remarks             = txtRemarks.getText().toString();
-        if(relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))){
+        String remarks = txtRemarks.getText().toString();
+        if (relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))) {
             relationWithNominee = "";
         }
-        Member member =  new Member(getApplicationContext(),name, alias, gender, father, spouse,
-                occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee,remarks);
+        Member member = new Member(getApplicationContext(), name, alias, gender, father, spouse,
+                occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
         member.setUpdatedAt(System.currentTimeMillis());
-        if(memberAvatar!=null) {
+        if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
         }
         return member;
     }
 
 
-
-    private Member setMemberDetailsFromId(long memberId){
-        if(memberId==-1){
+    private Member setMemberDetailsFromId(long memberId) {
+        if (memberId == -1) {
             return null;
         }
-            Member member = Member.getMemberFromId(getApplicationContext(),memberId);
+        Member member = Member.getMemberFromId(getApplicationContext(), memberId);
         //
         //    //Radio Button
         //        // get selected radio button from radioGroup
@@ -296,22 +260,22 @@ private Member getMemberDetailsFromInput(){
         //        // find the radio button by returned id
         //    RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
 
-            //EditText Fields
-            txtName.setText(member.getName());
-            txtAlias.setText(member.getAlias());
-            txtFather.setText(member.getFather());
-            txtSpouse.setText(member.getSpouse());
-            txtOccupation.setText(member.getOccupation());
-            txtAge.setText(member.getAge());
-            txtMobile.setText(member.getMobile());
-            txtAddress.setText(member.getAddress());
-            txtNominee.setText(member.getNominee());
-            txtAddressOfNominee.setText(member.getAddressOfNominee());
-            txtRemarks.setText(member.getRemarks());
-            if (member.getAvatarDrawable() != null) {
-                imageViewAvatar.setImageDrawable(member.getAvatarDrawable());
-                memberAvatar = member.getAvatar();
-            }
+        //EditText Fields
+        txtName.setText(member.getName());
+        txtAlias.setText(member.getAlias());
+        txtFather.setText(member.getFather());
+        txtSpouse.setText(member.getSpouse());
+        txtOccupation.setText(member.getOccupation());
+        txtAge.setText(member.getAge());
+        txtMobile.setText(member.getMobile());
+        txtAddress.setText(member.getAddress());
+        txtNominee.setText(member.getNominee());
+        txtAddressOfNominee.setText(member.getAddressOfNominee());
+        txtRemarks.setText(member.getRemarks());
+        if (member.getAvatarDrawable() != null) {
+            imageViewAvatar.setImageDrawable(member.getAvatarDrawable());
+            memberAvatar = member.getAvatar();
+        }
 
         TextView tvAccountNumber = (TextView) findViewById(R.id.tvAccountNumber);
         if (tvAccountNumber != null) {
@@ -319,11 +283,11 @@ private Member getMemberDetailsFromInput(){
         }
 
         //    mSelectedGenderRadioButton.setText(member.get);
-    //    mRelationWithNomineeSpinner.getSelectedItem(member.get);
-    //
-    //    if(relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))){
-    //          relationWithNominee = "";
-    //    }
+        //    mRelationWithNomineeSpinner.getSelectedItem(member.get);
+        //
+        //    if(relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))){
+        //          relationWithNominee = "";
+        //    }
         return member;
     }
 
@@ -332,11 +296,10 @@ private Member getMemberDetailsFromInput(){
         showExitConfirmationDialog();
     }
 
-    private void showExitConfirmationDialog(){
+    private void showExitConfirmationDialog() {
         new AlertDialog.Builder(this)
                 .setMessage("Any unsaved data will be removed. Are you sure want to close?")
-                .setPositiveButton("Close", new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -365,7 +328,7 @@ private Member getMemberDetailsFromInput(){
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             return true;
         }
 
@@ -390,7 +353,7 @@ private Member getMemberDetailsFromInput(){
     public class RegisterMemberTask extends AsyncTask<Void, Void, Boolean> {
         private final Member mMember;
 
-        RegisterMemberTask(Member member){
+        RegisterMemberTask(Member member) {
             this.mMember = member;
         }
 
@@ -400,53 +363,11 @@ private Member getMemberDetailsFromInput(){
             ContentValues values = Member.getMemberContentValues(mMember);
             getApplicationContext().getContentResolver().update(
                     SurakshaContract.MemberEntry.CONTENT_URI, values,
-                    SurakshaContract.MemberEntry._ID+"=?",
+                    SurakshaContract.MemberEntry._ID + "=?",
                     new String[]{String.valueOf(getIntent().getLongExtra(ARG_MEMBER_ID, -1))});
-
-//            //Save Account for member
-//            int accountNumber = Account.generateAccountNumber(getApplicationContext());
-//            Account account = new Account(mMember,Utility.getOpeningDepositAmount(),1);
-//            account.setAccountNumber(accountNumber);
-//            values = Account.getAccountContentValues(account);
-//            getApplicationContext().getContentResolver().insert(SurakshaContract.AccountEntry.CONTENT_URI, values);
-//
-//            //Save Registration Fee
-//            Transaction txnRegistrationFee = new Transaction(accountNumber, Utility.getRegistrationFeeAmount(),SurakshaContract.TxnEntry.RECEIPT_VOUCHER,SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER,"");
-//            values = Transaction.getTxnContentValues(txnRegistrationFee);
-//            getApplicationContext().getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
-//
-//            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//            boolean sendSms = prefs.getBoolean("enable_sms",false) && prefs.getBoolean("sms_after_registration",false);
-//            if(sendSms) {
-//                SmsManager sms = SmsManager.getDefault();
-//                String phoneNumber = "121";//mMember.getMobile();
-//                String message = getResources().getString(R.string.member_registered_sms)
-//                        + " Your account number is " + account.getAccountNumber();
-//                sms.sendTextMessage(phoneNumber, null, message, null, null);
-//            }
-
-
-            //Save Monthly Deposit which is pending at time of registration
-//            List<Calendar> pendingMonths = Utility.getPendingDepositMonths(null);
-//            List<ContentValues> cv = new ArrayList<>();
-//            for (int i = 0; i < pendingMonths.size(); i++) {
-//                Transaction txnPendingMonth = new Transaction(accountNumber,
-//                        Utility.getMonthlyDepositAmount(),
-//                        SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
-//                        SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
-//                        "Deposited at time of registration");
-//                txnPendingMonth.setDefinedDepositDate(pendingMonths.get(i).getTimeInMillis());
-//                if (txnPendingMonth.getAmount() > 0){
-//                    values = Transaction.getTxnContentValues(txnPendingMonth);
-//                    cv.add(values);
-//                    //getApplicationContext().getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
-//                }
-//            }
-//            ContentValues[] cvArray = cv.toArray(new ContentValues[cv.size()]);
-//            getApplicationContext().getContentResolver().bulkInsert(SurakshaContract.TxnEntry.CONTENT_URI, cvArray);
-
             return true;
         }
+
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
@@ -455,9 +376,8 @@ private Member getMemberDetailsFromInput(){
                 Toast.makeText(getApplicationContext(), getString(R.string.updated_successfully),
                         Toast.LENGTH_SHORT).show();
                 finish();
-            }
-            else{
-                Toast.makeText(getApplicationContext(),"Updating Failed. " , Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Updating Failed. ", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -468,9 +388,10 @@ private Member getMemberDetailsFromInput(){
         }
     }
 
-    private class saveAvatarTask extends AsyncTask<Uri,Void,Bitmap> {
+    private class saveAvatarTask extends AsyncTask<Uri, Void, Bitmap> {
         Context mContext;
-        ProgressBar progressBar =(ProgressBar)findViewById(R.id.avatarProgress);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.avatarProgress);
+
         public saveAvatarTask(Context context) {
             mContext = context;
         }
@@ -482,9 +403,9 @@ private Member getMemberDetailsFromInput(){
                 Bitmap bitmap = Glide.with(mContext)
                         .load(uriAvatar[0])
                         .asBitmap()
-                        .skipMemoryCache( true)
-                        .diskCacheStrategy( DiskCacheStrategy.SOURCE )
-                        .into(AVATAR_IMAGE_SIZE_IN_PIXEL,AVATAR_IMAGE_SIZE_IN_PIXEL)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(AVATAR_IMAGE_SIZE_IN_PIXEL, AVATAR_IMAGE_SIZE_IN_PIXEL)
                         .get();
                 memberAvatar = ImageUtils.bitmapToByteArray(bitmap);
                 return bitmap;

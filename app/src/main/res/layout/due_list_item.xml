@@ -13,7 +13,7 @@
         />
 
     <TextView
-        android:id="@+id/ledger"
+        android:id="@+id/txnLedger"
         android:text="LEDGER"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,12 +23,12 @@
         android:layout_toEndOf="@id/ic_due_list"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     <TextView
-        android:id="@+id/month"
+        android:id="@+id/txnMonth"
         android:text="Month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_margin"
-        android:layout_below="@id/ledger"
+        android:layout_below="@id/txnLedger"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@color/blue"
         android:textStyle="bold"
@@ -36,12 +36,12 @@
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@+id/amount"
+        android:id="@+id/txnAmount"
         android:text="2000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/text_margin"
-        android:layout_below="@id/month"
+        android:layout_below="@id/txnMonth"
         android:textStyle="bold"
         android:layout_toEndOf="@id/ic_due_list"
         android:fontFamily="sans-serif-condensed"

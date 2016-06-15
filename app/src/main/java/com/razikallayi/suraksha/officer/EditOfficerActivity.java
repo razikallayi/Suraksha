@@ -18,11 +18,12 @@ import android.widget.Toast;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.SmsUtils;
 
 public class EditOfficerActivity extends BaseActivity {
     public static final String ARG_OFFICER_ID = "officer_id";
 
-    private EditText txtName,txtPassword, txtUsername, txtMobile, txtAddress;
+    private EditText txtName, txtPassword, txtUsername, txtMobile, txtAddress;
     private Switch switchIsAdmin;
 
     private EditOfficerTask mEditOfficerTask = null;
@@ -45,17 +46,17 @@ public class EditOfficerActivity extends BaseActivity {
         }
 
         //Enable full view scroll while soft keyboard is shown
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         NestedScrollView sv = (NestedScrollView) findViewById(R.id.create_officer_form);
-        txtName            = (EditText) sv.findViewById(R.id.txtName);
-        txtUsername        = (EditText) sv.findViewById(R.id.txtUsername);
-        txtPassword        = (EditText) sv.findViewById(R.id.txtPassword);
-        txtMobile          = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress         = (EditText) sv.findViewById(R.id.txtAddress);
-        switchIsAdmin      = (Switch) sv.findViewById(R.id.switchIsAdmin);
+        txtName = (EditText) sv.findViewById(R.id.txtName);
+        txtUsername = (EditText) sv.findViewById(R.id.txtUsername);
+        txtPassword = (EditText) sv.findViewById(R.id.txtPassword);
+        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
+        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
+        switchIsAdmin = (Switch) sv.findViewById(R.id.switchIsAdmin);
 
-        setOfficerDetailsFromId(getIntent().getLongExtra(ARG_OFFICER_ID,-1));
+        setOfficerDetailsFromId(getIntent().getLongExtra(ARG_OFFICER_ID, -1));
 
         //Button Create Officer
         final Button mEditOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
@@ -68,20 +69,22 @@ public class EditOfficerActivity extends BaseActivity {
                 if (TextUtils.isEmpty(txtName.getText().toString())) {
                     txtName.setError(getString(R.string.name_is_required));
                     txtName.requestFocus();
-                }else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
+                } else if (!TextUtils.isEmpty(txtMobile.getText().toString()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString())) {
+                    txtMobile.setError(getString(R.string.invalid_mobile_number));
+                    txtMobile.requestFocus();
+                } else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
                     txtUsername.setError(getString(R.string.username_is_required));
                     txtUsername.requestFocus();
-                }else if (TextUtils.isEmpty(password)) {
+                } else if (TextUtils.isEmpty(password)) {
                     txtPassword.setError(getString(R.string.password_is_required));
                     txtPassword.requestFocus();
-                }else if (password.length()<4) {
+                } else if (password.length() < 4) {
                     txtPassword.setError(getString(R.string.pin_should_be_minimum_4_digits));
                     txtPassword.requestFocus();
-                }else if (!TextUtils.isDigitsOnly(password)) {
+                } else if (!TextUtils.isDigitsOnly(password)) {
                     txtPassword.setError(getString(R.string.pin_should_be_a_number));
                     txtPassword.requestFocus();
-                }
-                else {   //no errors in input
+                } else {   //no errors in input
                     mEditOfficer.setEnabled(false);
                     Officer officer = getOfficerDetailsFromInput();
                     //Add the member to database
@@ -96,16 +99,16 @@ public class EditOfficerActivity extends BaseActivity {
     }
 
 
-    private Officer getOfficerDetailsFromInput(){
+    private Officer getOfficerDetailsFromInput() {
         //EditText Fields
-        String name                = txtName.getText().toString();
-        String username            = txtUsername.getText().toString();
-        String password            = txtPassword.getText().toString();
-        String mobile              = txtMobile.getText().toString();
-        String address             = txtAddress.getText().toString();
-        boolean isAdmin             = switchIsAdmin.isChecked();
+        String name = txtName.getText().toString();
+        String username = txtUsername.getText().toString();
+        String password = txtPassword.getText().toString();
+        String mobile = txtMobile.getText().toString();
+        String address = txtAddress.getText().toString();
+        boolean isAdmin = switchIsAdmin.isChecked();
 
-        Officer officer = new Officer(getApplicationContext(),name,mobile, username, password, address, isAdmin);
+        Officer officer = new Officer(getApplicationContext(), name, mobile, username, password, address, isAdmin);
         officer.setUpdatedAt(System.currentTimeMillis());
         return officer;
     }
@@ -132,7 +135,7 @@ public class EditOfficerActivity extends BaseActivity {
     public class EditOfficerTask extends AsyncTask<Void, Void, Boolean> {
         private final Officer mOfficer;
 
-        EditOfficerTask(Officer officer){
+        EditOfficerTask(Officer officer) {
             this.mOfficer = officer;
         }
 
@@ -142,10 +145,11 @@ public class EditOfficerActivity extends BaseActivity {
             ContentValues values = Officer.getOfficerContentValues(mOfficer);
             getApplicationContext().getContentResolver().update(
                     SurakshaContract.OfficerEntry.CONTENT_URI, values,
-                    SurakshaContract.OfficerEntry._ID+"=?",
+                    SurakshaContract.OfficerEntry._ID + "=?",
                     new String[]{String.valueOf(getIntent().getLongExtra(ARG_OFFICER_ID, -1))});
             return true;
         }
+
         @Override
         protected void onPostExecute(final Boolean success) {
             super.onPostExecute(success);
@@ -153,9 +157,8 @@ public class EditOfficerActivity extends BaseActivity {
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.officer_updated_successfully), Toast.LENGTH_SHORT).show();
                 finish();
-            }
-            else{
-                Toast.makeText(getApplicationContext(),"Cannot update officer details. " , Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Cannot update officer details. ", Toast.LENGTH_LONG).show();
             }
         }
 

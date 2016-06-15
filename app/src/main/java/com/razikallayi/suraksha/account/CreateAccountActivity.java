@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +21,7 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.AuthUtils;
+import com.razikallayi.suraksha.utils.SmsUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 public class CreateAccountActivity extends BaseActivity {
@@ -30,13 +30,12 @@ public class CreateAccountActivity extends BaseActivity {
 
     private CreateAccountTask mCreateAccountTask;
 
-    private CheckBox chkRegistrationFee;
     private CheckBox isAcceptedTerms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_create_account);
+        setContentView(R.layout.account_create_activity);
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,28 +53,6 @@ public class CreateAccountActivity extends BaseActivity {
         TextView tvAccountNumber = (TextView) layoutCreateAccount.findViewById(R.id.tvAccountNumber);
         TextView tvRegistrationFee = (TextView) layoutCreateAccount.findViewById(R.id.tvRegistrationFee);
         isAcceptedTerms = (CheckBox) layoutCreateAccount.findViewById(R.id.accept_terms);
-
-        chkRegistrationFee = (CheckBox) layoutCreateAccount.findViewById(R.id.chkRegistrationFee);
-//
-//        RecyclerView rvPendingDeposit = (RecyclerView) findViewById(R.id.pending_deposit_list);
-//        // use this setting to improve performance if you know that changes
-//        // in content do not change the layout size of the RecyclerView
-//        rvPendingDeposit.setHasFixedSize(true);
-//
-//        // use a linear layout manager
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        rvPendingDeposit.setLayoutManager(layoutManager);
-//
-//        List<Calendar> pendingMonthsList = Utility.getPendingDepositMonths(null);
-//        // specify an adapter (see also next example)
-//        DepositAdapter pendingDepositAdapter = new DepositAdapter(pendingMonthsList);
-//        rvPendingDeposit.setAdapter(pendingDepositAdapter);
-
-        //Set Total Payable amount at time of registration
-//        TextView tvTotal = (TextView) findViewById(R.id.tvTotalRegistration);
-//        double amt = (pendingMonthsList.size() * Utility.getMonthlyDepositAmount()) + Utility.getRegistrationFeeAmount();
-//        tvTotal.setText("TOTAL : " + Utility.formatAmountInRupees(getApplicationContext(), amt));
-
 
         long memberId = getIntent().getLongExtra(AccountListFragment.ARG_MEMBER_ID, 0);
         mMember = Member.getMemberFromId(getApplicationContext(), memberId);
@@ -117,11 +94,7 @@ public class CreateAccountActivity extends BaseActivity {
 
     private void createAccount() {
         View v = findViewById(R.id.layoutCreateAccount);
-        if (!chkRegistrationFee.isChecked()) {
-            Snackbar.make(v, "Please pay and tick the registration fee", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        } else if (!isAcceptedTerms.isChecked()) {
-
+        if (!isAcceptedTerms.isChecked()) {
             Snackbar.make(v, "Please accept and terms and conditions", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {   //no errors in input
@@ -158,31 +131,12 @@ public class CreateAccountActivity extends BaseActivity {
             values = Transaction.getTxnContentValues(registrationFeeTxn);
             contentResolver.insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
 
-            SmsManager sms = SmsManager.getDefault();
-            String phoneNumber = "121";//mMember.getMobile();
-            String message = getResources().getString(R.string.account_created_sms) + " Your account number is " + account.getAccountNumber();
-            sms.sendTextMessage(phoneNumber, null, message, null, null);
-// TODO: 20-05-2016 remove depositing at time of account creation
-
-            //Save Monthly Deposit which is pending at time of registration
-//            List<Calendar> pendingMonths = CalendarUtils.getPendingDepositMonths(null);
-//            List<ContentValues> cv = new ArrayList<>();
-//            Context context = getApplicationContext();
-//            Long officerId = AuthUtils.getAuthenticatedOfficerId(context);
-//            for (int i = 0; i < pendingMonths.size(); i++) {
-//                Transaction txnPendingMonth = new Transaction(context,account.getAccountNumber(),
-//                        Utility.getMonthlyDepositAmount(),
-//                        SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
-//                        SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
-//                        "Deposited at time of registration",officerId);
-//                txnPendingMonth.setDefinedDepositDate(pendingMonths.get(i).getTimeInMillis());
-//                if (txnPendingMonth.getAmount() > 0) {
-//                    values = Transaction.getTxnContentValues(txnPendingMonth);
-//                    cv.add(values);
-//                }
-//            }
-//            ContentValues[] cvArray = cv.toArray(new ContentValues[cv.size()]);
-//            contentResolver.bulkInsert(SurakshaContract.TxnEntry.CONTENT_URI, cvArray);
+            if (SmsUtils.smsEnabledAfterCreateAccount(getApplicationContext())) {
+                String phoneNumber = mMember.getMobile();
+                String message = getResources().getString(R.string.account_created_sms) + " Your account number is " + account.getAccountNumber();
+                SmsUtils.sendSms(message,phoneNumber);
+                Toast.makeText(getApplicationContext(), "SMS sent to "+mMember.getName(), Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 

@@ -62,16 +62,16 @@
         android:id="@+id/register_member_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/spacing_large"
-        android:layout_marginLeft="@dimen/spacing_normal"
-        android:layout_marginRight="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_large"
         android:overScrollMode="never"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
             android:orientation="vertical">
 
             <LinearLayout
@@ -102,7 +102,6 @@
 
             <android.support.design.widget.TextInputLayout
                 style="@style/Suraksha.InputField"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name">
@@ -116,7 +115,6 @@
 
             <android.support.design.widget.TextInputLayout
                 style="@style/Suraksha.InputField"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/mobile">
@@ -125,6 +123,7 @@
                     android:id="@+id/txtMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="10"
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
@@ -278,30 +277,29 @@
                     android:id="@+id/txtRemarks"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textShortMessage"/>
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName" />
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                style="@style/Suraksha.InputField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <CheckBox
-                    android:id="@+id/accept_terms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="I accept terms and conditions of suraksha" />
-            </LinearLayout>
+            <CheckBox
+                android:id="@+id/accept_terms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:text="I accept terms and conditions of suraksha" />
 
             <LinearLayout
                 android:id="@+id/RegistrationFeeLinearLayout"
                 style="@style/Suraksha.InputField"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:focusable="false">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_very_tiny"
                     android:accessibilityLiveRegion="assertive"
                     android:focusable="false"
                     android:text="Registration Fee" />
@@ -310,26 +308,23 @@
                     android:id="@+id/tvRegistrationFee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/spacing_small"
                     android:accessibilityLiveRegion="assertive"
-                    android:fontFamily="sans-serif-condensed"
                     android:focusable="false"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="322"
+                    android:textStyle="bold" />
             </LinearLayout>
-
-
-
 
             <Button
                 android:id="@+id/btnAddMember"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorSecondaryAccent"
+                android:background="@color/colorAccent"
                 android:contentDescription="Add Member"
                 android:focusable="true"
-                android:text="@string/add_member"
-                android:textStyle="bold" />
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:text="@string/add_member" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

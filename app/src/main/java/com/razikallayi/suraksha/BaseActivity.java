@@ -5,17 +5,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.razikallayi.suraksha.member.MemberListActivity;
+import com.razikallayi.suraksha.officer.OfficerListActivity;
+import com.razikallayi.suraksha.txn.TxnReportActivity;
 import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.SettingsUtils;
 
-public abstract class BaseActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public abstract class BaseActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     protected static int LOCK_SCREEN_REQUEST = 100;
     protected boolean mSkipLockOnce = false;
@@ -54,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity implements SharedPr
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.base, menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.settings_menu, menu);//Add settings menu to every activity
+        inflater.inflate(R.menu.base, menu);//Add settings menu to every activity
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -64,6 +75,15 @@ public abstract class BaseActivity extends AppCompatActivity implements SharedPr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_home_activity) {
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            return true;
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -125,6 +145,29 @@ public abstract class BaseActivity extends AppCompatActivity implements SharedPr
         }
     }
 
+    public void setupNavDrawer() {
+        //Setup the toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setLogo(R.drawable.suraksha_logo_name);
+            toolbar.setTitle("");
+            setSupportActionBar(toolbar);
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer != null) {
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                toggle.syncState();
+
+
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                if (navigationView != null) {
+                    navigationView.setNavigationItemSelectedListener(this);
+                }
+            }
+        }
+    }
 
     protected void skipLockOnce() {
         mSkipLockOnce = true;
@@ -143,6 +186,30 @@ public abstract class BaseActivity extends AppCompatActivity implements SharedPr
                 }
             }
         }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_members) {
+            // Handle the register member action
+            Intent intent = new Intent(this, MemberListActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_reports) {
+            Intent intent = new Intent(this, TxnReportActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_officer) {
+            Intent intent = new Intent(this, OfficerListActivity.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 }

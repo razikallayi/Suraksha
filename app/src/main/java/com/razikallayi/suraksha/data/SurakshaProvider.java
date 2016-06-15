@@ -301,7 +301,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
 //                        + " where " + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ?) as balance";
 //
 
-                String strQuery = "select sum(case when ledger = 1 and voucher_type = 1 then amount else 0 end) - sum(case when ledger = 4 and voucher_type = 0 then amount else 0 end) as balance from transactions";
+                String strQuery = "select sum(case when ledger = 1 and voucher_type = 101 then amount else 0 end) - sum(case when ledger = 4 and voucher_type = 100 then amount else 0 end) as balance from transactions";
                 retCursor = mOpenHelper.getReadableDatabase().rawQuery(
                         strQuery,null,null);
 //                        new String[]{String.valueOf(SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER),
@@ -385,47 +385,47 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
     private void normalizeMemberDate(ContentValues values) {
         //Member table
         // normalize the date value
-        if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT);
-            values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
-
-        if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_CREATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
-        if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
+//        if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT);
+//            values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
+//
+//        if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_CREATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_CREATED_AT);
+//            values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
+//        if (values.containsKey(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT);
+//            values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
     }
     private void normalizeOfficerDate(ContentValues values) {
         //Officer table
         // normalize the date value
-        if (values.containsKey(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
-        if (values.containsKey(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
+//        if (values.containsKey(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT);
+//            values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
+//        if (values.containsKey(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT);
+//            values.put(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
     }
     private void normalizeAccountDate(ContentValues values) {
-        // normalize the date value
-        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT);
-            values.put(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
-
-        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CREATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.AccountEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
-        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
+//        // normalize the date value
+//        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT);
+//            values.put(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
+//
+//        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CREATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_CREATED_AT);
+//            values.put(SurakshaContract.AccountEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
+//        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT);
+//            values.put(SurakshaContract.AccountEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
     }
 
     private void normalizeTxnDate(ContentValues values) {
@@ -437,15 +437,15 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
             }
         }
 
-        // normalize the date value
-        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_CREATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_CREATED_AT);
-            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
-        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT)) {
-            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT);
-            values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
-        }
+//        // normalize the date value
+//        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_CREATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_CREATED_AT);
+//            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
+//        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT)) {
+//            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT);
+//            values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
+//        }
     }
 
     @Nullable

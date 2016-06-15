@@ -64,7 +64,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_activity_member_details, menu);
+        inflater.inflate(R.menu.menu_member_details_activity, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

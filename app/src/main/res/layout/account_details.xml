@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout="@layout/officer_list_recycler_view" />
+        tools:layout="@layout/deposit_fragment" />
 
     <!--<FrameLayout-->
     <!--android:id="@+id/fragment_txn_list"-->

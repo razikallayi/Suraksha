@@ -7,17 +7,15 @@
 
     <TextView
         android:id="@+id/dateHeader"
-        android:text="Date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginBottom="@dimen/spacing_small"
-        android:textSize="@dimen/font_huge"
-        android:gravity="center"
-        android:background="@color/colorSecondaryAccent"
-        android:textColor="@color/white"
-        android:padding="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:fontFamily="sans-serif-condensed-light"
-        />
+        android:gravity="center"
+        android:padding="@dimen/spacing_small"
+        android:text="Date"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/font_huge" />
 
 </RelativeLayout>

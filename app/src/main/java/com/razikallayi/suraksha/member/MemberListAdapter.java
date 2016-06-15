@@ -26,7 +26,6 @@ import com.razikallayi.suraksha.utils.ImageUtils;
 import com.razikallayi.suraksha.utils.LetterAvatar;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Razi Kallayi on 10-04-2016.
@@ -73,6 +72,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.member_list_content, parent, false);
         view.setOnClickListener(this);
+
         return new MemberListViewHolder(view);
     }
 
@@ -197,11 +197,9 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             int avatarPixel = 56;
             int sizeDp = (int) (avatarPixel * density);
             Drawable drawableAvatar = null;
-            final int low = 50;
-            final int high = 200;
-            Random rnd = new Random();
-            int color = Color.rgb(rnd.nextInt(high - low) + low, rnd.nextInt(high - low) + low, rnd.nextInt(high - low) + low);
             String firstLetter = members[0].getName().substring(0, 1).toUpperCase();
+
+            int color = Color.rgb(123 ,145, 150);
             drawableAvatar = members[0].getAvatarDrawable();
             if (drawableAvatar == null) {
                 return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(new LetterAvatar(mContext,

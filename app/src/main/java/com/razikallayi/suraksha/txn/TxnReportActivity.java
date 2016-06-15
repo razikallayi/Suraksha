@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
@@ -43,9 +44,6 @@ public class TxnReportActivity extends BaseActivity implements
 
     public class HeaderItem extends ListItem {
         private long date;
-        // here getters and setters
-        // for title and so on, built
-        // using date
 
         @Override
         public int getType() {
@@ -120,7 +118,7 @@ public class TxnReportActivity extends BaseActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
-        mTransactionsMap = new LinkedHashMap <Long, List<Transaction>>();
+        mTransactionsMap = new LinkedHashMap<Long, List<Transaction>>();
         long dateKey;
         if (c.getCount() <= 0) {
             return;
@@ -163,7 +161,6 @@ public class TxnReportActivity extends BaseActivity implements
             }
         }
 
-
         RecyclerView transactionRecyclerView = (RecyclerView) findViewById(R.id.txnRecyclerView);
         TxnAdapter adapter = new TxnAdapter(getLayoutInflater(), mItems);
         transactionRecyclerView.setAdapter(adapter);
@@ -205,6 +202,9 @@ public class TxnReportActivity extends BaseActivity implements
             } else {
                 TxnItem txnItem = (TxnItem) mItems.get(position);
                 TxnViewHolder viewHolder = (TxnViewHolder) holder;
+                viewHolder.mAccountNo.setText(String.valueOf(txnItem.txn.getAccountNumber()));
+                viewHolder.mMemberName.setText(Account.getAccountFromAccountNumber(
+                        getApplicationContext(), txnItem.txn.getAccountNumber()).getMember().getName());
                 viewHolder.mAmountView.setText(Utility.formatAmountInRupees(getApplicationContext(),
                         txnItem.txn.getAmount()));
                 if (txnItem.txn.getDefinedDepositMonth() != -1) {
@@ -229,6 +229,8 @@ public class TxnReportActivity extends BaseActivity implements
 
         private class TxnViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
+            public final TextView mAccountNo;
+            public final TextView mMemberName;
             public final TextView mLedger;
             public final TextView mMonthView;
             public final TextView mCreatedAt;
@@ -238,11 +240,13 @@ public class TxnReportActivity extends BaseActivity implements
             public TxnViewHolder(View itemView) {
                 super(itemView);
                 mView = itemView;
-                mLedger = (TextView) itemView.findViewById(R.id.ledger);
-                mMonthView = (TextView) itemView.findViewById(R.id.month);
-                mCreatedAt = (TextView) itemView.findViewById(R.id.createdAt);
-                mAmountView = (TextView) itemView.findViewById(R.id.amount);
-                mVoucherName = (TextView) itemView.findViewById(R.id.voucherName);
+                mAccountNo = (TextView) itemView.findViewById(R.id.txnAccountNo);
+                mMemberName = (TextView) itemView.findViewById(R.id.txnMemberName);
+                mLedger = (TextView) itemView.findViewById(R.id.txnLedger);
+                mMonthView = (TextView) itemView.findViewById(R.id.txnMonth);
+                mCreatedAt = (TextView) itemView.findViewById(R.id.txnCreatedAt);
+                mAmountView = (TextView) itemView.findViewById(R.id.txnAmount);
+                mVoucherName = (TextView) itemView.findViewById(R.id.txnVoucherName);
             }
         }
 

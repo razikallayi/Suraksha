@@ -3,7 +3,6 @@ package com.razikallayi.suraksha.txn;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
 
@@ -102,12 +101,12 @@ public class Transaction {
 
     //Get working money fund amount
     public static Double getWmf(Context context) {
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.TxnEntry.buildGetWmfUri(), null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(SurakshaContract.TxnEntry.buildGetWmfUri(),
+                null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
         Double wmfAmount = cursor.getDouble(0);
-        Log.d("FISH", "getWmf: " + wmfAmount);
         cursor.close();
         return wmfAmount;
     }
