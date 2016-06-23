@@ -1,3 +1,4 @@
+
 package com.razikallayi.suraksha;
 
 import android.content.Context;
@@ -20,7 +21,7 @@ import android.widget.Toast;
 
 import com.razikallayi.suraksha.member.MemberListActivity;
 import com.razikallayi.suraksha.officer.OfficerListActivity;
-import com.razikallayi.suraksha.txn.TxnReportActivity;
+import com.razikallayi.suraksha.report.TxnReportActivity;
 import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.SettingsUtils;
 
@@ -33,9 +34,12 @@ public abstract class BaseActivity extends AppCompatActivity
     private boolean mHasLoaded = false;
     private Context mContext;
 
-    protected static final int mMinLockTime = 5000; //5 seconds
-    //    protected static final int mMinOfficerLockTime = 15000; //15 sec
-    protected static final int mMinOfficerLockTime = 900000; //15 minutes
+    private static final int FIVE_SECONDS = 5000; //5 seconds
+    private static final int FIFTEEN_MINUTES = 900000; //15 minutes
+
+
+    protected static final int mMinLockTime = FIFTEEN_MINUTES; // TODO: 17-06-2016 change to five seconds on Production
+    protected static final int mMinOfficerLockTime = FIFTEEN_MINUTES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +179,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d("FISH", "onSharedPreferenceChanged: " + key);
+        Log.d("FISH Key", "onSharedPreferenceChanged: " + key);
         if (key != null) {
             if (key.equals(SettingsUtils.PREF_IS_LOGGED_IN)) {
                 if (!AuthUtils.isLoggedIn(mContext)) {

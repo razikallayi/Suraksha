@@ -44,16 +44,13 @@ public class SurakshaContract {
     // Possible paths (appended to base content URI for possible URI's)
     public static final String PATH_OFFICER = "officer";
 
-    public static final String PATH_LOAN_PAYED = "loan_payed";
-
+    public static final String PATH_LOAN_ISSUE = "loan_issue";
 
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    public SurakshaContract(){}
-
-
-
+    public SurakshaContract() {
+    }
 
 
     /* Inner class that defines the table contents */
@@ -66,33 +63,37 @@ public class SurakshaContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MEMBER;
 
-        public static final String TABLE_NAME                  = "members";
-        public static final String COLUMN_NAME                 = "name";
-        public static final String COLUMN_MOBILE               = "mobile";
-        public static final String COLUMN_ADDRESS              = "address";
-        public static final String COLUMN_ALIAS                = "alias";
-        public static final String COLUMN_FATHER               = "father";
-        public static final String COLUMN_SPOUSE               = "spouse";
-        public static final String COLUMN_GENDER               = "gender";
-        public static final String COLUMN_OCCUPATION           = "occupation";
-        public static final String COLUMN_AVATAR               = "avatar";
-        public static final String COLUMN_AGE                  = "age";
-        public static final String COLUMN_NOMINEE              = "nominee";
-        public static final String COLUMN_RELATION_WITH_NOMINEE= "relation_with_nominee";
-        public static final String COLUMN_ADDRESS_OF_NOMINEE   = "address_of_nominee";
-        public static final String COLUMN_REMARKS              = "remarks";
-        public static final String COLUMN_IS_DELETED           = "is_deleted";
-        public static final String COLUMN_CLOSED_AT            = "closed_at";
-        public static final String COLUMN_CREATED_AT           = "created_at";
-        public static final String COLUMN_UPDATED_AT           = "updated_at";
+        public static final String TABLE_NAME = "members";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_ACCOUNT_NO = "account_no";
+        public static final String COLUMN_MOBILE = "mobile";
+        public static final String COLUMN_ADDRESS = "address";
+        public static final String COLUMN_ALIAS = "alias";
+        public static final String COLUMN_FATHER = "father";
+        public static final String COLUMN_SPOUSE = "spouse";
+        public static final String COLUMN_GENDER = "gender";
+        public static final String COLUMN_OCCUPATION = "occupation";
+        public static final String COLUMN_AVATAR = "avatar";
+        public static final String COLUMN_AGE = "age";
+        public static final String COLUMN_NOMINEE = "nominee";
+        public static final String COLUMN_RELATION_WITH_NOMINEE = "relation_with_nominee";
+        public static final String COLUMN_ADDRESS_OF_NOMINEE = "address_of_nominee";
+        public static final String COLUMN_REMARKS = "remarks";
+        public static final String COLUMN_HAS_LOAN = "has_loan";
+        public static final String COLUMN_IS_LOAN_BLOCKED = "is_loan_blocked";
+        public static final String COLUMN_IS_DELETED = "is_deleted";
+        public static final String COLUMN_CLOSED_AT = "closed_at";
+        public static final String COLUMN_CREATED_AT = "created_at";
+        public static final String COLUMN_UPDATED_AT = "updated_at";
 
         public static Uri buildMemberUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildMemberJoinAccount(){
+        public static Uri buildMemberJoinAccount() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEMBER_JOIN_ACCOUNT).build();
         }
+
 
         public static String getMemberId(Uri uri) {
             return uri.getPathSegments().get(1);
@@ -100,7 +101,6 @@ public class SurakshaContract {
 
 
     }
-
 
 
     /* Inner class that defines the table contents */
@@ -113,19 +113,20 @@ public class SurakshaContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ACCOUNT;
 
-        public static final String TABLE_NAME                  = "accounts";
-        public static final String COLUMN_ACCOUNT_NUMBER       = "account_number";
-        public static final String COLUMN_MEMBER_ID            = "member_id";
-        public static final String COLUMN_OPENING_BALANCE      = "opening_balance";
-        public static final String COLUMN_INSTALMENT_AMOUNT    = "instalment_amount";
-        public static final String COLUMN_IS_ACTIVE            = "is_active";
-        public static final String COLUMN_CLOSED_AT            = "closed_at";
-        public static final String COLUMN_CREATED_AT           = "created_at";
-        public static final String COLUMN_UPDATED_AT           = "updated_at";
+        public static final String TABLE_NAME = "accounts";
+        public static final String COLUMN_ACCOUNT_NUMBER = "account_number";
+        public static final String COLUMN_MEMBER_ID = "member_id";
+        public static final String COLUMN_OPENING_BALANCE = "opening_balance";
+        public static final String COLUMN_INSTALMENT_AMOUNT = "instalment_amount";
+        public static final String COLUMN_IS_ACTIVE = "is_active";
+        public static final String COLUMN_CLOSED_AT = "closed_at";
+        public static final String COLUMN_CREATED_AT = "created_at";
+        public static final String COLUMN_UPDATED_AT = "updated_at";
 
         public static Uri buildAccountUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
         public static Uri buildAccountUriUsingAccountNumber(int account_number) {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACCOUNT_NUMBER).appendPath(Long.toString(account_number)).build();
         }
@@ -146,7 +147,7 @@ public class SurakshaContract {
 
     }
 
-//Transaction Entry
+    //Transaction Entry
     public static class TxnEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN).build();
@@ -155,31 +156,31 @@ public class SurakshaContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TXN;
 
-        public static final String TABLE_NAME                  = "transactions";
-        public static final String COLUMN_FK_ACCOUNT_NUMBER    = "fk_account_number";
-        public static final String COLUMN_AMOUNT               = "amount";
+        public static final String TABLE_NAME = "transactions";
+        public static final String COLUMN_FK_ACCOUNT_NUMBER = "fk_account_number";
+        public static final String COLUMN_AMOUNT = "amount";
         public static final String COLUMN_DEFINED_DEPOSIT_DATE = "deposit_for_date";
-        public static final String COLUMN_FK_LOAN_PAYED_ID     = "loan_payed_id";
-        public static final String COLUMN_VOUCHER_TYPE         = "voucher_type";
-        public static final String COLUMN_LEDGER               = "ledger";
-        public static final String COLUMN_FK_OFFICER_ID        = "fk_officer_id";
-        public static final String COLUMN_NARRATION            = "narration";
-        public static final String COLUMN_CREATED_AT           = "created_at";
-        public static final String COLUMN_UPDATED_AT           = "updated_at";
+        public static final String COLUMN_FK_LOAN_PAYED_ID = "loan_payed_id";
+        public static final String COLUMN_VOUCHER_TYPE = "voucher_type";
+        public static final String COLUMN_LEDGER = "ledger";
+        public static final String COLUMN_FK_OFFICER_ID = "fk_officer_id";
+        public static final String COLUMN_NARRATION = "narration";
+        public static final String COLUMN_CREATED_AT = "created_at";
+        public static final String COLUMN_UPDATED_AT = "updated_at";
 
 
-    //Ledger
-    //Change in Transaction, if you make any change here
-        public static final int REGISTRATION_FEE_LEDGER  = 1;
-        public static final int DEPOSIT_LEDGER  = 2;
-        public static final int LOAN_PAYED_LEDGER  = 3;
-        public static final int LOAN_RETURN_LEDGER  = 4;
-        public static final int WORKING_COST_LEDGER  = 5;
+        //Ledger
+        //Change in Transaction, if you make any change here
+        public static final int REGISTRATION_FEE_LEDGER = 1;
+        public static final int DEPOSIT_LEDGER = 2;
+        public static final int LOAN_PAYED_LEDGER = 3;
+        public static final int LOAN_RETURN_LEDGER = 4;
+        public static final int WORKING_COST_LEDGER = 5;
 
         //Voucher_type
         //Change in Transaction, if you make any change here
-        public static final int PAYMENT_VOUCHER  = 100;
-        public static final int RECEIPT_VOUCHER  = 101;
+        public static final int PAYMENT_VOUCHER = 100;
+        public static final int RECEIPT_VOUCHER = 101;
 
         public static Uri buildTxnUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -198,13 +199,16 @@ public class SurakshaContract {
         public static Uri buildFetchAllDepositsUri() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_FETCH_DEPOSITS).build();
         }
+
         public static Uri buildGetTotalDeposit() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_TOTAL_DEPOSIT).build();
         }
+
         public static Uri buildGetDepositOfAccount(int account_number) {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_DEPOSIT_OF_ACCOUNT)
                     .appendPath(String.valueOf(account_number)).build();
         }
+
         public static Uri buildGetDepositOnDate() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_GET_DEPOSIT_ON_DATE).build();
         }
@@ -212,6 +216,7 @@ public class SurakshaContract {
         public static Uri buildTotalLoanPayed() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_TOTAL_LOAN_PAYED).build();
         }
+
         public static Uri buildTotalLoanReturn() {
             return BASE_CONTENT_URI.buildUpon().appendPath(PATH_TXN_TOTAL_LOAN_RETURN).build();
         }
@@ -247,32 +252,33 @@ public class SurakshaContract {
     }
 
 
-
     /* Inner class that defines the table contents */
     //LoanPayed Entry
-    public static class LoanPayedEntry implements BaseColumns {
+    public static class LoanIssueEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOAN_PAYED).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOAN_ISSUE).build();
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOAN_PAYED;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOAN_ISSUE;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOAN_PAYED;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOAN_ISSUE;
 
-        public static final String TABLE_NAME                  = "loan_payed";
-        public static final String COLUMN_FK_ACCOUNT_NUMBER    = "account_number";
-        public static final String COLUMN_SECURITY_ACCOUNT_NUMBER  = "security_acno";
-        public static final String COLUMN_PURPOSE              = "purpose";
-        public static final String COLUMN_AMOUNT               = "amount";
-        public static final String COLUMN_CLOSED_AT            = "closed_at";
-        public static final String COLUMN_CREATED_AT           = "created_at";
-        public static final String COLUMN_UPDATED_AT           = "updated_at";
+        public static final String TABLE_NAME = "loan_payed";
+        public static final String COLUMN_FK_ACCOUNT_NUMBER = "account_number";
+        public static final String COLUMN_SECURITY_ACCOUNT_NUMBER = "security_acno";
+        public static final String COLUMN_PURPOSE = "purpose";
+        public static final String COLUMN_AMOUNT = "amount";
+        public static final String COLUMN_LOAN_INSTALMENT_TIMES = "loan_instalment_times";
+        public static final String COLUMN_LOAN_INSTALMENT_AMOUNT = "loan_instalment_amount";
+        public static final String COLUMN_OFFICE_STATEMENT = "office_statement";
+        public static final String COLUMN_CLOSED_AT = "closed_at";
+        public static final String COLUMN_CREATED_AT = "created_at";
+        public static final String COLUMN_UPDATED_AT = "updated_at";
 
-        public static Uri buildLoanPayedUri(long id) {
+        public static Uri buildLoanIssueUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-
-        public static String getAccountNumber(Uri uri) {
-            return uri.getPathSegments().get(1);
+        public static long getLoanIssueIdFromUri(Uri uri) {
+            return Long.valueOf(uri.getPathSegments().get(1));
         }
     }
 
@@ -287,15 +293,15 @@ public class SurakshaContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_OFFICER;
 
-        public static final String TABLE_NAME                  = "officers";
-        public static final String COLUMN_NAME                 = "name";
-        public static final String COLUMN_MOBILE               = "mobile";
-        public static final String COLUMN_USERNAME             = "username";
-        public static final String COLUMN_PASSWORD             = "password";
-        public static final String COLUMN_ADDRESS              = "address";
-        public static final String COLUMN_IS_ADMIN             = "isAdmin";
-        public static final String COLUMN_CREATED_AT           = "created_at";
-        public static final String COLUMN_UPDATED_AT           = "updated_at";
+        public static final String TABLE_NAME = "officers";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_MOBILE = "mobile";
+        public static final String COLUMN_USERNAME = "username";
+        public static final String COLUMN_PASSWORD = "password";
+        public static final String COLUMN_ADDRESS = "address";
+        public static final String COLUMN_IS_ADMIN = "isAdmin";
+        public static final String COLUMN_CREATED_AT = "created_at";
+        public static final String COLUMN_UPDATED_AT = "updated_at";
 
         public static Uri buildOfficerUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -305,12 +311,6 @@ public class SurakshaContract {
             return uri.getPathSegments().get(1);
         }
     }
-
-
-
-
-
-
 
 
 //    public static long normalizeDate(long startDate) {

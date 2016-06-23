@@ -25,10 +25,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.razikallayi.suraksha.AvatarActivity;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.account.AccountListFragment;
+import com.razikallayi.suraksha.account.AccountManipulationsFragment;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.LetterAvatar;
 
@@ -52,11 +53,14 @@ public class MemberListActivity extends BaseActivity
             SurakshaContract.MemberEntry.COLUMN_NAME,
             SurakshaContract.MemberEntry.COLUMN_ADDRESS,
             SurakshaContract.MemberEntry.COLUMN_AVATAR,
+            SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO
     };
     private static final int COL_MEMBER_ID = 0;
     private static final int COL_MEMBER_NAME = 1;
     private static final int COL_MEMBER_ADDRESS = 2;
     private static final int COL_MEMBER_AVATAR = 3;
+    private static final int COL_MEMBER_ACCOUNT_NO = 4;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -158,16 +162,30 @@ public class MemberListActivity extends BaseActivity
 
     private void setupViewPager(ViewPager viewPager, long memberId) {
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
-        AccountListFragment accountListFragment = (AccountListFragment)
-                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
-        if (null == accountListFragment) {
+
+
+        AccountManipulationsFragment accountManipulationsFragment = (AccountManipulationsFragment)
+                getSupportFragmentManager().findFragmentByTag(AccountManipulationsFragment.TAG);
+        if (null == accountManipulationsFragment) {
             Bundle arguments = new Bundle();
-            //AccountList
-            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
-            accountListFragment = new AccountListFragment();
-            accountListFragment.setArguments(arguments);
-            adapter.addFragment(accountListFragment, "Accounts");
+            //AccountManipulationsFragment
+            arguments.putLong(AccountManipulationsFragment.ARG_MEMBER_ID, memberId);
+            accountManipulationsFragment = new AccountManipulationsFragment();
+            accountManipulationsFragment.setArguments(arguments);
+            adapter.addFragment(accountManipulationsFragment, "Account");
         }
+
+
+//        AccountListFragment accountListFragment = (AccountListFragment)
+//                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
+//        if (null == accountListFragment) {
+//            Bundle arguments = new Bundle();
+//            //AccountList
+//            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
+//            accountListFragment = new AccountListFragment();
+//            accountListFragment.setArguments(arguments);
+//            adapter.addFragment(accountListFragment, "Accounts");
+//        }
 
         MemberDetailFragment memberDetailFragment = (MemberDetailFragment)
                 getSupportFragmentManager().findFragmentByTag(MemberDetailFragment.TAG);
@@ -251,15 +269,30 @@ public class MemberListActivity extends BaseActivity
         }
 
         @Override
-        protected void onPostExecute(Member member) {
+        protected void onPostExecute(final Member member) {
             super.onPostExecute(member);
+
+            //Address Or Mobile
             TextView tvMobile = (TextView) findViewById(R.id.mobileMember);
-            String mobileOrAddress = member.getMobile().isEmpty()?member.getAddress():member.getMobile();
+            String mobileOrAddress = member.getAddress().isEmpty()?member.getMobile():member.getAddress();
             tvMobile.setText(mobileOrAddress);
+
+            //AccountNumber
+            TextView lblAccountNumber = (TextView) findViewById(R.id.lblAccountNumberInTitle);
+            String accountNumber = String.valueOf(member.getAccountNo());
+            lblAccountNumber.setText(accountNumber);
 
             ImageView ivAvatar = (ImageView) findViewById(R.id.avatarMember);
             if (member.getAvatarDrawable() != null) {
                 ivAvatar.setImageDrawable(member.getAvatarDrawable());
+                ivAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), AvatarActivity.class);
+                        intent.putExtra("avatar", member.getAvatar());
+                        startActivity(intent);
+                    }
+                });
             } else {
                 Random rnd = new Random();
                 int Low = 50;
@@ -276,12 +309,16 @@ public class MemberListActivity extends BaseActivity
         if (args != null) {
             //Used for searching
             return new CursorLoader(getApplicationContext(),
-                    SurakshaContract.MemberEntry.buildMemberJoinAccount(),
-                    MEMBER_COLUMNS, SurakshaContract.MemberEntry.COLUMN_NAME
+                    SurakshaContract.MemberEntry.CONTENT_URI,
+                    MEMBER_COLUMNS,
+
+                    SurakshaContract.MemberEntry.COLUMN_NAME
                     + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ADDRESS
-                    + " LIKE ? OR " + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + "=?",
+                    + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO + "=?",
+
                     new String[]{String.valueOf("%" + args.get("query") + "%"), String.valueOf("%"
                             + args.get("query") + "%"), String.valueOf(args.get("query"))},
+
                     SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID
                             + " COLLATE NOCASE");
         } else {

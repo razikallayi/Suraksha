@@ -4,19 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.razikallayi.suraksha.R;
@@ -24,8 +18,6 @@ import com.razikallayi.suraksha.RecyclerViewCursorAdapter;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.ImageUtils;
 import com.razikallayi.suraksha.utils.LetterAvatar;
-
-import java.util.List;
 
 /**
  * Created by Razi Kallayi on 10-04-2016.
@@ -36,7 +28,7 @@ import java.util.List;
  * specified {@link OnItemClickListener}.
  */
 public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapter.MemberListViewHolder>
-        implements View.OnClickListener {
+        implements View.OnClickListener{
 
     private static final int VIEW_TYPE_COUNT = 2;
     private static final int VIEW_TYPE_NORMAL_MEMBER = 0;
@@ -53,12 +45,14 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             SurakshaContract.MemberEntry.COLUMN_NAME,
             SurakshaContract.MemberEntry.COLUMN_ADDRESS,
             SurakshaContract.MemberEntry.COLUMN_AVATAR,
+            SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO
     };
 
     private static final int COL_MEMBER_ID = 0;
     private static final int COL_MEMBER_NAME = 1;
     private static final int COL_MEMBER_ADDRESS = 2;
     private static final int COL_MEMBER_AVATAR = 3;
+    private static final int COL_MEMBER_ACCOUNT_NO = 4;
 
     // Flag to determine if we want to use a separate view for "today".
     private boolean mRedMemberLayout = true;
@@ -111,7 +105,8 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         private ImageView mAvatarView;
         private TextView mNameView;
         private TextView mAddressView;
-        private LinearLayout mAccountNumbersView;
+        private TextView mAccountNumberView;
+        //        private LinearLayout mAccountNumbersView;
         private Member mMember;
 
         public MemberListViewHolder(final View view) {
@@ -120,7 +115,8 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             mAvatarView = (ImageView) view.findViewById(R.id.avatar);
             mNameView = (TextView) view.findViewById(R.id.name);
             mAddressView = (TextView) view.findViewById(R.id.address);
-            mAccountNumbersView = (LinearLayout) view.findViewById(R.id.llAccountNumbers);
+            mAccountNumberView = (TextView) view.findViewById(R.id.lblAccountNumber);
+//            mAccountNumbersView = (LinearLayout) view.findViewById(R.id.llAccountNumbers);
         }
 
         public void bindData(Cursor cursor) {
@@ -129,37 +125,38 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             member.setId(cursor.getLong(COL_MEMBER_ID));
             member.setName(cursor.getString(COL_MEMBER_NAME));
             member.setAddress(cursor.getString(COL_MEMBER_ADDRESS));
-            member.setAvatar(cursor.getBlob(COL_MEMBER_AVATAR));
-            member.fetchAccountNumbers(mView.getContext());
+            member.setAccountNo(cursor.getInt(COL_MEMBER_ACCOUNT_NO));
+//            member.fetchAccountNumbers(mView.getContext());
             mMember = member;
 
-            List<Integer> accountNumbers = member.getAccountNumbers();
-            //Remove all views, else account numbers will get repopulated in a random order
-            mAccountNumbersView.removeAllViews();
-            for (int accountNumber : accountNumbers) {
-                TextView tvAccountNumber = new TextView(mView.getContext());
-                tvAccountNumber.setText(String.valueOf(accountNumber));
-                tvAccountNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        mView.getContext().getResources().getDimension(R.dimen.font_small));
-                tvAccountNumber.setTypeface(null, Typeface.BOLD);
-
-                tvAccountNumber.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.white));
-                tvAccountNumber.setBackground(ResourcesCompat.getDrawable(mView.getContext().getResources(), R.drawable.ic_circle, null));
-                tvAccountNumber.setGravity(Gravity.CENTER);
-                //set Padding
-                int sidePaddingPixel = 2;
-                int sidePaddingDp = (int) (sidePaddingPixel * mView.getContext().getResources().getDisplayMetrics().density);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(sidePaddingDp, sidePaddingDp, sidePaddingDp, sidePaddingDp);
-                mAccountNumbersView.addView(tvAccountNumber, params);
-            }
+//            List<Integer> accountNumbers = member.getAccountNumbers();
+//            //Remove all views, else account numbers will get repopulated in a random order
+//            mAccountNumbersView.removeAllViews();
+//            for (int accountNumber : accountNumbers) {
+//                TextView tvAccountNumber = new TextView(mView.getContext());
+//                tvAccountNumber.setText(String.valueOf(accountNumber));
+//                tvAccountNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+//                        mView.getContext().getResources().getDimension(R.dimen.font_small));
+//                tvAccountNumber.setTypeface(null, Typeface.BOLD);
+//
+//                tvAccountNumber.setTextColor(ContextCompat.getColor(mView.getContext(), R.color.white));
+//                tvAccountNumber.setBackground(ResourcesCompat.getDrawable(mView.getContext().getResources(), R.drawable.ic_circle, null));
+//                tvAccountNumber.setGravity(Gravity.CENTER);
+//                //set Padding
+//                int sidePaddingPixel = 2;
+//                int sidePaddingDp = (int) (sidePaddingPixel * mView.getContext().getResources().getDisplayMetrics().density);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT);
+//                params.setMargins(sidePaddingDp, sidePaddingDp, sidePaddingDp, sidePaddingDp);
+//                mAccountNumbersView.addView(tvAccountNumber, params);
+//            }
 
             SetAvatarTask t = new SetAvatarTask(mView.getContext(), MemberListViewHolder.this);
             t.execute(member);
 
             mNameView.setText(member.getName());
             mAddressView.setText(member.getAddress());
+            mAccountNumberView.setText(String.valueOf(member.getAccountNo()));
 
 
             mView.setOnClickListener(new View.OnClickListener() {
@@ -197,16 +194,17 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             int avatarPixel = 56;
             int sizeDp = (int) (avatarPixel * density);
             Drawable drawableAvatar = null;
-            String firstLetter = members[0].getName().substring(0, 1).toUpperCase();
+            String firstLetter = members[0].getName().substring(0, 1);
 
-            int color = Color.rgb(123 ,145, 150);
+            int color = Color.rgb(113, 125, 169);
             drawableAvatar = members[0].getAvatarDrawable();
             if (drawableAvatar == null) {
-                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(new LetterAvatar(mContext,
-                        color, firstLetter, 32), sizeDp, sizeDp), avatarPixel);
+                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(new LetterAvatar(
+                        mContext, color, firstLetter, 32), sizeDp, sizeDp), avatarPixel);
 
             } else {
-                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar, sizeDp, sizeDp), avatarPixel);
+                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,
+                        sizeDp, sizeDp), avatarPixel);
             }
         }
 

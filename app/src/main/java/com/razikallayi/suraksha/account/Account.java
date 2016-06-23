@@ -139,6 +139,11 @@ public class Account implements Serializable {
         return txnMonthlyDeposit;
     }
 
+    /**
+     * @deprecated
+     * Use fetch Deposit from Member Instead
+     */
+    @Deprecated
     public List<Transaction> fetchDeposits(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),

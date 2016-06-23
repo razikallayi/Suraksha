@@ -23,7 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/spacing_larger"
+        android:layout_marginBottom="@dimen/fab_margin"
         android:contentDescription="Add new member"
         android:src="@drawable/ic_plus_person" />
 </android.support.design.widget.CoordinatorLayout>

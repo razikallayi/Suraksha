@@ -1,10 +1,13 @@
 package com.razikallayi.suraksha.utils;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Build;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.data.SurakshaDbHelper;
 
 import java.util.Calendar;
 
@@ -47,6 +50,34 @@ public class Utility {
         }
         return actionBarHeight;
     }
+
+
+    public static void updateColumnToUpperCase(Context context, String tableName, String columnName) {
+//    String strQuery = "select sum(case when ledger = 1 and voucher_type = 101 then amount else 0 end) - sum(case when ledger = 4 and voucher_type = 100 then amount else 0 end) as balance from transactions";
+        String strQuery = "UPDATE " + tableName + " SET " + columnName + " = UPPER(" + columnName + ")";
+        Cursor cursor = runWritableRawQuery(context,strQuery);
+        Toast.makeText(context, "Capitalised "+columnName+" of all "+tableName+".", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void updateColumnToWordCase(Context context, String tableName, String columnName) {
+//    String strQuery = "select sum(case when ledger = 1 and voucher_type = 101 then amount else 0 end) - sum(case when ledger = 4 and voucher_type = 100 then amount else 0 end) as balance from transactions";
+        String strQuery = "UPDATE "+tableName+" SET "+columnName+" = UPPER(SUBSTR("+columnName+", 1, 1)) || SUBSTR("+columnName+", 2)";
+        Cursor cursor = runWritableRawQuery(context,strQuery);
+        Toast.makeText(context, "Capitalised First letter of "+columnName+" of all "+tableName+".", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public static Cursor runWritableRawQuery(Context context, String strQuery){
+        SurakshaDbHelper dbHelper = new SurakshaDbHelper(context);
+        return dbHelper.getWritableDatabase().rawQuery(strQuery, null, null);
+    }
+
+    public static Cursor runReadableRawQuery(Context context, String strQuery){
+        SurakshaDbHelper dbHelper = new SurakshaDbHelper(context);
+        return dbHelper.getReadableDatabase().rawQuery(strQuery, null, null);
+    }
+
+
 
 
     //    public static String getReadableDate(long millisecond){

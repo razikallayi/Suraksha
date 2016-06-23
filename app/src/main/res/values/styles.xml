@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
         <item name="android:textColorPrimary">@color/foreground_material_dark</item>
     </style>
 
@@ -18,6 +19,11 @@
     <!--Night Mode-->
     <style name="SurakshaNight" parent="Theme.AppCompat.NoActionBar" />
 
+    <!-- Theme for the dialog itself -->
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
 
     <style name="Suraksha.InputField" parent="Widget.Design.TextInputLayout">
         <item name="android:layout_marginTop">@dimen/spacing_tiny</item>

@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_tiny"
+    android:layout_margin="@dimen/spacing_extra_tiny"
     android:background="@android:drawable/list_selector_background"
     android:focusable="true">
 
@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/spacing_tiny">
+        android:padding="@dimen/spacing_very_tiny">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -18,16 +18,14 @@
 
             <TextView
                 android:id="@+id/txnAccountNo"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_marginRight="@dimen/spacing_small"
-                android:background="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_very_tiny"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:maxLines="1"
-                android:padding="2dp"
                 android:text="122asd"
-                android:textColor="@color/white"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/font_larger" />
 
             <TextView
@@ -36,24 +34,25 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
                 android:text="Name"
-                android:textSize="@dimen/font_larger" />
+                android:textSize="@dimen/font_large" />
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_tiny">
+            android:paddingTop="@dimen/spacing_tiny"
+            android:paddingBottom="@dimen/spacing_tiny"
+            >
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_transaction_48dp" />
+            <!--<ImageView-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:src="@drawable/ic_transaction_48dp" />-->
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="0dp"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_small"
                 android:orientation="vertical">
 
                 <TextView
@@ -69,15 +68,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-thin"
+                    android:textColor="@color/gray_dark"
                     android:text="2016, 3:46PM"
                     android:textSize="@dimen/font_small" />
+
+                <TextView
+                    android:id="@+id/txnCreatedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="sys"
+                    android:textSize="@dimen/font_medium" />
             </LinearLayout>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_small"
+                android:paddingLeft="@dimen/spacing_extra_tiny"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,14 +94,15 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
                     android:text="Month"
-                    android:textSize="@dimen/font_large" />
+                    android:textSize="@dimen/font_medium" />
             </LinearLayout>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginLeft="@dimen/spacing_extra_tiny"
+                android:gravity="end"
                 android:orientation="vertical">
 
                 <TextView
@@ -101,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed"
-                    android:textSize="@dimen/font_larger"
+                    android:textSize="@dimen/font_large"
                     android:textStyle="bold"
                     android:text="2000" />
 

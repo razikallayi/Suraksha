@@ -85,7 +85,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         Transaction deposited = mDepositedTxnList.get(position);
         String monthAndYear = CalendarUtils.readableDepositMonth(deposited.getDefinedDepositMonth());
         holder.mMonthCheckbox.setText(monthAndYear);
-        holder.mCreatedAtTextView.setText(CalendarUtils.formatDate(deposited.getCreatedAt()));
+        holder.mCreatedAtTextView.setText(CalendarUtils.formatDateTime(deposited.getCreatedAt()));
         holder.mCreatedAtTextView.setVisibility(View.VISIBLE);
         holder.mOfficerTextView.setText(Officer.getOfficerFromId(mContext,deposited.getOfficer_id()).getName());
         holder.mOfficerTextView.setVisibility(View.VISIBLE);
@@ -143,12 +143,12 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         Transaction txn = mAccount.makeDeposit(mContext, depositMonth, remarks);
         mDepositedTxnList = mAccount.fetchDeposits(mContext);
         notifyDataSetChanged();
-        if (SmsUtils.smsEnabledAfterCreateAccount(mContext)) {
+        if (SmsUtils.smsEnabledAfterDeposit(mContext)) {
             Member member = mAccount.getMember();
             String phoneNumber = member.getMobile();
-            String message = "Your suraksha account "+mAccount.getAccountNumber()
+            String message = member.getName()+", your suraksha account "+mAccount.getAccountNumber()
                     +" is credited with a deposit of "+Utility.formatAmountInRupees(mContext,txn.getAmount())
-                    +" for the month of "+CalendarUtils.readableDepositMonth(txn.getDefinedDepositMonth());
+                    +" for the month "+CalendarUtils.readableDepositMonth(txn.getDefinedDepositMonth());
             boolean result = SmsUtils.sendSms(message,phoneNumber);
             if(result) {
                 Toast.makeText(mContext, "SMS sent to " + member.getName(), Toast.LENGTH_SHORT).show();

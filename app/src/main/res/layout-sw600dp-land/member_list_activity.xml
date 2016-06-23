@@ -30,7 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/spacing_larger"
                 android:contentDescription="Add new member"
                 android:src="@drawable/ic_plus_person" />
         </FrameLayout>
@@ -44,7 +45,7 @@
             android:background="@color/gray_light"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:background="@color/white">
@@ -53,33 +54,66 @@
                     android:id="@+id/avatarMember"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:src="@drawable/ic_account_circle_black_48dp"
                     android:scaleType="centerCrop"
-                    />
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_account_circle_black_48dp"
+                    android:contentDescription="Member Image" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/nameMember"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="90dp"
-                    android:orientation="vertical">
+                    android:layout_marginRight="90dp"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Name"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:textSize="@dimen/font_huge" />
 
-                    <TextView
-                        android:id="@+id/nameMember"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-thin"
-                        android:text="Name"
-                        android:textSize="@dimen/font_huge" />
+                <TextView
+                    android:id="@+id/mobileMember"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/nameMember"
+                    android:layout_below="@id/nameMember"
+                    android:layout_marginRight="90dp"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Mobile/Address"
+                    android:maxLines="1"
+                    android:ellipsize="marquee"
+                    android:textSize="@dimen/font_larger" />
 
-                    <TextView
-                        android:id="@+id/mobileMember"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-thin"
-                        android:text="Mobile/Address"
-                        android:textSize="@dimen/font_larger" />
-                </LinearLayout>
-            </FrameLayout>
+                <TextView
+                    android:id="@+id/lblAccountNumberInTitle"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-thin"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/font_extra_huge"
+                    android:gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    />
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="@dimen/font_smaller"
+                    android:text="Account Number"
+                    android:maxLines="2"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="@dimen/spacing_very_tiny"
+                    android:textColor="@color/gray"
+                    android:layout_alignLeft="@id/lblAccountNumberInTitle"
+                    />
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/spacing_very_tiny"
+                    android:layout_toStartOf="@id/lblAccountNumberInTitle"
+                    android:background="@color/colorSeparatorLine" />
+            </RelativeLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"

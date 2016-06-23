@@ -19,6 +19,14 @@ public class AuthUtils {
     public static boolean isAdmin(Context context) {
         return isLoggedIn(context) && SettingsUtils.getAuthOfficer(context).isAdmin();
     }
+    public static boolean isDeveloper(Context context) {
+        if(isLoggedIn(context)) {
+            String userName = SettingsUtils.getAuthOfficer(context).getUsername();
+            boolean isDeveloper = userName.equals("RAZI");
+            return isDeveloper;
+        }
+        return false;
+    }
 
     public static long getAuthenticatedOfficerId(Context context) {
         return SettingsUtils.getAuthOfficerId(context);

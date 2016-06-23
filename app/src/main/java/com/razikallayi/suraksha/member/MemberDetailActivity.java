@@ -16,7 +16,7 @@ import com.razikallayi.suraksha.AvatarActivity;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.account.AccountListFragment;
+import com.razikallayi.suraksha.account.AccountManipulationsFragment;
 
 import java.util.Random;
 
@@ -33,8 +33,6 @@ public class MemberDetailActivity extends BaseActivity {
 
     private String mMemberName;
     private long mMemberId;
-
-    private int mColor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +51,11 @@ public class MemberDetailActivity extends BaseActivity {
             mMemberId = savedInstanceState.getLong(ARG_MEMBER_ID);
             mMemberName = savedInstanceState.getString(ARG_MEMBER_NAME);
 
-        }else{
-            mMemberId = getIntent().getLongExtra(ARG_MEMBER_ID,-1);
+        } else {
+            mMemberId = getIntent().getLongExtra(ARG_MEMBER_ID, -1);
             mMemberName = getIntent().getStringExtra(ARG_MEMBER_NAME);
         }
 
-
-        Random rnd = new Random();
-        int Low = 50;
-        int High = 200;
-        int mColor = Color.rgb(rnd.nextInt(High-Low) + Low,
-                rnd.nextInt(High-Low) + Low, rnd.nextInt(High-Low) + Low);
-        
         //Load Avatar
         LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
         loadAvatarTask.execute(mMemberId);
@@ -76,7 +67,7 @@ public class MemberDetailActivity extends BaseActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.member_detail_container);
         if (viewPager != null) {
-            setupViewPager(viewPager,mMemberId);
+            setupViewPager(viewPager, mMemberId);
         }
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         if (viewPager != null) {
@@ -99,19 +90,31 @@ public class MemberDetailActivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager, long memberId) {
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
 
-        AccountListFragment accountListFragment = (AccountListFragment)
-                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
-        if(null == accountListFragment) {
+        AccountManipulationsFragment accountManipulationsFragment = (AccountManipulationsFragment)
+                getSupportFragmentManager().findFragmentByTag(AccountManipulationsFragment.TAG);
+        if (null == accountManipulationsFragment) {
             Bundle arguments = new Bundle();
-            //AccountList
-            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
-            accountListFragment = new AccountListFragment();
-            accountListFragment.setArguments(arguments);
-//        getFragmentManager().beginTransaction()
-//                .replace(R.id.account_list_container, accountListFragment)
-//                .commit();
-            adapter.addFragment(accountListFragment, "Accounts");
+            //AccountManipulationsFragment
+            arguments.putLong(AccountManipulationsFragment.ARG_MEMBER_ID, memberId);
+            accountManipulationsFragment = new AccountManipulationsFragment();
+            accountManipulationsFragment.setArguments(arguments);
+            adapter.addFragment(accountManipulationsFragment, "Account");
         }
+
+
+//        AccountListFragment accountListFragment = (AccountListFragment)
+//                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
+//        if(null == accountListFragment) {
+//            Bundle arguments = new Bundle();
+//            //AccountList
+//            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
+//            accountListFragment = new AccountListFragment();
+//            accountListFragment.setArguments(arguments);
+////        getFragmentManager().beginTransaction()
+////                .replace(R.id.account_list_container, accountListFragment)
+////                .commit();
+//            adapter.addFragment(accountListFragment, "Accounts");
+//        }
 
         MemberDetailFragment memberDetailFragment = (MemberDetailFragment)
                 getSupportFragmentManager().findFragmentByTag(MemberDetailFragment.TAG);
@@ -132,30 +135,33 @@ public class MemberDetailActivity extends BaseActivity {
     }
 
 
-
-
-    private class LoadAvatarTask extends AsyncTask<Long,Void,Member>{
+    private class LoadAvatarTask extends AsyncTask<Long, Void, Member> {
         @Override
         protected Member doInBackground(Long[] memberId) {
-            return Member.getMemberFromId(getApplicationContext(),memberId[0]);
+            return Member.getMemberFromId(getApplicationContext(), memberId[0]);
         }
+
         @Override
         protected void onPostExecute(final Member member) {
             super.onPostExecute(member);
-            ImageView ivAvatar = (ImageView)findViewById(R.id.ivAvatarMemberDetailActivity);
+            ImageView ivAvatar = (ImageView) findViewById(R.id.ivAvatarMemberDetailActivity);
             if (member.getAvatarDrawable() != null) {
                 ivAvatar.setImageDrawable(member.getAvatarDrawable());
                 ivAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplicationContext(), AvatarActivity.class);
-                        intent.putExtra("avatar",member.getAvatar());
+                        intent.putExtra("avatar", member.getAvatar());
                         startActivity(intent);
                     }
                 });
-            }else{
-
-                ivAvatar.setImageDrawable(new ColorDrawable(mColor));
+            } else {
+                Random rnd = new Random();
+                int Low = 50;
+                int High = 200;
+                int color = Color.rgb(rnd.nextInt(High - Low) + Low,
+                        rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
+                ivAvatar.setImageDrawable(new ColorDrawable(color));
 
 //                ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
 //                        R.color.blue, member.getName().substring(0, 1).toUpperCase(), 24));

@@ -21,7 +21,6 @@ import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.AuthUtils;
-import com.razikallayi.suraksha.utils.SmsUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 public class CreateAccountActivity extends BaseActivity {
@@ -131,12 +130,7 @@ public class CreateAccountActivity extends BaseActivity {
             values = Transaction.getTxnContentValues(registrationFeeTxn);
             contentResolver.insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
 
-            if (SmsUtils.smsEnabledAfterCreateAccount(getApplicationContext())) {
-                String phoneNumber = mMember.getMobile();
-                String message = getResources().getString(R.string.account_created_sms) + " Your account number is " + account.getAccountNumber();
-                SmsUtils.sendSms(message,phoneNumber);
-                Toast.makeText(getApplicationContext(), "SMS sent to "+mMember.getName(), Toast.LENGTH_SHORT).show();
-            }
+//       e
             return true;
         }
 

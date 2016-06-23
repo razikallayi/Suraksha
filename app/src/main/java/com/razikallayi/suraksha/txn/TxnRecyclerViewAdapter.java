@@ -43,7 +43,7 @@ public class TxnRecyclerViewAdapter extends RecyclerView.Adapter<TxnRecyclerView
         }
         //CreatedAt
 
-        holder.mCreatedAt.setText(CalendarUtils.formatDate(Long.valueOf(mTxns.get(position).getCreatedAt())));
+        holder.mCreatedAt.setText(CalendarUtils.formatDateTime(Long.valueOf(mTxns.get(position).getCreatedAt())));
         //Amount
 
         holder.mAmountView.setText(holder.mAmountView.getContext().getString(R.string.format_rupees,mTxns.get(position).getAmount()));

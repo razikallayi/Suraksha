@@ -18,15 +18,15 @@ public class SurakshaProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private SurakshaDbHelper mOpenHelper;
 
-    static final int MEMBER  = 100;
-    static final int MEMBER_ID  = 101;
-    static final int MEMBER_JOIN_ACCOUNT  = 110;
+    static final int MEMBER = 100;
+    static final int MEMBER_ID = 101;
+    static final int MEMBER_JOIN_ACCOUNT = 110;
 
     static final int ACCOUNT = 200;
     static final int ACCOUNT_NUMBER = 202;
     static final int ACCOUNTS_OF_MEMBER = 210;
 
-    static final int TXN     = 300;
+    static final int TXN = 300;
     static final int TXN_ON_DATE = 310;
     static final int TXN_OF_ACCOUNT = 320;
     static final int TXN_GET_WMF = 340; //getWorkinMoneyFund
@@ -40,8 +40,11 @@ public class SurakshaProvider extends ContentProvider {
     static final int OFFICER = 400;
     static final int OFFICER_ID = 401;
 
+    static final int LOAN_ISSUE = 500;
+
     private static final SQLiteQueryBuilder sAccountsOfMemberQueryBuilder;
-    static{
+
+    static {
         sAccountsOfMemberQueryBuilder = new SQLiteQueryBuilder();
 
         //This is an inner join which looks like
@@ -57,7 +60,8 @@ public class SurakshaProvider extends ContentProvider {
     }
 
     private static final SQLiteQueryBuilder sTxnAccountQueryBuilder;
-    static{
+
+    static {
         sTxnAccountQueryBuilder = new SQLiteQueryBuilder();
 
         //This is an inner join which looks like
@@ -91,7 +95,7 @@ public class SurakshaProvider extends ContentProvider {
 
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT, ACCOUNT);
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_NUMBER + "/#", ACCOUNT_NUMBER);
-        matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_OF_MEMBER+"/*", ACCOUNTS_OF_MEMBER);
+        matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_OF_MEMBER + "/*", ACCOUNTS_OF_MEMBER);
 
         matcher.addURI(authority, SurakshaContract.PATH_TXN, TXN);
         matcher.addURI(authority, SurakshaContract.PATH_TXN_ON_DATE + "/*", TXN_ON_DATE);
@@ -103,34 +107,37 @@ public class SurakshaProvider extends ContentProvider {
         matcher.addURI(authority, SurakshaContract.PATH_TXN_GET_DEPOSIT_ON_DATE + "/*", TXN_GET_DEPOSIT_ON_DATE);
         matcher.addURI(authority, SurakshaContract.PATH_TXN_TOTAL_LOAN_PAYED, TXN_TOTAL_LOAN_PAYED);
         matcher.addURI(authority, SurakshaContract.PATH_TXN_TOTAL_LOAN_RETURN, TXN_TOTAL_LOAN_RETURN);
+
+        matcher.addURI(authority, SurakshaContract.PATH_LOAN_ISSUE, LOAN_ISSUE);
+
         return matcher;
     }
 
 
     //location.location_setting = ?
     private static final String sMemberIdSelection =
-            SurakshaContract.MemberEntry.TABLE_NAME+
+            SurakshaContract.MemberEntry.TABLE_NAME +
                     "." + SurakshaContract.MemberEntry._ID + " = ? ";
 
 
     //location.location_setting = ?
     private static final String sAccountNumberSelection =
-            SurakshaContract.AccountEntry.TABLE_NAME+
+            SurakshaContract.AccountEntry.TABLE_NAME +
                     "." + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
 
     //location.location_setting = ? AND date >= ?
     private static final String sMemberNameOrAccountSelection =
-            SurakshaContract.MemberEntry.TABLE_NAME+
+            SurakshaContract.MemberEntry.TABLE_NAME +
                     "." + SurakshaContract.MemberEntry.COLUMN_NAME + " = ? OR " +
                     SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
 
 
-    private Cursor getTxnsOnDate(Uri uri, String[] projection,String selection,String[] selectionArgs, String sortOrder) {
+    private Cursor getTxnsOnDate(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final long date = SurakshaContract.TxnEntry.getDateFromUri(uri);
 
         //transactions.created_at = ?
         final String sTxnOnDateSelection =
-                SurakshaContract.TxnEntry.TABLE_NAME+
+                SurakshaContract.TxnEntry.TABLE_NAME +
                         "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " = ? ";
 
         return mOpenHelper.getReadableDatabase().query(
@@ -144,18 +151,18 @@ public class SurakshaProvider extends ContentProvider {
         );
     }
 
-private Cursor getTxnOfAccount(Uri uri, String[] projection,String selection,
-                               String[] selectionArgs, String sortOrder) {
+    private Cursor getTxnOfAccount(Uri uri, String[] projection, String selection,
+                                   String[] selectionArgs, String sortOrder) {
         String account_number = SurakshaContract.TxnEntry.getAccountNumberFromUri(uri);
-    return sTxnAccountQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-            projection,
-            selection != null ? selection : SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ? ",
-            selection != null ? selectionArgs : new String[]{account_number},
-            null,
-            null,
-            sortOrder
-    );
-}
+        return sTxnAccountQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection != null ? selection : SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ? ",
+                selection != null ? selectionArgs : new String[]{account_number},
+                null,
+                null,
+                sortOrder
+        );
+    }
 
 
     @Override
@@ -169,14 +176,14 @@ private Cursor getTxnOfAccount(Uri uri, String[] projection,String selection,
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
-Log.d("DB", "Query in Provider: "+uri.toString());
-Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
+        Log.d("DB", "Query in Provider: " + uri.toString());
+        Log.d("DB", "Matcher Provider: " + sUriMatcher.match(uri));
         switch (sUriMatcher.match(uri)) {
-            case MEMBER:{
+            case MEMBER: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.MemberEntry.TABLE_NAME,
                         projection,
-                        selection,selectionArgs,
+                        selection, selectionArgs,
                         null,
                         null,
                         sortOrder
@@ -184,7 +191,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 break;
             }
 
-            case MEMBER_ID:{
+            case MEMBER_ID: {
                 String id = SurakshaContract.MemberEntry.getMemberId(uri);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.MemberEntry.TABLE_NAME,
@@ -197,12 +204,12 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 );
                 break;
             }
-            case MEMBER_JOIN_ACCOUNT:{
+            case MEMBER_JOIN_ACCOUNT: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         true,
                         sAccountsOfMemberQueryBuilder.getTables(),
                         projection,
-                        selection,selectionArgs,
+                        selection, selectionArgs,
                         null,
                         null,
                         sortOrder,
@@ -210,9 +217,9 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 );
                 break;
             }
-            case ACCOUNTS_OF_MEMBER:{
+            case ACCOUNTS_OF_MEMBER: {
                 String memberId = SurakshaContract.AccountEntry.getMemberIdFromUri(uri);
-                retCursor =  sAccountsOfMemberQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                retCursor = sAccountsOfMemberQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                         projection,
                         sMemberIdSelection,
                         new String[]{memberId},
@@ -222,18 +229,18 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 );
                 break;
             }
-            case ACCOUNT:{
+            case ACCOUNT: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.AccountEntry.TABLE_NAME,
                         projection,
-                        selection,selectionArgs,
+                        selection, selectionArgs,
                         null,
                         null,
                         sortOrder
                 );
                 break;
             }
-            case ACCOUNT_NUMBER:{
+            case ACCOUNT_NUMBER: {
                 String accountNumber = SurakshaContract.AccountEntry.getAccountNumber(uri);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.AccountEntry.TABLE_NAME,
@@ -246,21 +253,21 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 );
                 break;
             }
-            case OFFICER:{
+            case OFFICER: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.OfficerEntry.TABLE_NAME,
                         projection,
-                        selection,selectionArgs,
+                        selection, selectionArgs,
                         null,
                         null,
                         sortOrder
                 );
                 break;
             }
-            case OFFICER_ID:{
+            case OFFICER_ID: {
                 String id = SurakshaContract.OfficerEntry.getOfficerId(uri);
-                String idSelection =SurakshaContract.OfficerEntry.TABLE_NAME+
-                                "." + SurakshaContract.OfficerEntry._ID + " = ? ";
+                String idSelection = SurakshaContract.OfficerEntry.TABLE_NAME +
+                        "." + SurakshaContract.OfficerEntry._ID + " = ? ";
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.OfficerEntry.TABLE_NAME,
                         projection,
@@ -272,26 +279,26 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 );
                 break;
             }
-            case TXN:{
+            case TXN: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.TxnEntry.TABLE_NAME,
                         projection,
-                        selection,selectionArgs,
+                        selection, selectionArgs,
                         null,
                         null,
                         sortOrder
                 );
                 break;
             }
-            case TXN_ON_DATE:{
-                retCursor = getTxnsOnDate(uri, projection, selection,selectionArgs,sortOrder);
+            case TXN_ON_DATE: {
+                retCursor = getTxnsOnDate(uri, projection, selection, selectionArgs, sortOrder);
                 break;
             }
-            case TXN_OF_ACCOUNT:{
+            case TXN_OF_ACCOUNT: {
                 retCursor = getTxnOfAccount(uri, projection, selection, selectionArgs, sortOrder);
                 break;
             }
-            case TXN_GET_WMF:{
+            case TXN_GET_WMF: {
                 //select (select sum (amount) from transactions where ledger = "REGISTRATION_FEE" )
                 // - (select sum (amount) from transactions where ledger = "WORKING_COST") as balance
 //                String strQuery = "select (select sum (" + SurakshaContract.TxnEntry.COLUMN_AMOUNT
@@ -303,53 +310,64 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
 
                 String strQuery = "select sum(case when ledger = 1 and voucher_type = 101 then amount else 0 end) - sum(case when ledger = 4 and voucher_type = 100 then amount else 0 end) as balance from transactions";
                 retCursor = mOpenHelper.getReadableDatabase().rawQuery(
-                        strQuery,null,null);
+                        strQuery, null, null);
 //                        new String[]{String.valueOf(SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER),
 //                                String.valueOf(SurakshaContract.TxnEntry.WORKING_COST_LEDGER)});
                 break;
             }
-            case TXN_FETCH_DEPOSITS:{
-                selection = selection !=null?selection:SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND " + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE +" = ?";
-                selectionArgs = selectionArgs != null?selectionArgs: new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER),String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER)};
+            case TXN_FETCH_DEPOSITS: {
+                selection = selection != null ? selection : SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND " + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ?";
+                selectionArgs = selectionArgs != null ? selectionArgs : new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER)};
                 retCursor = mOpenHelper.getReadableDatabase().query(SurakshaContract.TxnEntry.TABLE_NAME,
-                        projection,selection,selectionArgs,
-                        null,null, SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE + " DESC");
+                        projection, selection, selectionArgs,
+                        null, null, SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE + " DESC");
                 break;
             }
-            case TXN_GET_TOTAL_DEPOSIT:{
+            case TXN_GET_TOTAL_DEPOSIT: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.TxnEntry.TABLE_NAME,
-                        new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"} ,
+                        new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"},
                         SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ?",
                         new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER)},
                         null,
                         null,
                         null
-                        );
+                );
                 break;
             }
-            case TXN_TOTAL_LOAN_PAYED:{
+            case TXN_TOTAL_LOAN_PAYED: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.TxnEntry.TABLE_NAME,
-                        new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"} ,
-                        SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND "+SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE +" = ?",
+                        new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"},
+                        SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND " + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ?",
                         new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER), String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)},
                         null,
                         null,
                         null
-                        );
+                );
                 break;
             }
-            case TXN_TOTAL_LOAN_RETURN:{
+            case TXN_TOTAL_LOAN_RETURN: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.TxnEntry.TABLE_NAME,
-                        new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"} ,
-                        SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND "+SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE +" = ?",
+                        new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"},
+                        SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND " + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ?",
                         new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER), String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER)},
                         null,
                         null,
                         null
-                        );
+                );
+                break;
+            }
+            case LOAN_ISSUE: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.LoanIssueEntry.TABLE_NAME,
+                        projection,
+                        selection, selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             }
             default:
@@ -399,6 +417,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
 //            values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
 //        }
     }
+
     private void normalizeOfficerDate(ContentValues values) {
         //Officer table
         // normalize the date value
@@ -411,6 +430,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
 //            values.put(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
 //        }
     }
+
     private void normalizeAccountDate(ContentValues values) {
 //        // normalize the date value
 //        if (values.containsKey(SurakshaContract.AccountEntry.COLUMN_CLOSED_AT)) {
@@ -431,7 +451,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
     private void normalizeTxnDate(ContentValues values) {
         // normalize the date value
         if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE)) {
-            if(values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE) > 0 ) {
+            if (values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE) > 0) {
                 long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE);
                 values.put(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE, CalendarUtils.normalizeDate(dateValue));
             }
@@ -455,47 +475,49 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
 
-        switch (match){
+        switch (match) {
             case MEMBER: {
-                normalizeMemberDate(values);
+//                normalizeMemberDate(values);
                 long _id = db.insert(SurakshaContract.MemberEntry.TABLE_NAME, null, values);
-                if( _id > 0){
+                if (_id > 0) {
                     returnUri = SurakshaContract.MemberEntry.buildMemberUri(_id);
-                }
-                else{
+                } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
             }
             case ACCOUNT: {
-                normalizeAccountDate(values);
                 long _id = db.insert(SurakshaContract.AccountEntry.TABLE_NAME, null, values);
-                if( _id > 0){
+                if (_id > 0) {
                     returnUri = SurakshaContract.AccountEntry.buildAccountUri(_id);
-                }
-                else{
+                } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
             }
             case OFFICER: {
-                normalizeOfficerDate(values);
                 long _id = db.insert(SurakshaContract.OfficerEntry.TABLE_NAME, null, values);
-                if( _id > 0){
+                if (_id > 0) {
                     returnUri = SurakshaContract.OfficerEntry.buildOfficerUri(_id);
-                }
-                else{
+                } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
             }
             case TXN: {
-                normalizeTxnDate(values);
                 long _id = db.insert(SurakshaContract.TxnEntry.TABLE_NAME, null, values);
-                if( _id > 0){
+                if (_id > 0) {
                     returnUri = SurakshaContract.TxnEntry.buildTxnUri(_id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
-                else{
+                break;
+            }
+            case LOAN_ISSUE: {
+                long _id = db.insert(SurakshaContract.LoanIssueEntry.TABLE_NAME, null, values);
+                if (_id > 0) {
+                    returnUri = SurakshaContract.LoanIssueEntry.buildLoanIssueUri(_id);
+                } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
@@ -515,7 +537,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
         int rowsDeleted;
 
         // this makes delete all rows return the number of rows deleted
-        if ( null == selection )selection ="1";
+        if (null == selection) selection = "1";
         switch (match) {
             case MEMBER:
                 rowsDeleted = db.delete(
@@ -534,9 +556,9 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                         SurakshaContract.TxnEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri: "+ uri);
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if(rowsDeleted != 0) {
+        if (rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
@@ -552,27 +574,27 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
             case MEMBER:
                 normalizeMemberDate(values);
                 rowsUpdated = db.update(
-                        SurakshaContract.MemberEntry.TABLE_NAME, values, selection,selectionArgs);
+                        SurakshaContract.MemberEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case ACCOUNT:
                 normalizeAccountDate(values);
                 rowsUpdated = db.update(
-                        SurakshaContract.AccountEntry.TABLE_NAME, values, selection,selectionArgs);
+                        SurakshaContract.AccountEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case OFFICER:
                 normalizeOfficerDate(values);
                 rowsUpdated = db.update(
-                        SurakshaContract.OfficerEntry.TABLE_NAME, values, selection,selectionArgs);
+                        SurakshaContract.OfficerEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case TXN:
                 normalizeTxnDate(values);
                 rowsUpdated = db.update(
-                        SurakshaContract.TxnEntry.TABLE_NAME, values, selection,selectionArgs);
+                        SurakshaContract.TxnEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             default:
-                throw new UnsupportedOperationException("Unknown uri: "+ uri);
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if(rowsUpdated != 0) {
+        if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
@@ -590,7 +612,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                     for (ContentValues value : values) {
                         normalizeMemberDate(value);
                         long _id = db.insert(SurakshaContract.MemberEntry.TABLE_NAME, null, value);
-                        if(_id != -1){
+                        if (_id != -1) {
                             returnCount++;
                         }
                     }
@@ -598,14 +620,14 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri,null);
+                getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             case ACCOUNT:
                 db.beginTransaction();
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(SurakshaContract.AccountEntry.TABLE_NAME, null, value);
-                        if(_id != -1){
+                        if (_id != -1) {
                             returnCount++;
                         }
                     }
@@ -613,7 +635,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri,null);
+                getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             case TXN:
                 db.beginTransaction();
@@ -621,7 +643,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                     for (ContentValues value : values) {
                         normalizeTxnDate(value);
                         long _id = db.insert(SurakshaContract.TxnEntry.TABLE_NAME, null, value);
-                        if(_id != -1){
+                        if (_id != -1) {
                             returnCount++;
                         }
                     }
@@ -629,7 +651,7 @@ Log.d("DB", "Matcher Provider: "+sUriMatcher.match(uri));
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri,null);
+                getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);

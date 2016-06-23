@@ -68,12 +68,12 @@ public class EditMemberActivity extends BaseActivity {
     private CheckBox isAcceptedTerms;
     private RegisterMemberTask mRegisterMemberTask = null;
 
+    private Member memberBeforeEditing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_member);
-
-        setupNavDrawer();
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -117,12 +117,26 @@ public class EditMemberActivity extends BaseActivity {
         mRelationWithNomineeSpinner = (Spinner) sv.findViewById(R.id.spnRelationWithNominee);
         mRelationWithNomineeSpinner.setAdapter(adapter);
 
+
         LinearLayout llRegistrationFee = (LinearLayout) sv.findViewById(R.id.RegistrationFeeLinearLayout);
         llRegistrationFee.setVisibility(View.GONE);
 
 
         imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
-        setMemberDetailsFromId(getIntent().getLongExtra(ARG_MEMBER_ID, -1));
+        memberBeforeEditing = setMemberDetailsFromId(getIntent().getLongExtra(ARG_MEMBER_ID, -1));
+        mRelationWithNomineeSpinner.setSelection(adapter.getPosition(memberBeforeEditing.getRelationWithNominee()));
+
+        // get selected radio button from radioGroup
+        RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
+        int oldMemberGender;
+        if (memberBeforeEditing.getGender().equals("Male")) {
+            oldMemberGender = R.id.rdoMale;
+        } else {
+            oldMemberGender = R.id.rdoFemale;
+        }
+        // find the radio button by returned id
+        RadioButton oldGenderRadioButton = (RadioButton) findViewById(oldMemberGender);
+        oldGenderRadioButton.setChecked(true);
 
 
         imageViewAvatar.setOnClickListener(new View.OnClickListener() {
@@ -236,10 +250,12 @@ public class EditMemberActivity extends BaseActivity {
         String relationWithNominee = mRelationWithNomineeSpinner.getSelectedItem().toString();
         String remarks = txtRemarks.getText().toString();
         if (relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))) {
-            relationWithNominee = "";
+            relationWithNominee = memberBeforeEditing.getRelationWithNominee();
         }
         Member member = new Member(getApplicationContext(), name, alias, gender, father, spouse,
                 occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
+        member.setAccountNo(memberBeforeEditing.getAccountNo());
+        member.setCreatedAt(memberBeforeEditing.getCreatedAt());
         member.setUpdatedAt(System.currentTimeMillis());
         if (memberAvatar != null) {
             member.setAvatar(memberAvatar);

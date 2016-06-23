@@ -13,40 +13,11 @@ import java.util.List;
  * Created by Razi Kallayi on 31-01-2016.
  */
 public class Transaction {
-
-    public interface TxnQuery {
-        String[] PROJECTION = new String[]{
-                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry._ID,
-                SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
-                SurakshaContract.TxnEntry.COLUMN_AMOUNT,
-                SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
-                SurakshaContract.TxnEntry.COLUMN_LEDGER,
-                SurakshaContract.TxnEntry.COLUMN_NARRATION,
-                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT,
-                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT,
-                SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
-                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
-                SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
-        };
-        int COL_ID = 0;
-        int COL_FK_ACCOUNT_NUMBER = 1;
-        int COL_AMOUNT = 2;
-        int COL_VOUCHER_TYPE = 3;
-        int COL_LEDGER = 4;
-        int COL_NARRATION = 5;
-        int COL_CREATED_AT = 6;
-        int COL_UPDATED_AT = 7;
-        int COL_DEFINED_DEPOSIT_DATE = 8;
-        int COL_FK_LOAN_PAYED_ID = 9;
-        int COL_FK_OFFICER_ID = 10;
-    }
-
-
     private long id;
     private int accountNumber;
     private double amount;
-    private long definedDepositDate = -1;
-    private int loanPayedId = -1;
+    protected long definedDepositDate = -1;
+    protected long loanPayedId = -1;
     private int voucherType;
     private int ledger;
     private String narration;
@@ -125,8 +96,10 @@ public class Transaction {
         return amount;
     }
 
+
     //Get Total Loan Payed amount in suraksha
     public static Double getTotalLoanPayed(Context context) {
+
         Cursor cursor = context.getContentResolver().query(SurakshaContract.TxnEntry.buildTotalLoanPayed(), null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -152,6 +125,7 @@ public class Transaction {
         }
         return amount;
     }
+
 
     public static List<Transaction> getTxnFromCursor(Context context, Cursor c) {
         List<Transaction> txnList = new ArrayList<Transaction>();
@@ -189,6 +163,35 @@ public class Transaction {
 
         return values;
     }
+
+
+    public interface TxnQuery {
+        String[] PROJECTION = new String[]{
+                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry._ID,
+                SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
+                SurakshaContract.TxnEntry.COLUMN_AMOUNT,
+                SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
+                SurakshaContract.TxnEntry.COLUMN_LEDGER,
+                SurakshaContract.TxnEntry.COLUMN_NARRATION,
+                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT,
+                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT,
+                SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
+                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
+                SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
+        };
+        int COL_ID = 0;
+        int COL_FK_ACCOUNT_NUMBER = 1;
+        int COL_AMOUNT = 2;
+        int COL_VOUCHER_TYPE = 3;
+        int COL_LEDGER = 4;
+        int COL_NARRATION = 5;
+        int COL_CREATED_AT = 6;
+        int COL_UPDATED_AT = 7;
+        int COL_DEFINED_DEPOSIT_DATE = 8;
+        int COL_FK_LOAN_PAYED_ID = 9;
+        int COL_FK_OFFICER_ID = 10;
+    }
+
 
 
     public int getVoucherType() {
@@ -240,11 +243,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public int getLoanPayedId() {
+    public long getLoanPayedId() {
         return loanPayedId;
     }
 
-    public void setLoanPayedId(int loanPayedId) {
+    public void setLoanPayedId(long loanPayedId) {
         this.loanPayedId = loanPayedId;
     }
 

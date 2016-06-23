@@ -15,26 +15,34 @@ import java.util.List;
  */
 public class CalendarUtils extends GregorianCalendar {
 
+    public static String formatDateTime(long dateInMilliseconds) {
+        if (dateInMilliseconds == 0L) {
+            return "";
+        }
+        Date date = new Date(dateInMilliseconds);
+        return DateFormat.getDateTimeInstance().format(date);
+    }
+
     public static String formatDate(long dateInMilliseconds) {
-        if(dateInMilliseconds == 0L){
+        if (dateInMilliseconds == 0L) {
             return "";
         }
         Date date = new Date(dateInMilliseconds);
         return DateFormat.getDateInstance().format(date);
     }
 
-    public static Calendar getSurakshaStartDate(){
+    public static Calendar getSurakshaStartDate() {
         Calendar c = getInstance();
         c.setTimeInMillis(0);
         c.set(2016, 0, 1);
         return c;
     }
 
-    public static Calendar getDepositEndDate(){
+    public static Calendar getDepositEndDate() {
         Calendar c = getInstance();
-        c.set(DATE,1);
+        c.set(DATE, 1);
         c.set(MONTH, DECEMBER);
-        c.add(YEAR,2);
+        c.add(YEAR, 2);
         c.setTimeInMillis(normalizeDate(c.getTimeInMillis()));
         return c;
     }
@@ -43,7 +51,7 @@ public class CalendarUtils extends GregorianCalendar {
         String month = new DateFormatSymbols().getMonths()[calendar.get(MONTH)];
         int year = calendar.get(YEAR);
 
-        if(year>=getSurakshaStartDate().get(YEAR)) {
+        if (year >= getSurakshaStartDate().get(YEAR)) {
             return month.concat(" " + String.valueOf(year));
         }
         return month;
@@ -57,11 +65,11 @@ public class CalendarUtils extends GregorianCalendar {
 
     public static final long writableDepositMonth(String monthAndYear) {
         Calendar c = getInstance();
-        String[] monthYear= monthAndYear.split(" ");
+        String[] monthYear = monthAndYear.split(" ");
         c.setTimeInMillis(0);//Normalizing to start Date
-        c.set(DATE,1);
-        c.set(MONTH,getMonthInt(monthYear[0]));
-        c.set(YEAR,Integer.parseInt(monthYear[1]));
+        c.set(DATE, 1);
+        c.set(MONTH, getMonthInt(monthYear[0]));
+        c.set(YEAR, Integer.parseInt(monthYear[1]));
         return c.getTimeInMillis();
     }
 
@@ -73,7 +81,7 @@ public class CalendarUtils extends GregorianCalendar {
         c.setTimeInMillis(0);
         Calendar date = getInstance();
         date.setTimeInMillis(startDate);
-        c.set(date.get(YEAR),date.get(MONTH),date.get(DATE));
+        c.set(date.get(YEAR), date.get(MONTH), date.get(DATE));
         return c.getTimeInMillis();
 //        Time time = new Time();
 //        time.set(startDate);
@@ -81,9 +89,9 @@ public class CalendarUtils extends GregorianCalendar {
 //        return time.setJulianDay(julianDay);
     }
 
-    private static int getMonthInt(String month){
+    private static int getMonthInt(String month) {
         month = month.toUpperCase();
-        switch (month){
+        switch (month) {
             case "JANUARY":
                 return JANUARY;
             case "FEBRUARY":
@@ -113,7 +121,7 @@ public class CalendarUtils extends GregorianCalendar {
         }
     }
 
-    public static List<Calendar> getAllDepositMonthsFromStart(){
+    public static List<Calendar> getAllDepositMonthsFromStart() {
         //Initialise new calendar list
         List<Calendar> pendingDepositCalendarList = new ArrayList<>();
         Calendar surakshaStartDate = getSurakshaStartDate();// 2016, 0, 1,0,0,0 Time will be zero
@@ -121,25 +129,25 @@ public class CalendarUtils extends GregorianCalendar {
 
 
         //Loop from suraksha start month to current month
-        Calendar i=surakshaStartDate;
-        while(i.getTimeInMillis()<=endDate.getTimeInMillis()){
+        Calendar i = surakshaStartDate;
+        while (i.getTimeInMillis() <= endDate.getTimeInMillis()) {
             //Initialise new calendar
             Calendar c = getInstance();
             //set calendar time to looping calendar
             c.setTimeInMillis(i.getTimeInMillis());
             //set date to 1
-            c.set(DATE,1);
+            c.set(DATE, 1);
             //Add the calendar to the list
             pendingDepositCalendarList.add(c);
             //increment the looping calendar month
-            i.add(MONTH,1);
+            i.add(MONTH, 1);
         }//end while
         return pendingDepositCalendarList;
     }
 
     public static List<Calendar> getDepositedMonthsFromTxn(List<Transaction> existingDepositTransaction) {
         List<Calendar> depositCalendarList = new ArrayList<>();
-        for (Transaction deposit:existingDepositTransaction) {
+        for (Transaction deposit : existingDepositTransaction) {
             Calendar calendar = getInstance();
             calendar.setTimeInMillis(deposit.getDefinedDepositMonth());
             depositCalendarList.add(calendar);
@@ -149,7 +157,7 @@ public class CalendarUtils extends GregorianCalendar {
 
     public static List<Calendar> getPendingDepositMonthsFromTxn(List<Transaction> existingDepositTransaction) {
         List<Calendar> depositCalendarList = new ArrayList<>();
-        for (Transaction deposit:existingDepositTransaction) {
+        for (Transaction deposit : existingDepositTransaction) {
             Calendar calendar = getInstance();
             calendar.setTimeInMillis(deposit.getDefinedDepositMonth());
             depositCalendarList.add(calendar);
@@ -157,7 +165,7 @@ public class CalendarUtils extends GregorianCalendar {
         return getPendingDepositMonths(depositCalendarList);
     }
 
-    public static List<Calendar> getPendingDepositMonths(List<Calendar> existingDepositCalendars){
+    public static List<Calendar> getPendingDepositMonths(List<Calendar> existingDepositCalendars) {
         List<Calendar> pendingDepositCalendars = getAllDepositMonthsFromStart();
         //If already deposited, remove it from the calendar
         pendingDepositCalendars.removeAll(existingDepositCalendars);

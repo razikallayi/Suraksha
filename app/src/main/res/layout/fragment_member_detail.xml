@@ -11,25 +11,6 @@
     tools:context="com.razikallayi.suraksha.MemberDetailFragment"
     android:orientation="vertical">
 
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="ACCOUNT DETAILS"-->
-        <!--android:layout_gravity="center_horizontal" />-->
-    <!--<FrameLayout-->
-        <!--android:id="@+id/account_list_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="200dp"-->
-        <!--/>-->
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="PERSONAL DETAILS"-->
-        <!--android:layout_gravity="center_horizontal" />-->
-
-
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -505,36 +486,36 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:fontFamily="sans-serif-condensed"/>
         </LinearLayout>
-        <!--<LinearLayout-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <!--<TextView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:text="Updated At"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:accessibilityLiveRegion="assertive"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_gravity="left"-->
-                <!--android:gravity="center|start"-->
-                <!--android:padding="10dp"-->
-                <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                <!--android:fontFamily="sans-serif-condensed"/>-->
+            <TextView
+                android:layout_width="0dp"
+                android:text="Updated At"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
 
-            <!--<TextView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/tvMemberUpdatedAt"-->
-                <!--android:accessibilityLiveRegion="assertive"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_weight="1"-->
-                <!--android:gravity="center|end"-->
-                <!--android:padding="10dp"-->
-                <!---->
-                <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-                <!--android:fontFamily="sans-serif-condensed"/>-->
-        <!--</LinearLayout>-->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvMemberUpdatedAt"
+                android:accessibilityLiveRegion="assertive"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="center|end"
+                android:padding="10dp"
+
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-condensed"/>
+        </LinearLayout>
 
       </LinearLayout>
 

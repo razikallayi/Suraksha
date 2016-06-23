@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha.txn;
+package com.razikallayi.suraksha.report;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.officer.Officer;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -133,6 +135,7 @@ public class TxnReportActivity extends BaseActivity implements
             txn.setId(c.getLong(Transaction.TxnQuery.COL_ID));
             txn.setDefinedDepositDate(c.getLong(Transaction.TxnQuery.COL_DEFINED_DEPOSIT_DATE));
             txn.setLoanPayedId(c.getInt(Transaction.TxnQuery.COL_FK_LOAN_PAYED_ID));
+            txn.setOfficer_id(c.getInt(Transaction.TxnQuery.COL_FK_OFFICER_ID));
             txn.setCreatedAt(c.getLong(Transaction.TxnQuery.COL_CREATED_AT));
             txn.setUpdatedAt(c.getLong(Transaction.TxnQuery.COL_UPDATED_AT));
 
@@ -214,7 +217,9 @@ public class TxnReportActivity extends BaseActivity implements
                 }
                 viewHolder.mLedger.setText(Transaction.getLedgerName(txnItem.txn.getLedger()));
                 viewHolder.mVoucherName.setText(Transaction.getVoucherName(txnItem.txn.getVoucherType()));
-                viewHolder.mCreatedAt.setText(CalendarUtils.formatDate(txnItem.txn.getCreatedAt()));
+                viewHolder.mCreatedAt.setText(CalendarUtils.formatDateTime(txnItem.txn.getCreatedAt()));
+                viewHolder.mCreatedBy.setText(Officer.getOfficerFromId(getApplicationContext(),
+                        txnItem.txn.getOfficer_id()).getName());
             }
         }
 
@@ -234,6 +239,7 @@ public class TxnReportActivity extends BaseActivity implements
             public final TextView mLedger;
             public final TextView mMonthView;
             public final TextView mCreatedAt;
+            public final TextView mCreatedBy;
             public final TextView mAmountView;
             public final TextView mVoucherName;
 
@@ -245,6 +251,7 @@ public class TxnReportActivity extends BaseActivity implements
                 mLedger = (TextView) itemView.findViewById(R.id.txnLedger);
                 mMonthView = (TextView) itemView.findViewById(R.id.txnMonth);
                 mCreatedAt = (TextView) itemView.findViewById(R.id.txnCreatedAt);
+                mCreatedBy = (TextView) itemView.findViewById(R.id.txnCreatedBy);
                 mAmountView = (TextView) itemView.findViewById(R.id.txnAmount);
                 mVoucherName = (TextView) itemView.findViewById(R.id.txnVoucherName);
             }

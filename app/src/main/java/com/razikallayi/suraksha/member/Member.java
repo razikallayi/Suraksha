@@ -8,7 +8,9 @@ import android.graphics.drawable.Drawable;
 
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.ImageUtils;
+import com.razikallayi.suraksha.utils.WordUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class Member implements Serializable {
 
     private Long id;
     private String name;
+    private int accountNo;
     private String mobile;
     private String address;
     private String alias;
@@ -35,6 +38,8 @@ public class Member implements Serializable {
     private String nominee;
     private String relationWithNominee;
     private String addressOfNominee;
+    private int hasLoan = 0;
+    private int isLoanBlocked = 0;
     private int isDeleted = 0;
     private long closedAt;
     private long createdAt;
@@ -77,6 +82,22 @@ public class Member implements Serializable {
         this.addressOfNominee = addressOfNominee;
     }
 
+    public int getHasLoan() {
+        return hasLoan;
+    }
+
+    public void setHasLoan(int hasLoan) {
+        this.hasLoan = hasLoan;
+    }
+
+    public int getIsLoanBlocked() {
+        return isLoanBlocked;
+    }
+
+    public void setIsLoanBlocked(int isLoanBlocked) {
+        this.isLoanBlocked = isLoanBlocked;
+    }
+
     public interface MemberQuery {
         String[] PROJECTION = {
                 SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry.COLUMN_NAME,
@@ -95,7 +116,9 @@ public class Member implements Serializable {
                 SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
                 SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry.COLUMN_CREATED_AT,
                 SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry.COLUMN_UPDATED_AT,
-                SurakshaContract.MemberEntry.COLUMN_AVATAR
+                SurakshaContract.MemberEntry.COLUMN_AVATAR,
+                SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO,
+                SurakshaContract.MemberEntry._ID
         };
 
         int COL_NAME = 0;
@@ -115,22 +138,60 @@ public class Member implements Serializable {
         int COL_CREATED_AT = 14;
         int COL_UPDATED_AT = 15;
         int COL_AVATAR = 16;
+        int COL_ACCOUNT_NO = 17;
+        int COL_ID = 18;
 
     }
 
     public static Member getMemberFromId(Context context, long id) {
-        // TODO: 28-05-2016 Use id to load member. use in selection
+        // TODO: 28-05-2016 Use id to load member. use in selection. Use BuildMemberUri
         Cursor cursor = context.getContentResolver().query(
-                SurakshaContract.MemberEntry.buildMemberUri(id), MemberQuery.PROJECTION,
+                SurakshaContract.MemberEntry.CONTENT_URI, MemberQuery.PROJECTION,
                 SurakshaContract.MemberEntry._ID + " = ? ",
                 new String[]{String.valueOf(id)},
                 null);
+        return getMemberFromCursor(cursor);
+    }
+
+    public boolean saveIsLoanBlocked(Context context, boolean isLoanBlocked) {
+        ContentValues values  = new ContentValues();
+        values.put(SurakshaContract.MemberEntry.COLUMN_IS_LOAN_BLOCKED, isLoanBlocked?1:0);
+        int numRowsUpdated = context.getContentResolver().update(
+                SurakshaContract.MemberEntry.CONTENT_URI,
+                values,
+                SurakshaContract.MemberEntry._ID + " = ? ",
+                new String[]{String.valueOf(this.id)});
+        return numRowsUpdated>0?true:false;
+    }
+
+    public boolean saveHasLoan(Context context, boolean hasLoan) {
+        ContentValues values  = new ContentValues();
+        values.put(SurakshaContract.MemberEntry.COLUMN_HAS_LOAN, hasLoan?1:0);
+        int numRowsUpdated = context.getContentResolver().update(
+                SurakshaContract.MemberEntry.CONTENT_URI,
+                values,
+                SurakshaContract.MemberEntry._ID + " = ? ",
+                new String[]{String.valueOf(this.id)});
+        return numRowsUpdated>0?true:false;
+    }
+
+    public static Member getMemberFromAccountNumber(Context context, int accountNumber) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.MemberEntry.CONTENT_URI, MemberQuery.PROJECTION,
+                SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO + " = ? ",
+                new String[]{String.valueOf(accountNumber)},
+                null);
+        return getMemberFromCursor(cursor);
+    }
+
+    public static Member getMemberFromCursor(Cursor cursor){
         Member m = new Member();
         if (cursor != null) {
             cursor.moveToFirst();
 
-            m.id = id;
+            m.id = cursor.getLong(MemberQuery.COL_ID);
             m.name = cursor.getString(MemberQuery.COL_NAME);
+            m.accountNo = cursor.getInt(MemberQuery.COL_ACCOUNT_NO);
             m.mobile = cursor.getString(MemberQuery.COL_MOBILE);
             m.address = cursor.getString(MemberQuery.COL_ADDRESS);
             m.alias = cursor.getString(MemberQuery.COL_ALIAS);
@@ -181,6 +242,7 @@ public class Member implements Serializable {
         ContentValues values = new ContentValues();
 
         values.put(SurakshaContract.MemberEntry.COLUMN_NAME, member.name);
+        values.put(SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO, member.accountNo);
         values.put(SurakshaContract.MemberEntry.COLUMN_ALIAS, member.alias);
         values.put(SurakshaContract.MemberEntry.COLUMN_GENDER, member.gender);
         values.put(SurakshaContract.MemberEntry.COLUMN_FATHER, member.father);
@@ -194,6 +256,8 @@ public class Member implements Serializable {
         values.put(SurakshaContract.MemberEntry.COLUMN_RELATION_WITH_NOMINEE, member.relationWithNominee);
         values.put(SurakshaContract.MemberEntry.COLUMN_ADDRESS_OF_NOMINEE, member.addressOfNominee);
         values.put(SurakshaContract.MemberEntry.COLUMN_REMARKS, member.remarks);
+        values.put(SurakshaContract.MemberEntry.COLUMN_HAS_LOAN, member.hasLoan);
+        values.put(SurakshaContract.MemberEntry.COLUMN_IS_LOAN_BLOCKED, member.isLoanBlocked);
         values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT, member.closedAt);
         values.put(SurakshaContract.MemberEntry.COLUMN_IS_DELETED, member.isDeleted);
         values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, member.createdAt);
@@ -218,6 +282,29 @@ public class Member implements Serializable {
         return acNumbers;
     }
 
+    public static List<Transaction> fetchDeposits(Context context, String accountNumber) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
+                Transaction.TxnQuery.PROJECTION,
+                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND "
+                        + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
+                new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), accountNumber},
+                SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " DESC");
+        return Transaction.getTxnFromCursor(context, cursor);
+    }
+
+    public List<Transaction> fetchDeposits(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
+                Transaction.TxnQuery.PROJECTION,
+                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND "
+                        + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
+                new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER),
+                        String.valueOf(accountNo)},
+                SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " DESC");
+        return Transaction.getTxnFromCursor(context, cursor);
+    }
+
     public List<Integer> fetchAccountNumbers(Context context) {
         List<Integer> acNumbers = new ArrayList<>();
         //Fetching accountNumbers
@@ -237,6 +324,7 @@ public class Member implements Serializable {
 
     //Get count of all active members
     public static int getActiveMembersCount(Context context) {
+        // TODO: 19-06-2016 Check for Active members instead of all members. Use selection (where)
         Cursor cursor = context.getContentResolver().query(SurakshaContract.MemberEntry.CONTENT_URI, new String[]{SurakshaContract.MemberEntry._ID}, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
@@ -248,7 +336,6 @@ public class Member implements Serializable {
         }
         return count;
     }
-
 
     public List<Integer> getAccountNumbers() {
         return accountNumbers;
@@ -283,7 +370,7 @@ public class Member implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return WordUtils.toTitleCase(name);
     }
 
     public void setName(String name) {
@@ -291,7 +378,7 @@ public class Member implements Serializable {
     }
 
     public String getAlias() {
-        return alias;
+        return WordUtils.toTitleCase(alias);
     }
 
     public void setAlias(String alias) {
@@ -307,7 +394,7 @@ public class Member implements Serializable {
     }
 
     public String getFather() {
-        return father;
+        return WordUtils.toTitleCase(father);
     }
 
     public void setFather(String father) {
@@ -315,7 +402,7 @@ public class Member implements Serializable {
     }
 
     public String getSpouse() {
-        return spouse;
+        return WordUtils.toTitleCase(spouse);
     }
 
     public void setSpouse(String spouse) {
@@ -323,7 +410,7 @@ public class Member implements Serializable {
     }
 
     public String getOccupation() {
-        return occupation;
+        return WordUtils.toTitleCase(occupation);
     }
 
     public void setOccupation(String occupation) {
@@ -355,7 +442,7 @@ public class Member implements Serializable {
     }
 
     public String getAddress() {
-        return address;
+        return WordUtils.toTitleCase(address);
     }
 
     public void setAddress(String address) {
@@ -363,7 +450,7 @@ public class Member implements Serializable {
     }
 
     public String getNominee() {
-        return nominee;
+        return WordUtils.toTitleCase(nominee);
     }
 
     public void setNominee(String nominee) {
@@ -384,6 +471,14 @@ public class Member implements Serializable {
 
     public void setAddressOfNominee(String addressOfNominee) {
         this.addressOfNominee = addressOfNominee;
+    }
+
+    public int getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(int accountNo) {
+        this.accountNo = accountNo;
     }
 
     public long getUpdatedAt() {

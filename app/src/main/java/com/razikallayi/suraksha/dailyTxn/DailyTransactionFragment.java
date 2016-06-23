@@ -85,7 +85,7 @@ public class DailyTransactionFragment extends Fragment{
         calendar.setTimeInMillis(mDate);
         Log.d("FISH", "onCreateView Date:  "+mDate);
         Log.d("FISH", "onCreateView: "+calendar.getTimeInMillis());
-        textView.setText(CalendarUtils.formatDate(calendar.getTimeInMillis()));
+        textView.setText(CalendarUtils.formatDateTime(calendar.getTimeInMillis()));
 
             return rootView;
     }

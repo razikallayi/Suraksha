@@ -2,6 +2,7 @@ package com.razikallayi.suraksha;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -12,19 +13,18 @@ import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.member.MemberListActivity;
 import com.razikallayi.suraksha.member.RegisterMemberActivity;
 import com.razikallayi.suraksha.officer.CreateOfficerActivity;
+import com.razikallayi.suraksha.report.TxnReportActivity;
 import com.razikallayi.suraksha.txn.Transaction;
-import com.razikallayi.suraksha.txn.TxnReportActivity;
 import com.razikallayi.suraksha.utils.AuthUtils;
 
-public class HomeActivity extends BaseActivity
-        {
+public class HomeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-//
+
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectDiskReads()
 //                .detectDiskWrites()
@@ -50,6 +50,21 @@ public class HomeActivity extends BaseActivity
                 startActivity(intent);
             }
         });
+
+        if(AuthUtils.isDeveloper(getApplicationContext())){
+            Button btnDebug = (Button) findViewById(R.id.btnDebug);
+            if (btnDebug != null) {
+                btnDebug.setVisibility(View.VISIBLE);
+                btnDebug.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), DebugActivity.class);
+                    startActivity(intent);
+                    }
+                });
+            }
+        }
+
         Button btnAddMember = (Button) findViewById(R.id.btnRegistration);
         btnAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +141,8 @@ public class HomeActivity extends BaseActivity
             super.onBackPressed();
         }
     }
+
+
 
 
 }

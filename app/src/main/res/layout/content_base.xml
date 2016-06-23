@@ -13,6 +13,15 @@
     tools:context=".HomeActivity"
     tools:showIn="@layout/app_bar_base">
 
+    <Button
+        android:id="@+id/btnDebug"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:visibility="gone"
+        android:text="Debug" />
+
 
     <Button
         android:id="@+id/btnRegistration"

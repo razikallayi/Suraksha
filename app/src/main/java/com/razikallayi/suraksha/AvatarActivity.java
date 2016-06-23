@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.razikallayi.suraksha.utils.ImageUtils;
 
@@ -111,8 +112,9 @@ public class AvatarActivity extends BaseActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.closeBtn).setOnTouchListener(mDelayHideTouchListener);
-        findViewById(R.id.closeBtn).setOnClickListener(new View.OnClickListener() {
+        TextView closeBtn = (TextView)  findViewById(R.id.closeBtn);
+        closeBtn.setOnTouchListener(mDelayHideTouchListener);
+        closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

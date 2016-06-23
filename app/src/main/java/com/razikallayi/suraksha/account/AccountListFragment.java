@@ -77,19 +77,19 @@ public class AccountListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.account_list_fragment_menu, menu);
+//        inflater.inflate(R.menu.account_list_fragment_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.add_account) {
-            Intent intent = new Intent(getContext(), CreateAccountActivity.class);
-            intent.putExtra(ARG_MEMBER_ID, mMemberId);
-            startActivityForResult(intent, CREATE_ACCOUNT_ACTIVITY);
-            return true;
-        }
+//        if (id == R.id.add_account) {
+//            Intent intent = new Intent(getContext(), CreateAccountActivity.class);
+//            intent.putExtra(ARG_MEMBER_ID, mMemberId);
+//            startActivityForResult(intent, CREATE_ACCOUNT_ACTIVITY);
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

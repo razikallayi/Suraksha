@@ -146,8 +146,8 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
                     mOfficerName.setText(data.getString(COL_NAME));
                     mOfficerMobile.setText(data.getString(COL_MOBILE));
                     mOfficerAddress.setText(data.getString(COL_ADDRESS));
-                    mOfficerCreatedAt.setText(CalendarUtils.formatDate(data.getLong(COL_CREATED_AT)));
-                    mOfficerUpdatedAt.setText(CalendarUtils.formatDate(data.getLong(COL_UPDATED_AT)));
+                    mOfficerCreatedAt.setText(CalendarUtils.formatDateTime(data.getLong(COL_CREATED_AT)));
+                    mOfficerUpdatedAt.setText(CalendarUtils.formatDateTime(data.getLong(COL_UPDATED_AT)));
                     if(data.getInt(COL_IS_ADMIN)==1?true:false){
                         mOfficerIsAdmin.setVisibility(View.VISIBLE);
                     }else {

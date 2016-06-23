@@ -53,7 +53,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     private TextView mMemberRemarks;
     //    private TextView mMemberClosedAt           ;
     private TextView mMemberCreatedAt;
-//    private TextView mMemberUpdatedAt          ;
+    private TextView mMemberUpdatedAt          ;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -140,7 +140,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         mMemberRemarks = (TextView) rootView.findViewById(R.id.tvMemberRemarks);
 //        mMemberClosedAt             = (TextView) rootView.findViewById(R.id.tvMemberClosedAt           );
         mMemberCreatedAt = (TextView) rootView.findViewById(R.id.tvMemberCreatedAt);
-//        mMemberUpdatedAt            = (TextView) rootView.findViewById(R.id.tvMemberUpdatedAt          );
+        mMemberUpdatedAt            = (TextView) rootView.findViewById(R.id.tvMemberUpdatedAt          );
 
         return rootView;
     }
@@ -180,9 +180,9 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
                     mMemberRelationWithNominee.setText(data.getString(Member.MemberQuery.COL_RELATION_WITH_NOMINEE));
                     mMemberAddressOfNominee.setText(data.getString(Member.MemberQuery.COL_ADDRESS_OF_NOMINEE));
                     mMemberRemarks.setText(data.getString(Member.MemberQuery.COL_REMARKS));
-//                    mMemberClosedAt.setText(Utility.formatDate(data.getLong(Member.MemberQuery.COL_CLOSED_AT)));
-                    mMemberCreatedAt.setText(CalendarUtils.formatDate(data.getLong(Member.MemberQuery.COL_CREATED_AT)));
-//                    mMemberUpdatedAt.setText(Utility.formatDate(data.getLong(Member.MemberQuery.COL_UPDATED_AT)));
+//                    mMemberClosedAt.setText(Utility.formatDateTime(data.getLong(Member.MemberQuery.COL_CLOSED_AT)));
+                    mMemberCreatedAt.setText(CalendarUtils.formatDateTime(data.getLong(Member.MemberQuery.COL_CREATED_AT)));
+                    mMemberUpdatedAt.setText(CalendarUtils.formatDateTime(data.getLong(Member.MemberQuery.COL_UPDATED_AT)));
                 }
                 break;
         }

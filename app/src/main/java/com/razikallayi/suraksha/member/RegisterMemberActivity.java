@@ -173,10 +173,10 @@ public class RegisterMemberActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //Validating name column
-                if (TextUtils.isEmpty(txtName.getText().toString())) {
+                if (TextUtils.isEmpty(txtName.getText().toString().trim())) {
                     txtName.setError(getString(R.string.name_is_required));
                     txtName.requestFocus();
-                } else if (!TextUtils.isEmpty(txtMobile.getText().toString()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString())) {
+                } else if (!TextUtils.isEmpty(txtMobile.getText().toString().trim()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString().trim())) {
                     txtMobile.setError(getString(R.string.invalid_mobile_number));
                     txtMobile.requestFocus();
                 } else if (!isAcceptedTerms.isChecked()) {
@@ -348,12 +348,17 @@ public class RegisterMemberActivity extends BaseActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
+
+            //Generate Account Number
+            int accountNumber = Account.generateAccountNumber(getApplicationContext());
+
             //Save Member
+            mMember.setAccountNo(accountNumber);
             ContentValues values = Member.getMemberContentValues(mMember);
-            getApplicationContext().getContentResolver().insert(SurakshaContract.MemberEntry.CONTENT_URI, values);
+            getApplicationContext().getContentResolver().insert(
+                    SurakshaContract.MemberEntry.CONTENT_URI, values);
 
             //Save Account for member
-            int accountNumber = Account.generateAccountNumber(getApplicationContext());
             Account account = new Account(mMember, Utility.getOpeningDepositAmount(), true);
             account.setAccountNumber(accountNumber);
             values = Account.getAccountContentValues(account);
@@ -369,7 +374,7 @@ public class RegisterMemberActivity extends BaseActivity {
 
             if (SmsUtils.smsEnabledAfterRegistration(getApplicationContext())) {
                 String phoneNumber = mMember.getMobile();
-                String message = getResources().getString(R.string.member_registered_sms)
+                String message = mMember.getName() +", "+ getResources().getString(R.string.member_registered_sms)
                         + " Your account number is " + account.getAccountNumber();
                 SmsUtils.sendSms(message, phoneNumber);
             }

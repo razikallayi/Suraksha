@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="enable_sms"
         android:title="Enable SMS" />
 
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:dependency="enable_sms"
         android:key="sms_after_registration"
         android:title="Registration" />
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:dependency="enable_sms"
-        android:key="sms_after_create_account"
-        android:title="Create Account" />
+    <!--<CheckBoxPreference-->
+        <!--android:defaultValue="true"-->
+        <!--android:dependency="enable_sms"-->
+        <!--android:key="sms_after_create_account"-->
+        <!--android:title="Create Account" />-->
 
 
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:dependency="enable_sms"
         android:key="sms_after_deposit"
         android:title="Deposit" />
 
-    <!--<CheckBoxPreference-->
-        <!--android:defaultValue="false"-->
-        <!--android:dependency="enable_sms"-->
-        <!--android:key="sms_after_loan_payed"-->
-        <!--android:title="Loan Payed" />-->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:dependency="enable_sms"
+        android:key="sms_after_loan_payed"
+        android:title="Loan Payed" />
 
     <!--<CheckBoxPreference-->
-        <!--android:defaultValue="false"-->
+        <!--android:defaultValue="true"-->
         <!--android:dependency="enable_sms"-->
         <!--android:key="sms_after_loan_return"-->
         <!--android:title="Loan Return" />-->
