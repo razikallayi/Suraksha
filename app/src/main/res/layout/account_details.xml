@@ -26,10 +26,10 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:layout="@layout/deposit_fragment" />
 
-    <!--<FrameLayout-->
-    <!--android:id="@+id/fragment_txn_list"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_margin="@dimen/text_margin"-->
-    <!--/>-->
+    <FrameLayout
+    android:id="@+id/fragment_txn_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/text_margin"
+    />
 </android.support.design.widget.CoordinatorLayout>

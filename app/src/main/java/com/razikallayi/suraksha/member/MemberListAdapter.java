@@ -28,7 +28,7 @@ import com.razikallayi.suraksha.utils.LetterAvatar;
  * specified {@link OnItemClickListener}.
  */
 public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapter.MemberListViewHolder>
-        implements View.OnClickListener{
+        implements View.OnClickListener {
 
     private static final int VIEW_TYPE_COUNT = 2;
     private static final int VIEW_TYPE_NORMAL_MEMBER = 0;
@@ -119,13 +119,14 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 //            mAccountNumbersView = (LinearLayout) view.findViewById(R.id.llAccountNumbers);
         }
 
-        public void bindData(Cursor cursor) {
+        public void bindData(final Cursor cursor) {
             Member member = new Member();
             // The Cursor is now set to the right position
             member.setId(cursor.getLong(COL_MEMBER_ID));
             member.setName(cursor.getString(COL_MEMBER_NAME));
             member.setAddress(cursor.getString(COL_MEMBER_ADDRESS));
             member.setAccountNo(cursor.getInt(COL_MEMBER_ACCOUNT_NO));
+            member.setAvatar(cursor.getBlob(COL_MEMBER_AVATAR));
 //            member.fetchAccountNumbers(mView.getContext());
             mMember = member;
 
@@ -157,6 +158,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             mNameView.setText(member.getName());
             mAddressView.setText(member.getAddress());
             mAccountNumberView.setText(String.valueOf(member.getAccountNo()));
+//            mAvatarView.setImageBitmap(getAvatar(mAvatarView.getContext(),member));
 
 
             mView.setOnClickListener(new View.OnClickListener() {
@@ -165,11 +167,13 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
                     if (null != mOnItemClickListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        mOnItemClickListener.onItemClick(mMember.getId(), mMember.getName());
+                        mOnItemClickListener.onItemClick(mMember.getId(),
+                                mMember.getName());
                     }
                 }
             });
         }
+
 
         @Override
         public String toString() {
@@ -177,6 +181,30 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         }
     }
 
+    private Bitmap getAvatarBitmap(Context context, Member member) {
+        float density = context.getResources().getDisplayMetrics().density;
+        int avatarPixel = 56;
+        int sizeDp = (int) (avatarPixel * density);
+        Drawable drawableAvatar = null;
+
+
+        drawableAvatar = member.getAvatarDrawable();
+        if (drawableAvatar == null) {
+            String firstLetter = member.getName().substring(0, 1);
+            int color = Color.rgb(238,238,238);
+//            Random rnd = new Random();
+//            int Low = 50;
+//            int High = 200;
+//            int color = Color.rgb(rnd.nextInt(High - Low) + Low,
+//                    rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
+            return ImageUtils.convertToBitmap(new LetterAvatar(context, color, firstLetter, 32),
+                    sizeDp, sizeDp);
+
+        } else {
+            return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,
+                    sizeDp, sizeDp), avatarPixel);
+        }
+    }
 
     private class SetAvatarTask extends AsyncTask<Member, Void, Bitmap> {
         private Context mContext;
@@ -190,22 +218,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 
         @Override
         protected Bitmap doInBackground(Member... members) {
-            float density = mContext.getResources().getDisplayMetrics().density;
-            int avatarPixel = 56;
-            int sizeDp = (int) (avatarPixel * density);
-            Drawable drawableAvatar = null;
-            String firstLetter = members[0].getName().substring(0, 1);
-
-            int color = Color.rgb(113, 125, 169);
-            drawableAvatar = members[0].getAvatarDrawable();
-            if (drawableAvatar == null) {
-                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(new LetterAvatar(
-                        mContext, color, firstLetter, 32), sizeDp, sizeDp), avatarPixel);
-
-            } else {
-                return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,
-                        sizeDp, sizeDp), avatarPixel);
-            }
+            return getAvatarBitmap(mContext, members[0]);
         }
 
         @Override

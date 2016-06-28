@@ -114,7 +114,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        List<Transaction> depositedDates = Transaction.getTxnFromCursor(getContext(),cursor);
+        List<Transaction> depositedDates = Transaction.getTxnListFromCursor(getContext(),cursor);
         cursor.close();
         RecyclerView recyclerViewDue = (RecyclerView) rootView.findViewById(R.id.due_list);
         LinearLayoutManager llm = new LinearLayoutManager(rootView.getContext());

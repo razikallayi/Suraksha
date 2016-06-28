@@ -1,6 +1,7 @@
 package com.razikallayi.suraksha.loan;
 
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -64,25 +66,15 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
     private EditText txtLoanInstalmentAmount;
     private EditText txtLoanInstalmentTimes;
 
-
-    public interface MemberColumns {
-        String[] PROJECTION = {
-                SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
-                SurakshaContract.MemberEntry.COLUMN_NAME,
-                SurakshaContract.MemberEntry.COLUMN_ADDRESS,
-                SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO
-        };
-        int COL_MEMBER_ID = 0;
-        int COL_MEMBER_NAME = 1;
-        int COL_MEMBER_ADDRESS = 2;
-        int COL_MEMBER_ACCOUNT_NO = 3;
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loan_issue_activity);
+
+//        //reduce window width size to 80%
+//        DisplayMetrics metrics = getResources().getDisplayMetrics();
+//        int screenWidth = (int) (metrics.widthPixels * 0.8);
+//        getWindow().setLayout(screenWidth, ViewGroup.LayoutParams.MATCH_PARENT);
 
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -213,7 +205,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                     txtAmountIssueLoan.setError(getString(R.string.enter_a_valid_amount));
                     txtAmountIssueLoan.requestFocus();
                 } else if (!TextUtils.isEmpty(loanAmount) && Integer.parseInt(loanAmount) > mMaxLoanAmount) {
-                    txtAmountIssueLoan.setError("Loan amount cannot be more than " + mMaxLoanAmount+". Change maximum loanable amount in settings.");
+                    txtAmountIssueLoan.setError("Loan amount cannot be more than " + mMaxLoanAmount + ". Change maximum loanable amount in settings.");
                     txtAmountIssueLoan.requestFocus();
                 } else if (TextUtils.isEmpty(times)) {
                     txtLoanInstalmentTimes.setError(getString(R.string.enter_a_valid_number));
@@ -231,16 +223,6 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                 } else {   //no errors in input
                     btnIssueLoan.setEnabled(false);
                     mLoanIssue = getLoanDetailsFromInput();
-
-//                    Context context = getApplicationContext();
-//                    String mobileNumber = "9746730324";
-//                    String message = "Enthenkilum aykotte... mesage povo enn ariyana";
-//                    Intent smsIntent = new Intent(context, SmsReceiver.class);
-//                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, smsIntent, 0);
-//                    SmsManager sms = SmsManager.getDefault();
-//                    Log.d("FISH SmsUtils", "sendSms: sending message" + mobileNumber + " : " + message);
-//                    sms.sendTextMessage(mobileNumber, null, message, pendingIntent, null);
-
 
                     //Add the member to database
                     new IssueLoanTask(mLoanIssue).execute();
@@ -331,7 +313,6 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         addMemberNamesToAutoComplete(memberAccNoNameAddress);
     }
 
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
@@ -384,6 +365,33 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            setResult(Activity.RESULT_CANCELED);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public interface MemberColumns {
+        String[] PROJECTION = {
+                SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
+                SurakshaContract.MemberEntry.COLUMN_NAME,
+                SurakshaContract.MemberEntry.COLUMN_ADDRESS,
+                SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO
+        };
+        int COL_MEMBER_ID = 0;
+        int COL_MEMBER_NAME = 1;
+        int COL_MEMBER_ADDRESS = 2;
+        int COL_MEMBER_ACCOUNT_NO = 3;
+    }
 
     /**
      * Represents an asynchronous loanIssue task used to authenticate
@@ -447,6 +455,9 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             if (success) {
                 Toast.makeText(context, getString(R.string.loan_issued_successfully), Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "SMS sent to " + mMember.getName(), Toast.LENGTH_SHORT).show();
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result", mMember);
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             } else {
                 Toast.makeText(context, "Insertion Failed. ", Toast.LENGTH_LONG).show();

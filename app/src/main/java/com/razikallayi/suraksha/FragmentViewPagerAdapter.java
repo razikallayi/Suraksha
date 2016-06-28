@@ -28,6 +28,17 @@ public class FragmentViewPagerAdapter extends FragmentStatePagerAdapter {
         return mFragments.get(position);
     }
 
+
+
+//    @Override
+//    public int getItemPosition(Object object) {
+//        AccountManipulationsFragment amf=(AccountManipulationsFragment) object;
+//        if(amf!=null){
+//            amf.update();
+//        }
+//        return super.getItemPosition(object);
+//    }
+
     @Override
     public int getCount() {
         return mFragments.size();

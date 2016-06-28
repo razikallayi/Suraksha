@@ -14,18 +14,12 @@ import com.razikallayi.suraksha.utils.CalendarUtils;
 
 
 public class SurakshaProvider extends ContentProvider {
-    // The URI Matcher used by this content provider.
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
-    private SurakshaDbHelper mOpenHelper;
-
     static final int MEMBER = 100;
     static final int MEMBER_ID = 101;
     static final int MEMBER_JOIN_ACCOUNT = 110;
-
     static final int ACCOUNT = 200;
     static final int ACCOUNT_NUMBER = 202;
     static final int ACCOUNTS_OF_MEMBER = 210;
-
     static final int TXN = 300;
     static final int TXN_ON_DATE = 310;
     static final int TXN_OF_ACCOUNT = 320;
@@ -36,13 +30,23 @@ public class SurakshaProvider extends ContentProvider {
     static final int TXN_GET_DEPOSIT_ON_DATE = 352;
     static final int TXN_TOTAL_LOAN_PAYED = 360;
     static final int TXN_TOTAL_LOAN_RETURN = 361;
-
     static final int OFFICER = 400;
     static final int OFFICER_ID = 401;
-
     static final int LOAN_ISSUE = 500;
-
+    // The URI Matcher used by this content provider.
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sAccountsOfMemberQueryBuilder;
+    private static final SQLiteQueryBuilder sLoanIssueJoinTxnQueryBuilder;
+    private static final SQLiteQueryBuilder sTxnAccountQueryBuilder;
+    //location.location_setting = ?
+    private static final String sAccountNumberSelection =
+            SurakshaContract.AccountEntry.TABLE_NAME +
+                    "." + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
+    //location.location_setting = ? AND date >= ?
+    private static final String sMemberNameOrAccountSelection =
+            SurakshaContract.MemberEntry.TABLE_NAME +
+                    "." + SurakshaContract.MemberEntry.COLUMN_NAME + " = ? OR " +
+                    SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
 
     static {
         sAccountsOfMemberQueryBuilder = new SQLiteQueryBuilder();
@@ -59,7 +63,20 @@ public class SurakshaProvider extends ContentProvider {
         );
     }
 
-    private static final SQLiteQueryBuilder sTxnAccountQueryBuilder;
+    static {
+        sLoanIssueJoinTxnQueryBuilder = new SQLiteQueryBuilder();
+
+        //This is an inner join which looks like
+        //member INNER JOIN account ON account.member_id = Member._id
+        sLoanIssueJoinTxnQueryBuilder.setTables(
+                SurakshaContract.LoanIssueEntry.TABLE_NAME + " JOIN " +
+                        SurakshaContract.TxnEntry.TABLE_NAME +
+                        " ON " + SurakshaContract.TxnEntry.TABLE_NAME +
+                        "." + SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID +
+                        " = " + SurakshaContract.LoanIssueEntry.TABLE_NAME +
+                        "." + SurakshaContract.LoanIssueEntry._ID
+        );
+    }
 
     static {
         sTxnAccountQueryBuilder = new SQLiteQueryBuilder();
@@ -76,6 +93,14 @@ public class SurakshaProvider extends ContentProvider {
 
         sTxnAccountQueryBuilder.setTables(SurakshaContract.TxnEntry.TABLE_NAME);
     }
+
+
+//    //location.location_setting = ?
+//    private static final String sMemberIdSelection =
+//            SurakshaContract.MemberEntry.TABLE_NAME +
+//                    "." + SurakshaContract.MemberEntry._ID + " = ? ";
+
+    private SurakshaDbHelper mOpenHelper;
 
     static UriMatcher buildUriMatcher() {
         // All paths added to the UriMatcher have a corresponding code to return when a match is
@@ -112,25 +137,6 @@ public class SurakshaProvider extends ContentProvider {
 
         return matcher;
     }
-
-
-    //location.location_setting = ?
-    private static final String sMemberIdSelection =
-            SurakshaContract.MemberEntry.TABLE_NAME +
-                    "." + SurakshaContract.MemberEntry._ID + " = ? ";
-
-
-    //location.location_setting = ?
-    private static final String sAccountNumberSelection =
-            SurakshaContract.AccountEntry.TABLE_NAME +
-                    "." + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
-
-    //location.location_setting = ? AND date >= ?
-    private static final String sMemberNameOrAccountSelection =
-            SurakshaContract.MemberEntry.TABLE_NAME +
-                    "." + SurakshaContract.MemberEntry.COLUMN_NAME + " = ? OR " +
-                    SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
-
 
     private Cursor getTxnsOnDate(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final long date = SurakshaContract.TxnEntry.getDateFromUri(uri);
@@ -192,11 +198,14 @@ public class SurakshaProvider extends ContentProvider {
             }
 
             case MEMBER_ID: {
+                final String memberIdSelection = SurakshaContract.MemberEntry.TABLE_NAME +
+                        "." + SurakshaContract.MemberEntry._ID + " = ? ";
                 String id = SurakshaContract.MemberEntry.getMemberId(uri);
+
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.MemberEntry.TABLE_NAME,
                         projection,
-                        sMemberIdSelection,
+                        memberIdSelection,
                         new String[]{id},
                         null,
                         null,
@@ -217,18 +226,18 @@ public class SurakshaProvider extends ContentProvider {
                 );
                 break;
             }
-            case ACCOUNTS_OF_MEMBER: {
-                String memberId = SurakshaContract.AccountEntry.getMemberIdFromUri(uri);
-                retCursor = sAccountsOfMemberQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                        projection,
-                        sMemberIdSelection,
-                        new String[]{memberId},
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
+//            case ACCOUNTS_OF_MEMBER: {
+//                String memberId = SurakshaContract.AccountEntry.getMemberIdFromUri(uri);
+//                retCursor = sAccountsOfMemberQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+//                        projection,
+//                        sMemberIdSelection,
+//                        new String[]{memberId},
+//                        null,
+//                        null,
+//                        sortOrder
+//                );
+//                break;
+//            }
             case ACCOUNT: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.AccountEntry.TABLE_NAME,
@@ -360,8 +369,8 @@ public class SurakshaProvider extends ContentProvider {
                 break;
             }
             case LOAN_ISSUE: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        SurakshaContract.LoanIssueEntry.TABLE_NAME,
+                retCursor = sLoanIssueJoinTxnQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
                         projection,
                         selection, selectionArgs,
                         null,

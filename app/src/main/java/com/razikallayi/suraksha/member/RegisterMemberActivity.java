@@ -136,7 +136,7 @@ public class RegisterMemberActivity extends BaseActivity {
         TextView tvRegistrationFee = (TextView) sv.findViewById(R.id.tvRegistrationFee);
 
 
-        tvAccountNumber.setText(String.valueOf(Account.generateAccountNumber(getApplicationContext())));
+        tvAccountNumber.setText(String.valueOf(Member.generateAccountNumber(getApplicationContext())));
         tvRegistrationFee.setText(getString(R.string.format_rupees, Utility.getRegistrationFeeAmount()));
 
         imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
@@ -152,6 +152,14 @@ public class RegisterMemberActivity extends BaseActivity {
                 startActivityForResult(new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI),
                         CHOOSE_AVATAR_REQUEST);
+            }
+        });
+        imageViewAvatar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                imageViewAvatar.setImageResource(Member.DEFAULT_AVATAR);
+                memberAvatar = null;
+                return true;
             }
         });
 
@@ -350,7 +358,7 @@ public class RegisterMemberActivity extends BaseActivity {
         protected Boolean doInBackground(Void... params) {
 
             //Generate Account Number
-            int accountNumber = Account.generateAccountNumber(getApplicationContext());
+            int accountNumber = Member.generateAccountNumber(getApplicationContext());
 
             //Save Member
             mMember.setAccountNo(accountNumber);
@@ -374,7 +382,7 @@ public class RegisterMemberActivity extends BaseActivity {
 
             if (SmsUtils.smsEnabledAfterRegistration(getApplicationContext())) {
                 String phoneNumber = mMember.getMobile();
-                String message = mMember.getName() +", "+ getResources().getString(R.string.member_registered_sms)
+                String message = mMember.getName() + ", " + getResources().getString(R.string.member_registered_sms)
                         + " Your account number is " + account.getAccountNumber();
                 SmsUtils.sendSms(message, phoneNumber);
             }
@@ -413,6 +421,9 @@ public class RegisterMemberActivity extends BaseActivity {
 
         @Override
         protected Bitmap doInBackground(Uri... uriAvatar) {
+            if (null == uriAvatar) {
+                return null;
+            }
 
             try {
                 Bitmap bitmap = Glide.with(mContext)

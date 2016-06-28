@@ -20,10 +20,12 @@
     <!--<color name="colorTextPrimary">#455a64</color>-->
 
     <!--<color name="colorToolbar">#1e000000</color>-->
-    <color name="colorBackground">#e0e0e0</color>
+    <color name="colorBackground">#EEEEEE</color>
     <color name="colorSeparatorLine">#28b8b8b8</color>
 
+    <color name="blueGrayLight">#b0bec5</color>
     <color name="blueGray">#546e7a</color>
+    <color name="blueGrayDark">#37474f</color>
 
     <!-- grayscale -->
     <color name="white">#FFFFFF</color>
@@ -34,11 +36,19 @@
     <color name="semi_black">#ae000000</color>
     <color name="black">#323232</color>
 
+    <!-- colors indicators-->
+    <color name="danger">#e43f33</color>
+    <color name="warning">#ffa726</color>
+    <color name="success">#00c853</color>
+    <color name="info">#26c6da</color>
+
     <!-- basic colors -->
-    <color name="green">#27D34D</color>
-    <color name="blue">#2A91BD</color>
-    <color name="orange">#FF9D2F</color>
     <color name="red">#FF432F</color>
+    <color name="orange">#f57f17</color>
+    <color name="yellow">#ffCC00</color>
+    <color name="purple">#ab47bc</color>
+    <color name="green">#43a047</color>
+    <color name="blue">#0277bd</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

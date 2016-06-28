@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_members" android:icon="@drawable/ic_users_black_24dp"
+        <item
+            android:id="@+id/nav_members"
+            android:icon="@drawable/ic_users_black_24dp"
             android:title="Members" />
-        <item android:id="@+id/nav_reports" android:icon="@drawable/ic_graph_black_24dp"
+        <item
+            android:id="@+id/nav_reports"
+            android:icon="@drawable/ic_graph_black_24dp"
             android:title="Reports" />
-        <item android:id="@+id/nav_officer" android:icon="@drawable/ic_fingerprint_black_24dp"
+        <item
+            android:id="@+id/nav_officer"
+            android:icon="@drawable/ic_fingerprint_black_24dp"
             android:title="Officers" />
     </group>
+
+    <!--<item android:title="Administrator">-->
+    <!--<menu>-->
+    <!--<item-->
+    <!--android:id="@+id/nav_share"-->
+    <!--android:icon="@drawable/ic_24_sms_envelope"-->
+    <!--android:title="Share" />-->
+    <!--<item-->
+    <!--android:id="@+id/nav_send"-->
+    <!--android:icon="@drawable/ic_24_loan_rupee_plastered"-->
+    <!--android:title="Send" />-->
+    <!--</menu>-->
+    <!--</item>-->
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_key_black_24dp"
+        android:title="Logout" />
 </menu>

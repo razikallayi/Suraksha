@@ -90,10 +90,6 @@ public class SurakshaContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildMemberJoinAccount() {
-            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_MEMBER_JOIN_ACCOUNT).build();
-        }
-
 
         public static String getMemberId(Uri uri) {
             return uri.getPathSegments().get(1);

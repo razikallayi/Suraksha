@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/list_selector_background"
+    android:background="@drawable/touch_selector"
     android:focusable="true"
     >
 
@@ -10,7 +10,6 @@
         android:id="@+id/avatar"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:src="@drawable/ic_circle"
         android:scaleType="centerCrop"
         android:layout_margin="10dp"
         android:layout_centerVertical="true"/>

@@ -55,9 +55,9 @@ public class LetterAvatar extends ColorDrawable {
         pBoundsTextHeight = bounds.height();
 
         float xOffset = ((canvas.getWidth() - pMesuredTextWidth) / 2);
-        float yOffset = (int) (pBoundsTextHeight + (canvas.getHeight() - pBoundsTextHeight) / 2);
-        paint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        //paint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+        float yOffset = pBoundsTextHeight + (canvas.getHeight() - pBoundsTextHeight) / 2;
+//        paint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        paint.setTypeface(Typeface.create("sans-serif-black",0));
         paint.setColor(0xffffffff);
         canvas.drawText(pLetters, xOffset, yOffset, paint);
     }

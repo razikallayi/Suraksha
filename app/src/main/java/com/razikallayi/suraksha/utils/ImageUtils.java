@@ -23,10 +23,8 @@ public class ImageUtils {
         if (d != null) {
             Bitmap imageBitmap = ((BitmapDrawable) d).getBitmap();
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 40, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            return byteArray;
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            return stream.toByteArray();
         } else
             return null;
 
@@ -36,24 +34,20 @@ public class ImageUtils {
 
         if (bitmap != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, stream);
-            byte[] byteArray = stream.toByteArray();
-
-            return byteArray;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+            return stream.toByteArray();
         } else
             return null;
 
     }
 
 
-
-    public static Drawable byteToDrawable(Resources resources,byte[] data) {
+    public static Drawable byteToDrawable(Resources resources, byte[] data) {
         if (data == null)
             return null;
         else
-            return new BitmapDrawable(resources,BitmapFactory.decodeByteArray(data, 0, data.length));
+            return new BitmapDrawable(resources, BitmapFactory.decodeByteArray(data, 0, data.length));
     }
-
 
 
     public static Bitmap convertToBitmap(Drawable drawable, int widthPixels, int heightPixels) {

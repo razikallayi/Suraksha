@@ -93,11 +93,23 @@
     <string name="title_account_detail">Account Detail</string>
     <string name="title_officer_list">Officers</string>
     <string name="title_loan_issue">Issue Loan</string>
+    <string name="title_deposit">Deposit</string>
 
     <string name="member_search_hint">Enter Name or Account Number</string>
 
 
     <string name="format_rupees">\u20B9<xliff:g id="rupee">%1.00f</xliff:g></string>
+
+    <!-- Date format [CHAR LIMIT=NONE] -->
+    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
+
+    <!-- Language-specific constants -->
+    <string name="today">Today</string>
+
+    <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
+    <string name="tomorrow">Tomorrow</string>
+
+
     <string name="title_activity_daily_transaction">DailyTransactionActivity</string>
 
     <string name="title_settings">Settings</string>
@@ -139,7 +151,7 @@
     <!-- Example settings for Loan -->
     <string name="pref_header_loan">Loan</string>
     <string name="pref_title_max_loan_amount">Maximum Loanable Amount</string>
-    <string name="pref_title_loan_instalment_times">Loan Instalment Times (Months)</string>
+    <string name="pref_title_loan_instalment_times">Loan Instalment Times</string>
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
@@ -152,5 +164,6 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string name="title_activity_avatar">Image</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

@@ -11,9 +11,9 @@ import android.util.Log;
  */
 public class SurakshaDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION_MAY_2014 = 2; //App Version 1.0
-    public static final int DATABASE_VERSION_JUNE_2014 = 3; //App Version 2.0
-    public static final int CURRENT_DATABASE_VERSION = DATABASE_VERSION_JUNE_2014;
+    public static final int DATABASE_VERSION_MAY_2016 = 2; //App Version 1.0
+    public static final int DATABASE_VERSION_JUNE_2016 = 3; //App Version 2.0
+    public static final int CURRENT_DATABASE_VERSION = DATABASE_VERSION_JUNE_2016;
     public static final String DATABASE_NAME = "Suraksha.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -185,6 +185,22 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             "delete from " + SurakshaContract.TxnEntry.TABLE_NAME + " where " +
                     SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + " > 150";
 
+    //    update member loan blocked to false
+    private static final String SQL_UPDATE_DEFAULT_OFFICER_NAME_TO_SSP =
+            "update " + SurakshaContract.OfficerEntry.TABLE_NAME + " set "
+                    + SurakshaContract.OfficerEntry.COLUMN_NAME + " = SSP"
+                    + " where UPPER(" +
+                    SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = SYS";
+
+
+    //    update member loan blocked to false
+    private static final String SQL_UPDATE_DEFAULT_OFFICER_USERNAME_TO_SSP =
+            "update " + SurakshaContract.OfficerEntry.TABLE_NAME + " set "
+                    + SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = SSP"
+                    + " where UPPER(" +
+                    SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = SYS";
+
+
     private static final String CAPITALIZE_MEMBER_NAME =
             "UPDATE " + SurakshaContract.MemberEntry.TABLE_NAME + " SET " +
                     SurakshaContract.MemberEntry.COLUMN_NAME +
@@ -217,7 +233,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_LOAN_PAYED_ENTRIES);
         db.execSQL(SQL_CREATE_OFFICER_ENTRIES);
         db.execSQL(SQL_INSERT_DEFAULT_OFFICER);
-        db.execSQL(SQL_INSERT_DEVELOPER_OFFICER);
+
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -227,8 +243,8 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         int version = oldVersion;
 
 
-        if (version == DATABASE_VERSION_MAY_2014) {
-            Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_MAY_2014");
+        if (version == DATABASE_VERSION_MAY_2016) {
+            Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_MAY_2016");
             db.execSQL(DELETE_EXTRA_ACCOUNT);
             db.execSQL(DELETE_ALL_TXN_OF_EXTRA_ACCOUNTS);
             db.execSQL(SQL_DELETE_LOAN_PAYED_ENTRIES);
@@ -239,11 +255,14 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_MEMBER_ACCOUNT_NUMBER);
             db.execSQL(SQL_UPDATE_MEMBER_HAS_LOAN_TO_FALSE);
             db.execSQL(SQL_UPDATE_MEMBER_IS_LOAN_BLOCKED_TO_FALSE);
-//            db.execSQL(CAPITALIZE_MEMBER_NAME);
+            db.execSQL(SQL_INSERT_DEVELOPER_OFFICER);
             db.execSQL(CAPITALIZE_OFFICER_NAME);
             db.execSQL(CAPITALIZE_OFFICER_USERNAME);
+            db.execSQL(SQL_UPDATE_DEFAULT_OFFICER_NAME_TO_SSP);
+            db.execSQL(SQL_UPDATE_DEFAULT_OFFICER_USERNAME_TO_SSP);
             db.execSQL(SQL_INSERT_DEVELOPER_OFFICER);
-            version = DATABASE_VERSION_JUNE_2014;
+            version = DATABASE_VERSION_JUNE_2016;
+            Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_JUNE_2016");
         }
 
         //At this point, If database not updated to current Db, we will flush all data.

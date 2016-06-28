@@ -121,48 +121,13 @@ public class SettingsUtils {
     }
 
 
-    /**
-     * Store auth officer Id
-     *
-     * @param context Context to be used to edit the {@link android.content.SharedPreferences}.
-     */
-    public static void setAuthOfficerId(final Context context, final long value) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putLong(PREF_AUTH_OFFICER_ID, value).apply();
-    }
-
-
     public static long getAuthOfficerId(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getLong(PREF_AUTH_OFFICER_ID, -1);
     }
 
-
-    public static String getOfficerName(final Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(PREF_AUTH_OFFICER_NAME, null);
-    }
-
-
-
-    public static void setOfficerName(final Context context, final String name) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_AUTH_OFFICER_NAME, name).apply();
-    }
-
-
     public static String getOfficerUsername(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getString(PREF_AUTH_OFFICER_USERNAME, null);
-    }
-
-    /**
-     * Return a long representing the last time a sync was attempted (regardless of success).
-     *
-     * @param context Context to be used to lookup the {@link SharedPreferences}.
-     */
-    public static void setOfficerUsername(final Context context, final String username) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putString(PREF_AUTH_OFFICER_USERNAME, username).apply();
     }
 }

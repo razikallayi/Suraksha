@@ -2,9 +2,9 @@ package com.razikallayi.suraksha;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,6 +41,13 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
 
         setupNavDrawer();
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setLogo(R.drawable.suraksha_logo_name);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         Button btnTxnReport = (Button) findViewById(R.id.btnTxnReport);
         btnTxnReport.setOnClickListener(new View.OnClickListener() {

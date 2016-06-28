@@ -3,6 +3,8 @@ package com.razikallayi.suraksha.utils;
 import android.content.Context;
 import android.os.SystemClock;
 
+import com.razikallayi.suraksha.officer.Officer;
+
 /**
  * Created by Razi Kallayi on 10-05-2016 03:15.
  */
@@ -30,6 +32,10 @@ public class AuthUtils {
 
     public static long getAuthenticatedOfficerId(Context context) {
         return SettingsUtils.getAuthOfficerId(context);
+    }
+
+    public static Officer getAuthenticatedOfficer(Context context) {
+        return SettingsUtils.getAuthOfficer(context);
     }
 
     public static long getTimeDiffInMillis(Context context) {

@@ -55,7 +55,7 @@ public class EditMemberActivity extends BaseActivity {
     //Intent to pick avatar from gallery
     private static final int CHOOSE_AVATAR_REQUEST = 2;
 
-    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 512;
+    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 720;
 
     private EditText txtName, txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
             txtNominee, txtAddressOfNominee, txtRemarks;
@@ -147,6 +147,15 @@ public class EditMemberActivity extends BaseActivity {
 //                intent.setAction(Intent.ACTION_GET_CONTENT);
 //                startActivityForResult(Intent.createChooser(intent, "Select Member Image"), CHOOSE_AVATAR_REQUEST);
                 startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), CHOOSE_AVATAR_REQUEST);
+            }
+        });
+
+        imageViewAvatar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                imageViewAvatar.setImageResource(Member.DEFAULT_AVATAR);
+                memberAvatar = null;
+                return true;
             }
         });
 
@@ -377,7 +386,7 @@ public class EditMemberActivity extends BaseActivity {
         protected Boolean doInBackground(Void... params) {
             //Save Member
             ContentValues values = Member.getMemberContentValues(mMember);
-            getApplicationContext().getContentResolver().update(
+            getContentResolver().update(
                     SurakshaContract.MemberEntry.CONTENT_URI, values,
                     SurakshaContract.MemberEntry._ID + "=?",
                     new String[]{String.valueOf(getIntent().getLongExtra(ARG_MEMBER_ID, -1))});
@@ -414,6 +423,9 @@ public class EditMemberActivity extends BaseActivity {
 
         @Override
         protected Bitmap doInBackground(Uri... uriAvatar) {
+            if(uriAvatar == null){
+                return null;
+            }
 
             try {
                 Bitmap bitmap = Glide.with(mContext)

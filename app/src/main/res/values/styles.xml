@@ -20,9 +20,11 @@
     <style name="SurakshaNight" parent="Theme.AppCompat.NoActionBar" />
 
     <!-- Theme for the dialog itself -->
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="Suraksha.InputField" parent="Widget.Design.TextInputLayout">
@@ -41,6 +43,10 @@
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
+
+    <style name="SurakshaLight.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="SurakshaLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

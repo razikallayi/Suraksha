@@ -57,7 +57,7 @@ public class CreateAccountActivity extends BaseActivity {
         mMember = Member.getMemberFromId(getApplicationContext(), memberId);
         tvMemberName.setText(mMember.getName());
         tvMemberAddress.setText(mMember.getAddress());
-        tvAccountNumber.setText(String.valueOf(Account.generateAccountNumber(getApplicationContext())));
+        tvAccountNumber.setText(String.valueOf(Member.generateAccountNumber(getApplicationContext())));
         tvRegistrationFee.setText(getString(R.string.format_rupees, Utility.getRegistrationFeeAmount()));
     }
 
@@ -118,7 +118,7 @@ public class CreateAccountActivity extends BaseActivity {
             ContentResolver contentResolver = getApplicationContext().getContentResolver();
 
             Account account = new Account(mMember, Utility.getOpeningDepositAmount(), true);
-            account.setAccountNumber(Account.generateAccountNumber(getApplicationContext()));
+            account.setAccountNumber(Member.generateAccountNumber(getApplicationContext()));
             Transaction registrationFeeTxn = new Transaction(getApplicationContext(),account.getAccountNumber(),
                     Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
                     SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER, "New Account",

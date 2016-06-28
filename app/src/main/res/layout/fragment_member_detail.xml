@@ -1,527 +1,515 @@
-<android.support.v4.widget.NestedScrollView
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.razikallayi.suraksha.MemberDetailFragment"
-    android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card_view:cardCornerRadius="1dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.razikallayi.suraksha.MemberDetailFragment">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:text="Name"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberName"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="1dp">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:text="Mobile"
-                    android:layout_height="wrap_content"
-                    android:accessibilityLiveRegion="assertive"
-                    android:layout_weight="1"
-                    android:layout_gravity="left"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:fontFamily="sans-serif-condensed"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvMemberMobile"
-                    android:accessibilityLiveRegion="assertive"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:fontFamily="sans-serif-condensed"/>
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Name"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tvMemberName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:text="Address"
-                    android:layout_height="wrap_content"
-                    android:accessibilityLiveRegion="assertive"
-                    android:layout_weight="1"
-                    android:layout_gravity="left"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:fontFamily="sans-serif-condensed"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tvMemberAddress"
-                    android:accessibilityLiveRegion="assertive"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:fontFamily="sans-serif-condensed"/>
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Mobile"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
+                    <TextView
+                        android:id="@+id/tvMemberMobile"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:autoLink="phone"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Alias"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Address"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberAlias"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:text="Gender"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberGender"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:text="Father"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberFather"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:text="Spouse"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberSpouse"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:text="Occupation"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberOccupation"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="0dp"
-                android:text="Age"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberAge"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvMemberAddress"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Nominee"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Alias"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberNominee"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvMemberAlias"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Relation With Nominee"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Gender"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberRelationWithNominee"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvMemberGender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Address Of Nominee"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Father"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberAddressOfNominee"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvMemberFather"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Remarks"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Spouse"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberRemarks"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvMemberSpouse"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-        <!--<LinearLayout-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <!--<TextView-->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Occupation"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tvMemberOccupation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Age"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tvMemberAge"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Nominee"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tvMemberNominee"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Relation With Nominee"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tvMemberRelationWithNominee"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Address Of Nominee"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tvMemberAddressOfNominee"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Remarks"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/tvMemberRemarks"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
+
+                <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+
+                <!--<TextView-->
                 <!--android:layout_width="0dp"-->
                 <!--android:text="Closed At"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:accessibilityLiveRegion="assertive"-->
                 <!--android:layout_weight="1"-->
-                <!--android:layout_gravity="left"-->
+                <!--android:layout_gravity="start"-->
                 <!--android:gravity="center|start"-->
                 <!--android:padding="10dp"-->
                 <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
                 <!--android:fontFamily="sans-serif-condensed"/>-->
 
-            <!--<TextView-->
+                <!--<TextView-->
                 <!--android:layout_width="0dp"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:id="@+id/tvMemberClosedAt"-->
                 <!--android:accessibilityLiveRegion="assertive"-->
-                <!--android:layout_gravity="right"-->
+                <!--android:layout_gravity="end"-->
                 <!--android:layout_weight="1"-->
                 <!--android:gravity="center|end"-->
                 <!--android:padding="10dp"-->
                 <!---->
                 <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
                 <!--android:fontFamily="sans-serif-condensed"/>-->
-        <!--</LinearLayout>-->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                <!--</LinearLayout>-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Created At"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Created At"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberCreatedAt"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
-                
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/tvMemberCreatedAt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:text="Updated At"
-                android:layout_height="wrap_content"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_weight="1"
-                android:layout_gravity="left"
-                android:gravity="center|start"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvMemberUpdatedAt"
-                android:accessibilityLiveRegion="assertive"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:padding="10dp"
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|start"
+                        android:padding="10dp"
+                        android:text="Updated At"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-condensed"/>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvMemberUpdatedAt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:accessibilityLiveRegion="assertive"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center|end"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                </LinearLayout>
 
-      </LinearLayout>
+            </LinearLayout>
 
 
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
 
 </android.support.v4.widget.NestedScrollView>

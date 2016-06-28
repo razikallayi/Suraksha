@@ -1,10 +1,10 @@
-package com.razikallayi.suraksha.account;
+package com.razikallayi.suraksha.deposit;
 
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.member.Member;
 
 public class DepositFragment extends Fragment {
     public static final String TAG = DepositFragment.class.getSimpleName();
@@ -22,9 +23,9 @@ public class DepositFragment extends Fragment {
      */
     public static final String ARG_ACCOUNT_NUMBER = "account_number";
     private int mAccountNumber;
-    private Account mAccount;
     private Context mContext;
     private RecyclerView mDepositRecyclerView;
+    private Member mMember;
 
     public DepositFragment() {
         // Required empty public constructor
@@ -39,21 +40,25 @@ public class DepositFragment extends Fragment {
         mDepositRecyclerView = (RecyclerView) rootView.findViewById(R.id.deposited_list);
         mDepositRecyclerView.setHasFixedSize(true);
 
+//        // use a linear layout manager
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+//        mDepositRecyclerView.setLayoutManager(layoutManager);
+
         // use a linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
         mDepositRecyclerView.setLayoutManager(layoutManager);
 
         //get AccountNumber From Intent
         mAccountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER);
-        mAccount = Account.getAccountFromAccountNumber(mContext, mAccountNumber);
+        mMember = Member.getMemberFromAccountNumber(mContext, mAccountNumber);
 
         TextView memberNameTv = (TextView) rootView.findViewById(R.id.depositMemberName);
-        memberNameTv.setText(mAccount.getMember().getName());
+        memberNameTv.setText(mMember.getName());
         TextView memberAcNoTv = (TextView) rootView.findViewById(R.id.depositMemberAcNo);
-        memberAcNoTv.setText(String.valueOf(mAccount.getAccountNumber()));
+        memberAcNoTv.setText(String.valueOf(mMember.getAccountNo()));
 
         // specify an adapter
-        final DepositAdapter depositAdapter = new DepositAdapter(getContext(), mAccount);
+        final DepositAdapter depositAdapter = new DepositAdapter(getContext(), mMember);
         mDepositRecyclerView.setAdapter(depositAdapter);
 
         Button makeDepositBtn = (Button) rootView.findViewById(R.id.makeDepositButton);
@@ -61,14 +66,11 @@ public class DepositFragment extends Fragment {
             makeDepositBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    depositAdapter.onMakeDepositClick(view,inflater);
+                    depositAdapter.onMakeDepositClick(view, inflater);
                 }
             });
         }
 
         return rootView;
-    }
-    public interface OnMakeDepositClickListener {
-        void onMakeDepositClick(View view, LayoutInflater inflater);
     }
 }

@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
             mUsernameView.setVisibility(View.GONE);
             TextView mUsernameTv = (TextView) findViewById(R.id.tvUsername);
             mUsernameTv.setText(mRecentOfficer);
+            mUsernameTv.setContentDescription(mRecentOfficer);
+            //((View)(mUsernameTv.getParent())).setContentDescription(mRecentOfficer);
             mUsernameTv.setVisibility(View.VISIBLE);
             Button mSignOutButton = (Button) findViewById(R.id.sign_out_button);
             mSignOutButton.setVisibility(View.VISIBLE);
@@ -177,12 +179,10 @@ public class LoginActivity extends AppCompatActivity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private long mOfficerId;
         private final String mUsername;
         private final String mPin;
 
         UserLoginTask(String username, String password) {
-            mOfficerId = -1;
             mUsername = username;
             mPin = password;
         }
@@ -198,6 +198,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (success) {
                 setResult(RESULT_OK);
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

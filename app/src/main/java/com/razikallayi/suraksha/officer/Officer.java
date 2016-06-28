@@ -64,6 +64,24 @@ public class Officer {
         return null;
     }
 
+    public static String getOfficerNameFromId(Context context, long id) {
+        if (id <= 0) {
+            return null;
+        }
+
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.OfficerEntry.buildOfficerUri(id),
+                new String[]{SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.OfficerEntry.COLUMN_NAME},
+                null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            String officerName = cursor.getString(OfficerQuery.COL_NAME);
+            cursor.close();
+            return officerName;
+        }
+        return null;
+    }
+
     public static boolean authenticate(Context context, String username, String password) {
         Cursor cursor = context.getContentResolver().query(SurakshaContract.OfficerEntry.CONTENT_URI,
                 new String[]{SurakshaContract.OfficerEntry._ID},

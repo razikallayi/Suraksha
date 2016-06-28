@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.deposit.DepositFragment;
 import com.razikallayi.suraksha.member.MemberListActivity;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.List;
  * in a {@link MemberListActivity}.
  */
 public class AccountDetailActivity extends BaseActivity {
-
+    public static final String ARG_ACCOUNT_NUMBER = "account_number";
     int mAccountNumber;
 
     @Override
@@ -45,7 +46,7 @@ public class AccountDetailActivity extends BaseActivity {
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.account_detail_container);
         if (viewPager != null) {
-            mAccountNumber = getIntent().getIntExtra("account_number", -1);
+            mAccountNumber = getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1);
             setupViewPager(viewPager, mAccountNumber);
         }
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);

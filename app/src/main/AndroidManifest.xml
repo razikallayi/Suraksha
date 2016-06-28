@@ -34,14 +34,8 @@
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable"
-                android:value=".member.memberListActivity" />
         </activity>
         <activity
             android:name=".member.RegisterMemberActivity"
@@ -93,9 +87,6 @@
                 android:value=".member.MemberListActivity" />
         </activity>
         <activity
-            android:name=".account.MakeDepositActivity"
-            android:parentActivityName=".member.MemberListActivity" />
-        <activity
             android:name=".account.AccountDetailActivity"
             android:label="@string/title_account_detail" />
         <activity
@@ -145,11 +136,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_avatar"
             android:theme="@style/FullscreenTheme" />
-
-        <receiver
-            android:name=".SmsReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
+        <activity
+            android:name=".deposit.DepositActivity"
+            android:label="@string/title_deposit" />
     </application>
 
 </manifest>

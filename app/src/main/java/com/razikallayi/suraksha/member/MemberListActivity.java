@@ -44,7 +44,8 @@ import java.util.Random;
  * item details side-by-side using two vertical panes.
  */
 public class MemberListActivity extends BaseActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener {
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        SearchView.OnQueryTextListener {
 
     public static final String TAG = MemberListActivity.class.getClass().getSimpleName();
     private static final int MEMBER_LIST_LOADER = 0;
@@ -74,7 +75,7 @@ public class MemberListActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.member_list_activity);
-
+// TODO: 28-06-2016 check if save instance state is null. [Ref]See resposnsive ui->40.Built 2pane tablet ui
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -152,14 +153,6 @@ public class MemberListActivity extends BaseActivity
         getSupportLoaderManager().initLoader(MEMBER_LIST_LOADER, null, this);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode != LOCK_SCREEN_REQUEST) {
-            getSupportLoaderManager().restartLoader(MEMBER_LIST_LOADER, null, this);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void setupViewPager(ViewPager viewPager, long memberId) {
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
 
@@ -199,7 +192,6 @@ public class MemberListActivity extends BaseActivity
         }
         viewPager.setAdapter(adapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,7 +242,6 @@ public class MemberListActivity extends BaseActivity
         return false;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -261,6 +252,55 @@ public class MemberListActivity extends BaseActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (args != null) {
+            //Used for searching
+            return new CursorLoader(getApplicationContext(),
+                    SurakshaContract.MemberEntry.CONTENT_URI,
+                    MEMBER_COLUMNS,
+
+                    SurakshaContract.MemberEntry.COLUMN_NAME
+                            + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ADDRESS
+                            + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO + "=?",
+
+                    new String[]{String.valueOf("%" + args.get("query") + "%"), String.valueOf("%"
+                            + args.get("query") + "%"), String.valueOf(args.get("query"))},
+
+                    SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID
+                            + " COLLATE NOCASE");
+        } else {
+            return new CursorLoader(getApplicationContext(),
+                    SurakshaContract.MemberEntry.CONTENT_URI,
+                    MEMBER_COLUMNS, null, null,
+                    SurakshaContract.MemberEntry._ID.concat(" COLLATE NOCASE"));
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mMemberListAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMemberListAdapter.swapCursor(null);
+    }
+
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Log.d("JELLYFISH", "onActivityResult:req cod " + requestCode);
+//        Log.d("JELLYFISH", "onActivityResult: resut" + resultCode);
+//        Log.d("JELLYFISH", "onActivityResult: resut" + data.getSerializableExtra("result").toString());
+//        if (requestCode == AccountManipulationsFragment.ISSUE_LOAN_ACTIVITY) {
+////            AccountManipulationsFragment amf = (AccountManipulationsFragment) getSupportFragmentManager().findFragmentByTag(AccountManipulationsFragment.TAG);
+////            amf.onLoanIssued((Member) data.getSerializableExtra("result"));
+//        }
+//    }
+
 
     private class LoadAvatarTask extends AsyncTask<Long, Void, Member> {
         @Override
@@ -274,7 +314,7 @@ public class MemberListActivity extends BaseActivity
 
             //Address Or Mobile
             TextView tvMobile = (TextView) findViewById(R.id.mobileMember);
-            String mobileOrAddress = member.getAddress().isEmpty()?member.getMobile():member.getAddress();
+            String mobileOrAddress = member.getAddress().isEmpty() ? member.getMobile() : member.getAddress();
             tvMobile.setText(mobileOrAddress);
 
             //AccountNumber
@@ -297,46 +337,10 @@ public class MemberListActivity extends BaseActivity
                 Random rnd = new Random();
                 int Low = 50;
                 int High = 200;
-                int color = Color.rgb(rnd.nextInt(High - Low) + Low,rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
+                int color = Color.rgb(rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
                 ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
                         color, member.getName().substring(0, 1).toUpperCase(), 24));
             }
         }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (args != null) {
-            //Used for searching
-            return new CursorLoader(getApplicationContext(),
-                    SurakshaContract.MemberEntry.CONTENT_URI,
-                    MEMBER_COLUMNS,
-
-                    SurakshaContract.MemberEntry.COLUMN_NAME
-                    + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ADDRESS
-                    + " LIKE ? OR " + SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO + "=?",
-
-                    new String[]{String.valueOf("%" + args.get("query") + "%"), String.valueOf("%"
-                            + args.get("query") + "%"), String.valueOf(args.get("query"))},
-
-                    SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID
-                            + " COLLATE NOCASE");
-        } else {
-            return new CursorLoader(getApplicationContext(),
-                    SurakshaContract.MemberEntry.CONTENT_URI,
-                    MEMBER_COLUMNS, null, null,
-                    SurakshaContract.MemberEntry._ID.concat(" COLLATE NOCASE"));
-        }
-    }
-
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mMemberListAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mMemberListAdapter.swapCursor(null);
     }
 }

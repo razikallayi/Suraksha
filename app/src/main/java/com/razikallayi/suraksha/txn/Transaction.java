@@ -5,19 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Razi Kallayi on 31-01-2016.
  */
-public class Transaction {
+public class Transaction implements Serializable {
+    private long definedDepositDate = -1;
+    private long loanPayedId = -1;
     private long id;
     private int accountNumber;
     private double amount;
-    protected long definedDepositDate = -1;
-    protected long loanPayedId = -1;
     private int voucherType;
     private int ledger;
     private String narration;
@@ -127,13 +129,22 @@ public class Transaction {
     }
 
 
-    public static List<Transaction> getTxnFromCursor(Context context, Cursor c) {
-        List<Transaction> txnList = new ArrayList<Transaction>();
+    public static List<Transaction> getTxnListFromCursor(Context context, Cursor c) {
+        List<Transaction> txnList = new ArrayList<>();
         if (c.getCount() <= 0) {
             return txnList;
         }
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            Transaction txn = new Transaction(context, c.getInt(TxnQuery.COL_FK_ACCOUNT_NUMBER),
+            Transaction txn = getTxnFromCursor(context, c);
+            txnList.add(txn);
+        }
+        return txnList;
+    }
+
+    public static Transaction getTxnFromCursor(Context context, Cursor c) {
+        Transaction txn = new Transaction();
+        if (c != null) {
+            txn = new Transaction(context, c.getInt(TxnQuery.COL_FK_ACCOUNT_NUMBER),
                     c.getDouble(TxnQuery.COL_AMOUNT), c.getInt(TxnQuery.COL_VOUCHER_TYPE),
                     c.getInt(TxnQuery.COL_LEDGER), c.getString(TxnQuery.COL_NARRATION),
                     c.getLong(TxnQuery.COL_FK_OFFICER_ID));
@@ -143,9 +154,22 @@ public class Transaction {
             txn.loanPayedId = c.getInt(TxnQuery.COL_FK_LOAN_PAYED_ID);
             txn.createdAt = c.getLong(TxnQuery.COL_CREATED_AT);
             txn.updatedAt = c.getLong(TxnQuery.COL_UPDATED_AT);
-            txnList.add(txn);
         }
-        return txnList;
+        return txn;
+    }
+
+    public static List<Transaction> getLoanReturnForLoanIssueId(Context context, long loanIssuedId) {
+        String receiptVoucher = String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER);
+        String loanReturnLedger = String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER);
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.CONTENT_URI,
+                Transaction.TxnQuery.PROJECTION,
+                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + " = ? and "
+                        + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? and "
+                        + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? ",
+                new String[]{String.valueOf(loanIssuedId), receiptVoucher, loanReturnLedger},
+                SurakshaContract.TxnEntry._ID + " DESC");
+        return getTxnListFromCursor(context, cursor);
     }
 
 
@@ -164,59 +188,28 @@ public class Transaction {
         return values;
     }
 
-
-    public interface TxnQuery {
-        String[] PROJECTION = new String[]{
-                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry._ID,
-                SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
-                SurakshaContract.TxnEntry.COLUMN_AMOUNT,
-                SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
-                SurakshaContract.TxnEntry.COLUMN_LEDGER,
-                SurakshaContract.TxnEntry.COLUMN_NARRATION,
-                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT,
-                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT,
-                SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
-                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
-                SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
-        };
-        int COL_ID = 0;
-        int COL_FK_ACCOUNT_NUMBER = 1;
-        int COL_AMOUNT = 2;
-        int COL_VOUCHER_TYPE = 3;
-        int COL_LEDGER = 4;
-        int COL_NARRATION = 5;
-        int COL_CREATED_AT = 6;
-        int COL_UPDATED_AT = 7;
-        int COL_DEFINED_DEPOSIT_DATE = 8;
-        int COL_FK_LOAN_PAYED_ID = 9;
-        int COL_FK_OFFICER_ID = 10;
-    }
-
-
-
     public int getVoucherType() {
         return voucherType;
-    }
-
-    public String getVoucherName() {
-        return Transaction.getVoucherName(voucherType);
     }
 
     public void setVoucherType(int voucherType) {
         this.voucherType = voucherType;
     }
 
+    public String getVoucherName() {
+        return Transaction.getVoucherName(voucherType);
+    }
+
     public int getLedger() {
         return ledger;
     }
 
-    public String getLedgerName() {
-        return Transaction.getLedgerName(ledger);
-    }
-
-
     public void setLedger(int ledger) {
         this.ledger = ledger;
+    }
+
+    public String getLedgerName() {
+        return Transaction.getLedgerName(ledger);
     }
 
     public int getAccountNumber() {
@@ -289,5 +282,45 @@ public class Transaction {
 
     public void setNarration(String narration) {
         this.narration = narration;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id='" + id + '\'' +
+                ", amount='" + amount + '\'' +
+                ", voucher='" + getVoucherName(voucherType) + '\'' +
+                ", ledger='" + getLedgerName(ledger) + '\'' +
+                ", accountNo='" + accountNumber + '\'' +
+                ", created='" + CalendarUtils.formatDateTime(createdAt) + '\'' +
+                '}';
+    }
+
+
+    public interface TxnQuery {
+        String[] PROJECTION = new String[]{
+                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry._ID,
+                SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
+                SurakshaContract.TxnEntry.COLUMN_AMOUNT,
+                SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
+                SurakshaContract.TxnEntry.COLUMN_LEDGER,
+                SurakshaContract.TxnEntry.COLUMN_NARRATION,
+                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT,
+                SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT,
+                SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
+                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
+                SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
+        };
+        int COL_ID = 0;
+        int COL_FK_ACCOUNT_NUMBER = 1;
+        int COL_AMOUNT = 2;
+        int COL_VOUCHER_TYPE = 3;
+        int COL_LEDGER = 4;
+        int COL_NARRATION = 5;
+        int COL_CREATED_AT = 6;
+        int COL_UPDATED_AT = 7;
+        int COL_DEFINED_DEPOSIT_DATE = 8;
+        int COL_FK_LOAN_PAYED_ID = 9;
+        int COL_FK_OFFICER_ID = 10;
     }
 }

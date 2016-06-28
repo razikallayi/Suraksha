@@ -5,7 +5,7 @@
     android:id="@+id/deposited_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutManager="LinearLayoutManager"
+    app:layoutManager="GridLayoutManager"
     tools:context=".account.AccountDetailActivity"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"

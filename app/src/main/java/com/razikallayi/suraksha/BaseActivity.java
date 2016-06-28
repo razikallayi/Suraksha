@@ -3,31 +3,28 @@ package com.razikallayi.suraksha;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
 import com.razikallayi.suraksha.member.MemberListActivity;
+import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.officer.OfficerListActivity;
 import com.razikallayi.suraksha.report.TxnReportActivity;
 import com.razikallayi.suraksha.utils.AuthUtils;
-import com.razikallayi.suraksha.utils.SettingsUtils;
 
 public abstract class BaseActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     protected static int LOCK_SCREEN_REQUEST = 100;
     protected boolean mSkipLockOnce = false;
@@ -40,6 +37,8 @@ public abstract class BaseActivity extends AppCompatActivity
 
     protected static final int mMinLockTime = FIFTEEN_MINUTES; // TODO: 17-06-2016 change to five seconds on Production
     protected static final int mMinOfficerLockTime = FIFTEEN_MINUTES;
+
+    public static Officer authOfficer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,8 @@ public abstract class BaseActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+            finish();
+//            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         //noinspection SimplifiableIfStatement
@@ -125,6 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        setOfficer();
         if (mSkipLockOnce) {
             mSkipLockOnce = false;
             return;
@@ -153,8 +154,6 @@ public abstract class BaseActivity extends AppCompatActivity
         //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setLogo(R.drawable.suraksha_logo_name);
-            toolbar.setTitle("");
             setSupportActionBar(toolbar);
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,12 +162,21 @@ public abstract class BaseActivity extends AppCompatActivity
                         this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
                 drawer.addDrawerListener(toggle);
                 toggle.syncState();
+            }
+        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+    }
 
-
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                if (navigationView != null) {
-                    navigationView.setNavigationItemSelectedListener(this);
-                }
+    private void setOfficer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            View navHeader = navigationView.getHeaderView(0);
+            TextView lblOfficer = (TextView) navHeader.findViewById(R.id.officer_nav_header);
+            if (lblOfficer != null && AuthUtils.isLoggedIn(navigationView.getContext())) {
+                lblOfficer.setText(AuthUtils.getAuthenticatedOfficer(navigationView.getContext()).getName());
             }
         }
     }
@@ -178,17 +186,12 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d("FISH Key", "onSharedPreferenceChanged: " + key);
-        if (key != null) {
-            if (key.equals(SettingsUtils.PREF_IS_LOGGED_IN)) {
-                if (!AuthUtils.isLoggedIn(mContext)) {
-                    Toast.makeText(BaseActivity.this, "Log in changed", Toast.LENGTH_SHORT).show();
-                    AuthUtils.logout(mContext);
-                    startActivity(new Intent(mContext, LoginActivity.class));
-                    finish();
-                }
-            }
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -197,22 +200,27 @@ public abstract class BaseActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_members) {
-            // Handle the register member action
-            Intent intent = new Intent(this, MemberListActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_reports) {
-            Intent intent = new Intent(this, TxnReportActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_officer) {
-            Intent intent = new Intent(this, OfficerListActivity.class);
-            startActivity(intent);
+        switch (id) {
+            case R.id.nav_members:
+                // Handle the member action
+                startActivity(new Intent(this, MemberListActivity.class));
+                break;
+            case R.id.nav_reports:
+                startActivity(new Intent(this, TxnReportActivity.class));
+                break;
+            case R.id.nav_officer:
+                startActivity(new Intent(this, OfficerListActivity.class));
+                break;
+            case R.id.nav_logout:
+                AuthUtils.logout(getApplicationContext());
+                launchLockScreen();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 

@@ -84,25 +84,6 @@ public class Account implements Serializable {
     }
 
     /**
-     * Return the next account number to be inserted to database.
-     *
-     * @param context Context used to getContentResolver
-     * @return int
-     */
-    public static int generateAccountNumber(Context context) {
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.AccountEntry.CONTENT_URI,
-                new String[]{"Max(" + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + ")"}, null,
-                null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int accountNumber = cursor.getInt(0) + 1;
-            cursor.close();
-            return accountNumber;
-        }
-        return 0;
-    }
-
-    /**
      * return contentValues from account object
      *
      * @param account
@@ -122,6 +103,8 @@ public class Account implements Serializable {
     }
 
     /**
+     * * @deprecated
+     * Use makeDeposit from Member Instead
      * return contentValues from account object
      *
      * @param context
@@ -129,6 +112,7 @@ public class Account implements Serializable {
      * @param remarks
      * @return Uri
      */
+    @Deprecated
     public Transaction makeDeposit(Context context, long date, String remarks) {
         Transaction txnMonthlyDeposit = new Transaction(context, accountNumber, Utility.getMonthlyDepositAmount(),
                 SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
@@ -140,8 +124,7 @@ public class Account implements Serializable {
     }
 
     /**
-     * @deprecated
-     * Use fetch Deposit from Member Instead
+     * @deprecated Use fetch Deposit from Member Instead
      */
     @Deprecated
     public List<Transaction> fetchDeposits(Context context) {
@@ -151,7 +134,7 @@ public class Account implements Serializable {
                 SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND " + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
                 new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), String.valueOf(accountNumber)},
                 SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " DESC");
-        return Transaction.getTxnFromCursor(context, cursor);
+        return Transaction.getTxnListFromCursor(context, cursor);
     }
 
     public boolean isActive() {

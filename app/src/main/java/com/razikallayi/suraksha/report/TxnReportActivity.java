@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -15,8 +16,8 @@ import android.widget.TextView;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
@@ -73,8 +74,16 @@ public class TxnReportActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_txn_report);
+
+        //Setup the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -93,8 +102,6 @@ public class TxnReportActivity extends BaseActivity implements
             });
         }
 
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportLoaderManager().initLoader(TXN_LOADER, null, this);
     }
 
@@ -206,8 +213,7 @@ public class TxnReportActivity extends BaseActivity implements
                 TxnItem txnItem = (TxnItem) mItems.get(position);
                 TxnViewHolder viewHolder = (TxnViewHolder) holder;
                 viewHolder.mAccountNo.setText(String.valueOf(txnItem.txn.getAccountNumber()));
-                viewHolder.mMemberName.setText(Account.getAccountFromAccountNumber(
-                        getApplicationContext(), txnItem.txn.getAccountNumber()).getMember().getName());
+                viewHolder.mMemberName.setText(Member.getMemberFromAccountNumber(getApplicationContext(), txnItem.txn.getAccountNumber()).getName());
                 viewHolder.mAmountView.setText(Utility.formatAmountInRupees(getApplicationContext(),
                         txnItem.txn.getAmount()));
                 if (txnItem.txn.getDefinedDepositMonth() != -1) {
