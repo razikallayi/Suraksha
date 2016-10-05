@@ -24,7 +24,10 @@ public class WordUtils {
                 }
             } else if (Character.isWhitespace(c)) {
                 space = true;
-            } else {
+            } else if (c == '.') {
+                space = true;
+            }
+            else {
                 builder.setCharAt(i, Character.toLowerCase(c));
             }
         }

@@ -33,42 +33,9 @@ public class TxnReportActivity extends BaseActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         DatePickerDialog.OnDateSetListener {
 
+    public static final int TXN_LOADER = 500;
     public LinkedHashMap<Long, List<Transaction>> mTransactionsMap;
     public List<ListItem> mItems;
-
-    public abstract class ListItem {
-
-        public static final int TYPE_HEADER = 1;
-        public static final int TYPE_TXN = 2;
-
-        abstract public int getType();
-    }
-
-
-    public class HeaderItem extends ListItem {
-        private long date;
-
-        @Override
-        public int getType() {
-            return TYPE_HEADER;
-        }
-    }
-
-    public class TxnItem extends ListItem {
-        private Transaction txn;
-
-        // here getters and setters
-        // for title and so on, built
-        // using date
-
-        @Override
-        public int getType() {
-            return TYPE_TXN;
-        }
-    }
-
-
-    public static final int TXN_LOADER = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +71,6 @@ public class TxnReportActivity extends BaseActivity implements
 
         getSupportLoaderManager().initLoader(TXN_LOADER, null, this);
     }
-
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -181,10 +147,39 @@ public class TxnReportActivity extends BaseActivity implements
 
     }
 
+    public abstract class ListItem {
+
+        public static final int TYPE_HEADER = 1;
+        public static final int TYPE_TXN = 2;
+
+        abstract public int getType();
+    }
+
+    public class HeaderItem extends ListItem {
+        private long date;
+
+        @Override
+        public int getType() {
+            return TYPE_HEADER;
+        }
+    }
+
+    public class TxnItem extends ListItem {
+        private Transaction txn;
+
+        // here getters and setters
+        // for title and so on, built
+        // using date
+
+        @Override
+        public int getType() {
+            return TYPE_TXN;
+        }
+    }
 
     public class TxnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private LayoutInflater mLayoutInflater;
         List<ListItem> mItems;
+        private LayoutInflater mLayoutInflater;
 
         public TxnAdapter(LayoutInflater mLayoutInflater, List<ListItem> mItems) {
             this.mLayoutInflater = mLayoutInflater;
@@ -229,6 +224,16 @@ public class TxnReportActivity extends BaseActivity implements
             }
         }
 
+        @Override
+        public int getItemCount() {
+            return mItems.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return mItems.get(position).getType();
+        }
+
         private class HeaderViewHolder extends RecyclerView.ViewHolder {
             TextView dateTextView;
 
@@ -261,16 +266,6 @@ public class TxnReportActivity extends BaseActivity implements
                 mAmountView = (TextView) itemView.findViewById(R.id.txnAmount);
                 mVoucherName = (TextView) itemView.findViewById(R.id.txnVoucherName);
             }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mItems.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return mItems.get(position).getType();
         }
     }
 }

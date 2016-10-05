@@ -1,72 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/deposit_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/deposit_item_layout"
-    android:orientation="vertical"
     android:background="@android:drawable/list_selector_background"
-    android:focusable="true">
+    android:focusable="true"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/depositMonth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_normal"
-        android:fontFamily="sans-serif-condensed"
-        android:textStyle="bold"
-        android:text="Pending Deposits"
         android:accessibilityLiveRegion="polite"
-        android:paddingTop="@dimen/spacing_normal"
+        android:fontFamily="sans-serif-condensed"
         android:paddingBottom="@dimen/spacing_very_tiny"
-        />
+        android:paddingTop="@dimen/spacing_normal"
+        android:text="Month YEAR"
+        android:textSize="@dimen/font_normal"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/depositAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="@dimen/font_normal"
-        android:text="1000"
-        android:accessibilityLiveRegion="polite"
-        android:layout_alignParentEnd="true"
         android:layout_alignBaseline="@id/depositMonth"
-        />
+        android:layout_alignParentEnd="true"
+        android:accessibilityLiveRegion="polite"
+        android:fontFamily="sans-serif-condensed"
+        android:text="1000"
+        android:textSize="@dimen/font_normal" />
+
     <TextView
         android:id="@+id/depositCreatedAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/depositMonth"
+        android:accessibilityLiveRegion="polite"
         android:text="June 01 2016"
         android:textSize="@dimen/font_smaller"
-        android:accessibilityLiveRegion="polite"
-        android:layout_below="@id/depositMonth"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/depositOfficer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/depositMonth"
+        android:layout_marginRight="@dimen/spacing_very_tiny"
+        android:layout_toRightOf="@id/depositCreatedAt"
+        android:accessibilityLiveRegion="polite"
         android:text="officer"
         android:textSize="@dimen/font_smaller"
-        android:accessibilityLiveRegion="polite"
-        android:layout_toRightOf="@id/depositCreatedAt"
-        android:layout_marginRight="@dimen/spacing_very_tiny"
-        android:layout_below="@id/depositMonth"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
 
     <TextView
         android:id="@+id/depositRemarks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="asdsadasd sample"
-        android:textSize="@dimen/font_smaller"
-        android:accessibilityLiveRegion="polite"
         android:layout_below="@id/depositCreatedAt"
-        />
+        android:accessibilityLiveRegion="polite"
+        android:text="asdsadasd sample"
+        android:textSize="@dimen/font_smaller" />
+
     <View
         android:id="@+id/depositListItemBottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/depositRemarks"
-        android:background="@color/colorSeparatorLine"
-        />
+        android:background="@color/colorSeparatorLine" />
 </LinearLayout>

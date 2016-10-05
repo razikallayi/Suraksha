@@ -23,6 +23,7 @@
     <string name="accountNumber">Account Number</string>
     <string name="name">Name</string>
     <string name="alias">Alias</string>
+    <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="father">Father</string>
@@ -35,6 +36,9 @@
     <string name="relation_with_nominee">Relation With Nominee</string>
     <string name="address_of_nominee">Address of Nominee</string>
     <string name="remarks">Remarks</string>
+    <string name="created_at">Created at</string>
+    <string name="updated_at">Updated at</string>
+    <string name="closed_at">Closed at</string>
     <string name="add_member">Add Member</string>
 
     <string name="name_is_required">Please enter the name</string>
@@ -109,6 +113,9 @@
     <!-- For labelling tomorrow's forecast [CHAR LIMIT=15] -->
     <string name="tomorrow">Tomorrow</string>
 
+    <!-- For labelling yesterdays's forecast [CHAR LIMIT=15] -->
+    <string name="yesterday">Yesterday</string>
+
 
     <string name="title_activity_daily_transaction">DailyTransactionActivity</string>
 
@@ -165,5 +172,20 @@
 
     <string name="title_activity_avatar">Image</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="member_image">Member Image</string>
+    <string name="issue_loan">Issue Loan</string>
+    <string name="loan_issued">Loan Issued</string>
+    <string name="loan_return">Loan Return</string>
+    <string name="instalment">Instalment</string>
+    <string name="deposit">Deposit</string>
+    <string name="make_deposit">Make Deposit</string>
+    <string name="loan">Loan</string>
+    <string name="date">Date</string>
+    <string name="title_loan">Loan</string>
+    <string name="title_activity_account_summery">Account Summery</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

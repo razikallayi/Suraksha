@@ -309,7 +309,7 @@ public class RegisterMemberActivity extends BaseActivity {
                     }
 
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Don't Close", null)
                 .show();
     }
 

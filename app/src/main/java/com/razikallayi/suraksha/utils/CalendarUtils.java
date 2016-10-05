@@ -1,19 +1,16 @@
 package com.razikallayi.suraksha.utils;
 
 import android.content.Context;
-import android.text.format.Time;
+import android.text.format.DateUtils;
 
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.txn.Transaction;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * Created by Razi Kallayi on 19-05-2016.
@@ -54,7 +51,7 @@ public class CalendarUtils extends GregorianCalendar {
 
     public static long getDueDate() {
         Calendar dueDate = getInstance();
-        dueDate.set(dueDate.get(YEAR), dueDate.get(MONTH), dueDate.get(DATE), 0, 0, 0);
+        dueDate = normalizeDate(dueDate);
         dueDate.set(Calendar.DATE, getDueDay());
         return dueDate.getTimeInMillis();
     }
@@ -104,8 +101,10 @@ public class CalendarUtils extends GregorianCalendar {
         // normalize the start date to the beginning of the (UTC) day
         Calendar date = getInstance();
         date.setTimeInMillis(startDate);
-        date.set(date.get(YEAR), date.get(MONTH), date.get(DATE), 0, 0, 0);
-        return date.getTimeInMillis();
+        Calendar standardDate = Calendar.getInstance();
+        standardDate.setTimeInMillis(0);
+        standardDate.set(date.get(YEAR), date.get(MONTH), date.get(DATE));
+        return standardDate.getTimeInMillis();
 //        Time time = new Time();
 //        time.set(startDate);
 //        int julianDay = Time.getJulianDay(startDate, time.gmtoff);
@@ -116,8 +115,10 @@ public class CalendarUtils extends GregorianCalendar {
     // the database to the start of the the Julian day at UTC.
     public static Calendar normalizeDate(Calendar calendar) {
         // normalize the calendar to the beginning of the (UTC) day means 12:00:00 AM
-        calendar.set(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE), 0, 0, 0);
-        return calendar;
+        Calendar standardDate = Calendar.getInstance();
+        standardDate.setTimeInMillis(0);
+        standardDate.set(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE));
+        return standardDate;
     }
 
     private static int getMonthInt(String month) {
@@ -166,29 +167,37 @@ public class CalendarUtils extends GregorianCalendar {
         // For tomorrow:  "Tomorrow"
         // For the next 5 days: "Wednesday" (just the day name)
         // For all days after that: "Mon Jun 8"
+        if (dateInMillis == 0L) {
+            return "";
+        }
 
-        Time time = new Time();
-        time.setToNow();
-        long currentTime = System.currentTimeMillis();
-        int julianDay = Time.getJulianDay(dateInMillis, time.gmtoff);
-        int currentJulianDay = Time.getJulianDay(currentTime, time.gmtoff);
+        long givenDate = normalizeDate(dateInMillis);
+        long currentDate = normalizeDate(System.currentTimeMillis());
+
+        long yesterday = currentDate - DateUtils.DAY_IN_MILLIS;
+        long tomorrow = currentDate + DateUtils.DAY_IN_MILLIS;
 
         // If the date we're building the String for is today's date, the format
         // is "Today, June 24"
-        if (julianDay == currentJulianDay) {
-            String today = context.getString(R.string.today);
-            int formatId = R.string.format_full_friendly_date;
+        int formatId = R.string.format_full_friendly_date;
+        if (givenDate == currentDate) {
             return String.format(context.getString(
                     formatId,
-                    today,
+                    context.getString(R.string.today),
                     getFormattedMonthDay(context, dateInMillis)));
-        } else if (julianDay < currentJulianDay + 7) {
-            // If the input date is less than a week in the future, just return the day name.
-            return getDayName(context, dateInMillis);
-        } else {
+        } else if (givenDate == tomorrow)
+            return String.format(context.getString(
+                    formatId,
+                    context.getString(R.string.tomorrow),
+                    getFormattedMonthDay(context, dateInMillis)));
+        else if (givenDate == yesterday)
+            return String.format(context.getString(
+                    formatId,
+                    context.getString(R.string.yesterday),
+                    getFormattedMonthDay(context, dateInMillis)));
+        else {
             // Otherwise, use the form "Mon Jun 3"
-            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
-            return shortenedDateFormat.format(dateInMillis);
+            return getFormattedMonthDay(context, dateInMillis);
         }
     }
 
@@ -201,91 +210,17 @@ public class CalendarUtils extends GregorianCalendar {
      * @return The day in the form of a string formatted "December 6"
      */
     public static String getFormattedMonthDay(Context context, long dateInMillis) {
-        Time time = new Time();
-        time.setToNow();
-        SimpleDateFormat dbDateFormat = new SimpleDateFormat(CalendarUtils.DATE_FORMAT);
-        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd");
-        String monthDayString = monthDayFormat.format(dateInMillis);
-        return monthDayString;
-    }
-
-    /**
-     * Given a day, returns just the name to use for that day.
-     * E.g "today", "tomorrow", "wednesday".
-     *
-     * @param context      Context to use for resource localization
-     * @param dateInMillis The date in milliseconds
-     * @return
-     */
-    public static String getDayName(Context context, long dateInMillis) {
-        // If the date is today, return the localized version of "Today" instead of the actual
-        // day name.
-
-        Time t = new Time();
-        t.setToNow();
-        int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
-        int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
-        if (julianDay == currentJulianDay) {
-            return context.getString(R.string.today);
-        } else if (julianDay == currentJulianDay + 1) {
-            return context.getString(R.string.tomorrow);
-        } else {
-            Time time = new Time();
-            time.setToNow();
-            // Otherwise, the format is just the day of the week (e.g "Wednesday".
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-            return dayFormat.format(dateInMillis);
+//        SimpleDateFormat dbDateFormat = new SimpleDateFormat(CalendarUtils.DATE_FORMAT);
+        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd EEE");
+        if (!isCurrentYear(dateInMillis)) {
+            monthDayFormat = new SimpleDateFormat("MMM dd, yyyy");
         }
+        return monthDayFormat.format(dateInMillis);
     }
 
-    public static List<Calendar> getAllDepositMonthsFromStart() {
-        //Initialise new calendar list
-        List<Calendar> pendingDepositCalendarList = new ArrayList<>();
-        Calendar surakshaStartDate = getSurakshaStartDate();// 2016, 0, 1,0,0,0 Time will be zero
-        Calendar endDate = getDepositEndDate();
-
-
-        //Loop from suraksha start month to current month
-        Calendar i = surakshaStartDate;
-        while (i.getTimeInMillis() <= endDate.getTimeInMillis()) {
-            //Initialise new calendar
-            Calendar c = getInstance();
-            //set calendar time to looping calendar
-            c.setTimeInMillis(i.getTimeInMillis());
-            //set date to 1
-            c.set(DATE, 1);
-            //Add the calendar to the list
-            pendingDepositCalendarList.add(c);
-            //increment the looping calendar month
-            i.add(MONTH, 1);
-        }//end while
-        return pendingDepositCalendarList;
-    }
-
-    public static List<Calendar> getDepositedMonthsFromTxn(List<Transaction> existingDepositTransaction) {
-        List<Calendar> depositCalendarList = new ArrayList<>();
-        for (Transaction deposit : existingDepositTransaction) {
-            Calendar calendar = getInstance();
-            calendar.setTimeInMillis(deposit.getDefinedDepositMonth());
-            depositCalendarList.add(calendar);
-        }
-        return depositCalendarList;
-    }
-
-    public static List<Calendar> getPendingDepositMonthsFromTxn(List<Transaction> existingDepositTransaction) {
-        List<Calendar> depositCalendarList = new ArrayList<>();
-        for (Transaction deposit : existingDepositTransaction) {
-            Calendar calendar = getInstance();
-            calendar.setTimeInMillis(deposit.getDefinedDepositMonth());
-            depositCalendarList.add(calendar);
-        }
-        return getPendingDepositMonths(depositCalendarList);
-    }
-
-    public static List<Calendar> getPendingDepositMonths(List<Calendar> existingDepositCalendars) {
-        List<Calendar> pendingDepositCalendars = getAllDepositMonthsFromStart();
-        //If already deposited, remove it from the calendar
-        pendingDepositCalendars.removeAll(existingDepositCalendars);
-        return pendingDepositCalendars;
+    public static boolean isCurrentYear(long dateInMillis) {
+        Calendar givenDate = Calendar.getInstance();
+        givenDate.setTimeInMillis(dateInMillis);
+        return givenDate.get(YEAR) == getInstance().get(YEAR);
     }
 }

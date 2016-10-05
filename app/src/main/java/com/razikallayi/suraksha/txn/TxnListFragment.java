@@ -14,11 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.razikallayi.suraksha.DueRecyclerViewAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.AuthUtils;
-import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,12 +118,12 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
         LinearLayoutManager llm = new LinearLayoutManager(rootView.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewDue.setLayoutManager(llm);
-        recyclerViewDue.setAdapter(
-                new DueRecyclerViewAdapter(
-                    getArguments().getInt("account_number",-1),
-                    CalendarUtils.getPendingDepositMonthsFromTxn(depositedDates)
-                )
-        );
+//        recyclerViewDue.setAdapter(
+//                new DueRecyclerViewAdapter(
+//                    getArguments().getInt("account_number",-1),
+//                    CalendarUtils.getPendingDepositMonthsFromTxn(depositedDates)
+//                )
+//        );
     }
 
     @Override

@@ -15,8 +15,7 @@ import java.util.List;
  * Created by Razi Kallayi on 31-01-2016.
  */
 public class Transaction implements Serializable {
-    private long definedDepositDate = -1;
-    private long loanPayedId = -1;
+
     private long id;
     private int accountNumber;
     private double amount;
@@ -24,6 +23,8 @@ public class Transaction implements Serializable {
     private int ledger;
     private String narration;
     private long officer_id;
+    private long definedDepositDate = -1;
+    private long loanPayedId = -1;
     private long createdAt;
     private long updatedAt;
     //private Officer officer;
@@ -158,20 +159,6 @@ public class Transaction implements Serializable {
         return txn;
     }
 
-    public static List<Transaction> getLoanReturnForLoanIssueId(Context context, long loanIssuedId) {
-        String receiptVoucher = String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER);
-        String loanReturnLedger = String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER);
-        Cursor cursor = context.getContentResolver().query(
-                SurakshaContract.TxnEntry.CONTENT_URI,
-                Transaction.TxnQuery.PROJECTION,
-                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + " = ? and "
-                        + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? and "
-                        + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? ",
-                new String[]{String.valueOf(loanIssuedId), receiptVoucher, loanReturnLedger},
-                SurakshaContract.TxnEntry._ID + " DESC");
-        return getTxnListFromCursor(context, cursor);
-    }
-
 
     public static ContentValues getTxnContentValues(Transaction txn) {
         ContentValues values = new ContentValues();
@@ -183,7 +170,7 @@ public class Transaction implements Serializable {
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
         values.put(SurakshaContract.TxnEntry.COLUMN_NARRATION, txn.getNarration());
         values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer_id());
-        values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, txn.getCreatedAt());
 
         return values;
     }

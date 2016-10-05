@@ -87,7 +87,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         builder.setPositiveButton("Deposit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String remarks = ((EditText) remarks_dialog_content.findViewById(R.id.remarksEditText)).getText().toString();
+                String remarks = ((EditText) remarks_dialog_content.findViewById(R.id.txtRemarks)).getText().toString();
                 makeDeposit(nextDepositMonth.getTimeInMillis(), remarks);
             }
         });

@@ -3,9 +3,7 @@ package com.razikallayi.suraksha.member;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,7 @@ import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.RecyclerViewCursorAdapter;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.utils.ImageUtils;
-import com.razikallayi.suraksha.utils.LetterAvatar;
+import com.razikallayi.suraksha.utils.LetterTileProvider;
 
 /**
  * Created by Razi Kallayi on 10-04-2016.
@@ -30,16 +28,6 @@ import com.razikallayi.suraksha.utils.LetterAvatar;
 public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapter.MemberListViewHolder>
         implements View.OnClickListener {
 
-    private static final int VIEW_TYPE_COUNT = 2;
-    private static final int VIEW_TYPE_NORMAL_MEMBER = 0;
-    private static final int VIEW_TYPE_RED_MARK_MEMBER = 1;
-
-
-    //Refract onListFragmentInteractionListener on ItemCLickListner
-    private OnItemClickListener mOnItemClickListener;
-    // Start with first item selected
-    private int focusedItem = -1;
-
     private static final String[] MEMBER_COLUMNS = {
             SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
             SurakshaContract.MemberEntry.COLUMN_NAME,
@@ -47,15 +35,14 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
             SurakshaContract.MemberEntry.COLUMN_AVATAR,
             SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO
     };
-
     private static final int COL_MEMBER_ID = 0;
     private static final int COL_MEMBER_NAME = 1;
     private static final int COL_MEMBER_ADDRESS = 2;
     private static final int COL_MEMBER_AVATAR = 3;
     private static final int COL_MEMBER_ACCOUNT_NO = 4;
+    //Refract onListFragmentInteractionListener on ItemCLickListner
+    private OnItemClickListener mOnItemClickListener;
 
-    // Flag to determine if we want to use a separate view for "today".
-    private boolean mRedMemberLayout = true;
 
     public MemberListAdapter() {
         super();
@@ -95,10 +82,33 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 
     @Override
     public void onBindViewHolder(final MemberListViewHolder holder, final Cursor cursor) {
+
         // Set selected state; use a state list drawable to style the view
         holder.bindData(cursor);
     }
 
+    private Bitmap getAvatarBitmap(Context context, Member member) {
+        float density = context.getResources().getDisplayMetrics().density;
+        int avatarPixel = 48;
+        int sizeDp = (int) (avatarPixel * density);
+        int cornerRadius = sizeDp / 2;
+        Drawable drawableAvatar = null;
+
+        drawableAvatar = member.getAvatarDrawable();
+        String memberName = member.getName();
+        if (drawableAvatar == null) {
+            return ImageUtils.getRoundedCornerBitmap(new LetterTileProvider(context)
+                    .getLetterTile(memberName, memberName, sizeDp), cornerRadius);
+
+        } else {
+            return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,
+                    sizeDp, sizeDp), cornerRadius);
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(long memberId, String memberName);
+    }
 
     public class MemberListViewHolder extends RecyclerView.ViewHolder {
         private View mView;
@@ -120,6 +130,7 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         }
 
         public void bindData(final Cursor cursor) {
+
             Member member = new Member();
             // The Cursor is now set to the right position
             member.setId(cursor.getLong(COL_MEMBER_ID));
@@ -152,13 +163,13 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
 //                mAccountNumbersView.addView(tvAccountNumber, params);
 //            }
 
-            SetAvatarTask t = new SetAvatarTask(mView.getContext(), MemberListViewHolder.this);
-            t.execute(member);
+//            SetAvatarTask t = new SetAvatarTask(mView.getContext(), MemberListViewHolder.this);
+//            t.execute(member);
 
             mNameView.setText(member.getName());
             mAddressView.setText(member.getAddress());
             mAccountNumberView.setText(String.valueOf(member.getAccountNo()));
-//            mAvatarView.setImageBitmap(getAvatar(mAvatarView.getContext(),member));
+            mAvatarView.setImageBitmap(getAvatarBitmap(mAvatarView.getContext(), member));
 
 
             mView.setOnClickListener(new View.OnClickListener() {
@@ -181,54 +192,25 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         }
     }
 
-    private Bitmap getAvatarBitmap(Context context, Member member) {
-        float density = context.getResources().getDisplayMetrics().density;
-        int avatarPixel = 56;
-        int sizeDp = (int) (avatarPixel * density);
-        Drawable drawableAvatar = null;
-
-
-        drawableAvatar = member.getAvatarDrawable();
-        if (drawableAvatar == null) {
-            String firstLetter = member.getName().substring(0, 1);
-            int color = Color.rgb(238,238,238);
-//            Random rnd = new Random();
-//            int Low = 50;
-//            int High = 200;
-//            int color = Color.rgb(rnd.nextInt(High - Low) + Low,
-//                    rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
-            return ImageUtils.convertToBitmap(new LetterAvatar(context, color, firstLetter, 32),
-                    sizeDp, sizeDp);
-
-        } else {
-            return ImageUtils.getRoundedCornerBitmap(ImageUtils.convertToBitmap(drawableAvatar,
-                    sizeDp, sizeDp), avatarPixel);
-        }
-    }
-
-    private class SetAvatarTask extends AsyncTask<Member, Void, Bitmap> {
-        private Context mContext;
-        private MemberListViewHolder holder;
-
-        public SetAvatarTask(Context context, MemberListViewHolder viewHolder) {
-            mContext = context;
-            holder = viewHolder;
-
-        }
-
-        @Override
-        protected Bitmap doInBackground(Member... members) {
-            return getAvatarBitmap(mContext, members[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmapAvatar) {
-            super.onPostExecute(bitmapAvatar);
-            holder.mAvatarView.setImageBitmap(bitmapAvatar);
-        }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(long memberId, String memberName);
-    }
+//    private class SetAvatarTask extends AsyncTask<Member, Void, Bitmap> {
+//        private Context mContext;
+//        private MemberListViewHolder holder;
+//
+//        public SetAvatarTask(Context context, MemberListViewHolder viewHolder) {
+//            mContext = context;
+//            holder = viewHolder;
+//
+//        }
+//
+//        @Override
+//        protected Bitmap doInBackground(Member... members) {
+//            return getAvatarBitmap(mContext, members[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Bitmap bitmapAvatar) {
+//            super.onPostExecute(bitmapAvatar);
+//            holder.mAvatarView.setImageBitmap(bitmapAvatar);
+//        }
+//    }
 }

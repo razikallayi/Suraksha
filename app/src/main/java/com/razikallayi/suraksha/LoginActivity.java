@@ -41,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mUsernameView = (EditText) findViewById(R.id.username);
+        mPasswordView = (EditText) findViewById(R.id.password);
+
+        mockLogin("RAZI","4976");
+
         mRecentOfficer = SettingsUtils.getOfficerUsername(getApplicationContext());
         if (null != mRecentOfficer) {
             mUsernameView.setVisibility(View.GONE);
@@ -62,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+
         mPasswordView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -94,6 +98,19 @@ public class LoginActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
+    }
+
+    private void mockLogin(String username, String password) {
+        mUsernameView.setText(username);
+        mPasswordView.setText(password);
+        Handler handler  =new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                attemptLogin();
+            }
+        },300);
+
     }
 
     @Override
@@ -133,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //get username from input text
         String username = mRecentOfficer;
-        if(username==null) {
+        if (username == null) {
             username = mUsernameView.getText().toString();
         }
 

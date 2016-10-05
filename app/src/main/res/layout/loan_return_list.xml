@@ -2,11 +2,11 @@
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/deposited_list"
+    android:id="@+id/loan_return_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     app:layoutManager="GridLayoutManager"
-    tools:context=".deposit.DepositActivity"
-    tools:listitem="@layout/deposited_list_item" />
+    tools:context=".loan.LoanActivity"
+    tools:listitem="@layout/loan_return_list_item" />

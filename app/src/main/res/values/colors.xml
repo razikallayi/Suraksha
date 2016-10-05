@@ -6,9 +6,9 @@
     <!--<color name="colorPrimaryDark">#77063b</color>-->
     <!--<color name="colorAccent">#ffffff</color>-->
 
-    <color name="colorPrimary">#4caf50</color>
-    <color name="colorPrimaryDark">#004d40</color>
-    <color name="colorAccent">#00bfa5</color>
+    <color name="colorPrimary">#4c8eaf</color>
+    <color name="colorPrimaryDark">#053652</color>
+    <color name="colorAccent">#e3683f</color>
 
     <color name="colorPrimaryLight">#aed581</color>
     <color name="colorSecondary">#6a03bf</color>
@@ -37,10 +37,10 @@
     <color name="black">#323232</color>
 
     <!-- colors indicators-->
-    <color name="danger">#e43f33</color>
+    <color name="danger">#b1271d</color>
     <color name="warning">#ffa726</color>
-    <color name="success">#00c853</color>
-    <color name="info">#26c6da</color>
+    <color name="success">#13ad53</color>
+    <color name="info">#1a9bab</color>
 
     <!-- basic colors -->
     <color name="red">#FF432F</color>

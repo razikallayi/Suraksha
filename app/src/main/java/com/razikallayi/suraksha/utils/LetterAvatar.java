@@ -42,8 +42,6 @@ public class LetterAvatar extends ColorDrawable {
         super.draw(canvas);
         paint.setAntiAlias(true);
 
-
-
         do {
             paint.setTextSize(++pSize);
             paint.getTextBounds(pLetters, 0, pLetters.length(), bounds);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/touch_selector"
@@ -8,34 +9,36 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:scaleType="centerCrop"
-        android:layout_margin="10dp"
-        android:layout_centerVertical="true"/>
+        android:layout_margin="@dimen/spacing_normal"
+        android:padding="@dimen/spacing_extra_tiny"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/member_image" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="testName"
         android:layout_toEndOf="@id/avatar"
         android:layout_alignTop="@id/avatar"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginRight="@dimen/spacing_small"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="@dimen/spacing_large"
         android:maxLines="1"
+        android:fontFamily="serif"
         android:textColor="@android:color/primary_text_light"
         android:singleLine="true"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        tools:ignore="RelativeOverlap" />
 
     <TextView
         android:id="@+id/address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="testPlace,testLocation"
-        android:layout_alignLeft="@id/name"
+        android:layout_alignStart="@id/name"
         android:layout_below="@id/name"
-        android:layout_marginRight="@dimen/spacing_extra_huge"
+        android:layout_marginEnd="@dimen/spacing_huge"
         android:layout_marginTop="2dp"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="@dimen/font_small"
@@ -55,25 +58,15 @@
         android:id="@+id/lblAccountNumber"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="@dimen/spacing_very_tiny"
+        android:layout_marginEnd="@dimen/spacing_very_tiny"
         android:background="@drawable/ic_circle"
+        android:maxLength="3"
         android:textStyle="bold"
         android:textSize="@dimen/font_medium"
         android:fontFamily="sans-serif-black"
-        android:text="112"
         android:gravity="center"
         android:textColor="@color/white"
         android:layout_width="24dp"
         android:layout_height="24dp" />
-
-    <!--<LinearLayout-->
-        <!--android:id="@+id/llAccountNumbers"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_marginRight="@dimen/spacing_very_tiny"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-    <!--</LinearLayout>-->
 
 </RelativeLayout>

@@ -304,7 +304,7 @@ public class EditMemberActivity extends BaseActivity {
 
         TextView tvAccountNumber = (TextView) findViewById(R.id.tvAccountNumber);
         if (tvAccountNumber != null) {
-            tvAccountNumber.setText(String.valueOf(member.fetchAccountNumbers(getApplicationContext())));
+            tvAccountNumber.setText(String.valueOf(member.getAccountNo()));
         }
 
         //    mSelectedGenderRadioButton.setText(member.get);
@@ -331,7 +331,7 @@ public class EditMemberActivity extends BaseActivity {
                     }
 
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Don't Close", null)
                 .show();
     }
 

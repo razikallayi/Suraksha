@@ -6,11 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="android:textColorPrimary">@color/foreground_material_dark</item>
+        <!--<item name="alertDialogTheme">@style/AppTheme.Dialog</item>-->
     </style>
 
-    <style name="SurakshaLight" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="SurakshaLight" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

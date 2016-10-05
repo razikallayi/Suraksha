@@ -441,7 +441,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                         + getResources().getString(R.string.app_name) + " account "
                         + mLoanIssue.getAccountNumber()
                         + " by guarantee of "
-                        + mLoanIssue.getSecurityMember().getName()
+                        + mLoanIssue.getSecurityMember(context).getName()
                         + "(" + mLoanIssue.getSecurityAccountNo() + ")";
                 SmsUtils.sendSms(message, mobileNumber);
             }

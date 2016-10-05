@@ -47,7 +47,6 @@ public class MemberListActivity extends BaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener {
 
-    public static final String TAG = MemberListActivity.class.getClass().getSimpleName();
     private static final int MEMBER_LIST_LOADER = 0;
     private static final String[] MEMBER_COLUMNS = {
             SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
@@ -70,6 +69,8 @@ public class MemberListActivity extends BaseActivity
     private MemberListAdapter mMemberListAdapter;
     // If non-null, this is the current filter the user has provided.
     private String mCurFilter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,19 +114,20 @@ public class MemberListActivity extends BaseActivity
         // The MemberListAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
         mMemberListAdapter = new MemberListAdapter();
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
 
         mMemberListAdapter.setOnItemClickListener(new MemberListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(long memberId, String memberName) {
                 if (mTwoPane) {
+                    RecyclerView.State state = new RecyclerView.State();
+
                     View rootView = findViewById(R.id.member_details_view_pager_container);
                     TextView nameTextView = (TextView) rootView.findViewById(R.id.nameMember);
                     nameTextView.setText(memberName);
                     //Load Avatar
                     LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
                     loadAvatarTask.execute(memberId);
-
 
                     ViewPager viewPager = (ViewPager) findViewById(R.id.member_detail_container);
                     if (viewPager != null) {

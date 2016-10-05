@@ -7,11 +7,16 @@ import android.database.Cursor;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
+import com.razikallayi.suraksha.utils.AuthUtils;
+import com.razikallayi.suraksha.utils.CalendarUtils;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Razi Kallayi on 19-06-2016 08:37.
  */
-public class LoanIssue {
+public class LoanIssue implements Serializable {
 
     private long id;
     private int accountNumber;
@@ -26,9 +31,8 @@ public class LoanIssue {
     private long closedAt;
     private long createdAt;
     private long updatedAt;
-
     private Transaction transaction;
-
+    private List<Transaction> loanReturnList = null;
     public LoanIssue() {
     }
 
@@ -40,16 +44,6 @@ public class LoanIssue {
         this.loanInstalmentTimes = loanInstalmentTimes;
         this.loanInstalmentAmount = amount / loanInstalmentTimes;
         this.officeStatement = officeStatement;
-    }
-
-    public static LoanIssue getActiveLoanForAccountNumber(Context context, int accountNumber) {
-        Cursor cursor = context.getContentResolver().query(
-                SurakshaContract.LoanIssueEntry.CONTENT_URI, LoanIssueQuery.PROJECTION,
-                SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ? and "
-                        + SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT + " = 0 ",
-                new String[]{String.valueOf(accountNumber)},
-                null);
-        return getLoanIssueFromCursor(context, cursor);
     }
 
     public static ContentValues getLoanIssuedContentValues(LoanIssue loanIssue) {
@@ -71,7 +65,7 @@ public class LoanIssue {
 
     public static LoanIssue getLoanIssueFromCursor(Context context, Cursor cursor) {
         LoanIssue loanIssue = new LoanIssue();
-        if (cursor.getCount()>0) {
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             loanIssue = new LoanIssue(cursor.getInt(LoanIssueQuery.COL_FK_ACCOUNT_NUMBER),
                     cursor.getDouble(LoanIssueQuery.COL_AMOUNT),
@@ -101,6 +95,99 @@ public class LoanIssue {
         return loanIssue;
     }
 
+    @Override
+    public String toString() {
+        return "LoanIssue{" +
+                "id='" + id + '\'' +
+                ", amount='" + amount + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", securityAccNo='" + securityAccountNo + '\'' +
+                ", accountNo='" + accountNumber + '\'' +
+                ", instalmentAmount='" + loanInstalmentAmount + '\'' +
+                ", instalmentTimes='" + loanInstalmentTimes + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", officeStatement='" + officeStatement + '\'' +
+                ", transaction='" + transaction.toString() + '\'' +
+                ", created='" + CalendarUtils.formatDateTime(createdAt) + '\'' +
+                '}';
+    }
+
+    public int nextInstalmentCount(Context context) {
+        if (loanReturnList == null) {
+            return getLoanReturnTxnList(context).size() + 1;
+        }
+        return loanReturnList.size() + 1;
+    }
+
+    public List<Transaction> getLoanReturnTxnList(Context context) {
+        String receiptVoucher = String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER);
+        String loanReturnLedger = String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER);
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.CONTENT_URI,
+                Transaction.TxnQuery.PROJECTION,
+                SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + " = ? and "
+                        + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? and "
+                        + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? ",
+                new String[]{String.valueOf(id), receiptVoucher, loanReturnLedger},
+                SurakshaContract.TxnEntry._ID + " DESC");
+        loanReturnList = Transaction.getTxnListFromCursor(context, cursor);
+        return loanReturnList;
+    }
+
+    public int bystanderReleaseInstalment() {
+        return getLoanInstalmentTimes() / 2;
+    }
+
+    /**
+     * make loan return payment of next instalment
+     *
+     * @param context
+     * @param narration
+     * @return Uri
+     */
+    public Transaction saveLoanReturn(Context context, String narration) {
+        int nextInstalmentCount = nextInstalmentCount(context);
+
+        int maxLoanInstalmentTime = getLoanInstalmentTimes();
+        //Check if instalment is already complete
+        if (nextInstalmentCount > maxLoanInstalmentTime) {
+            closeLoanIssued(context);
+            getMember(context).saveHasLoan(context, false);
+            return null;
+        }
+
+        Transaction txnLoanReturn = new Transaction(context, accountNumber, loanInstalmentAmount,
+                SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
+                SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER,
+                narration, AuthUtils.getAuthenticatedOfficerId(context));
+        txnLoanReturn.setLoanPayedId(id);
+        txnLoanReturn.setCreatedAt(System.currentTimeMillis());
+
+        ContentValues values = Transaction.getTxnContentValues(txnLoanReturn);
+        context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
+
+        //If maximum instalment reached, close loan and free member
+        if (nextInstalmentCount == maxLoanInstalmentTime) {
+            closeLoanIssued(context);
+            getMember(context).saveHasLoan(context, false);
+        }
+
+        //       if total loan returned amount is half of loan issued, security member lock is freed
+        if (nextInstalmentCount == bystanderReleaseInstalment()) {
+            getSecurityMember(context).saveIsLoanBlocked(context, false);
+        }
+        return txnLoanReturn;
+    }
+
+    public void closeLoanIssued(Context context) {
+        ContentValues values = new ContentValues();
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT, System.currentTimeMillis());
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_UPDATED_AT, System.currentTimeMillis());
+
+        context.getContentResolver().update(SurakshaContract.LoanIssueEntry.CONTENT_URI, values,
+                SurakshaContract.LoanIssueEntry._ID + "= ?", new String[]{String.valueOf(this.id)});
+    }
+
     public Transaction getTransaction() {
         return transaction;
     }
@@ -117,7 +204,10 @@ public class LoanIssue {
         this.amount = amount;
     }
 
-    public Member getSecurityMember() {
+    public Member getSecurityMember(Context context) {
+        if (securityMember == null) {
+            return Member.getMemberFromAccountNumber(context, securityAccountNo);
+        }
         return securityMember;
     }
 
@@ -149,7 +239,10 @@ public class LoanIssue {
         this.accountNumber = accountNumber;
     }
 
-    public Member getMember() {
+    public Member getMember(Context context) {
+        if (member == null) {
+            return Member.getMemberFromAccountNumber(context, accountNumber);
+        }
         return member;
     }
 

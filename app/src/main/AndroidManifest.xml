@@ -34,6 +34,7 @@
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -139,6 +140,9 @@
         <activity
             android:name=".deposit.DepositActivity"
             android:label="@string/title_deposit" />
+        <activity
+            android:name=".loan.LoanActivity"
+            android:label="@string/title_loan" />
     </application>
 
 </manifest>

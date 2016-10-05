@@ -13,6 +13,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +22,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.RecyclerViewCursorAdapter;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.deposit.DepositActivity;
 import com.razikallayi.suraksha.loan.IssueLoanActivity;
+import com.razikallayi.suraksha.loan.LoanActivity;
 import com.razikallayi.suraksha.loan.LoanIssue;
 import com.razikallayi.suraksha.loan.LoanIssue.LoanIssueQuery;
+import com.razikallayi.suraksha.loan.LoanIssuedRecyclerViewAdapter;
 import com.razikallayi.suraksha.member.Member;
-import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.SmsUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class AccountManipulationsFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -43,17 +46,16 @@ public class AccountManipulationsFragment extends Fragment
      * represents.
      */
     public static final String ARG_MEMBER_ID = "member_id";
-    public static final int ISSUE_LOAN_ACTIVITY = 0X000002;
 
-    private static final int MAKE_DEPOSIT_ACTIVITY = 0X00004;
-    private final int LOAN_DUE_LOADER = 0X000001;
+    private final int LOAN_ISSUED_LOADER = 0X000001;
     private Member mMember;
     private LoanIssuedRecyclerViewAdapter mLoanIssueAdapter;
-    private View mRootView;
     private CardView mLoanIssuedCardView;
     private LayoutInflater mInflater;
+    private TextView lblLoanBlockedReason;
     private CardView cvIssueLoan;
     private CardView cvDepositDueAMF;
+    private CardView cvLoanReturnDueAMF;
 
     public AccountManipulationsFragment() {
         // Required empty public constructor
@@ -63,53 +65,38 @@ public class AccountManipulationsFragment extends Fragment
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mInflater = inflater;
-        mRootView = inflater.inflate(R.layout.account_manipulations_fragment, container, false);
+        View mRootView = inflater.inflate(R.layout.account_manipulations_fragment, container, false);
 
+        TextView loan = (TextView) mRootView.findViewById(R.id.loanAMF);
+        loan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), LoanActivity.class);
+                intent.putExtra(LoanActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
+                startActivity(intent);
 
-//        CardView cvDeposit = (CardView) mRootView.findViewById(R.id.cvDeposit);
-//        cvDeposit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Intent intent = new Intent(getContext(), DepositActivity.class);
-////                intent.putExtra(DepositActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
-////                startActivityForResult(intent, MAKE_DEPOSIT_ACTIVITY);
-//
-//                //Get Next deposit Month
-//                Calendar depositMonth = mMember.getNextDepositMonthCalendar(getContext());
-//
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                builder.setMessage("Deposit " + Utility.formatAmountInRupees(builder.getContext(),
-//                        Utility.getMonthlyDepositAmount()) + " for " + mMember.getName()
-//                        + "(" + mMember.getAccountNo() + ")" + " ?");
-//                builder.setTitle(CalendarUtils.readableDepositMonth(depositMonth));
-//
-//                final View remarks_dialog_content = mInflater.inflate(R.layout.remarks_dialog_content, null);
-//                builder.setView(remarks_dialog_content);
-//                final Calendar nextDepositMonth = depositMonth;
-//                builder.setPositiveButton("Deposit", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        String remarks = ((EditText) remarks_dialog_content.findViewById(R.id.remarksEditText)).getText().toString();
-//                        makeDeposit(nextDepositMonth.getTimeInMillis(), remarks);
-//                    }
-//                });
-//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//                builder.show();
-//            }
-//        });
+            }
+        });
+
+        TextView deposit = (TextView) mRootView.findViewById(R.id.depositAMF);
+        deposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), DepositActivity.class);
+                intent.putExtra(DepositActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
+                startActivity(intent);
+
+            }
+        });
 
         //Issue Loan button
         cvIssueLoan = (CardView) mRootView.findViewById(R.id.cvIssueLoan);
+        lblLoanBlockedReason = (TextView) mRootView.findViewById(R.id.lblLoanBlockedReason);
         drawIssueLoanButton();
 
 
-        CardView cvLoanReturnDueAMF = (CardView) mRootView.findViewById(R.id.cvLoanReturnDueAMF);
-        cvLoanReturnDueAMF.setVisibility(mMember.hasLoanDue(getContext()) ? View.VISIBLE : View.GONE);
+        cvLoanReturnDueAMF = (CardView) mRootView.findViewById(R.id.cvLoanReturnDueAMF);
+        drawLoanDue();
 
         cvDepositDueAMF = (CardView) mRootView.findViewById(R.id.cvDepositDueAMF);
         drawDepositDue();
@@ -118,8 +105,62 @@ public class AccountManipulationsFragment extends Fragment
         mLoanIssuedCardView = (CardView) mRootView.findViewById(R.id.loanIssuedCardView);
         RecyclerView recyclerView = (RecyclerView) mLoanIssuedCardView.findViewById(R.id.loanIssuedList);
         mLoanIssueAdapter = new LoanIssuedRecyclerViewAdapter();
+        mLoanIssueAdapter.setFragmentManager(getActivity().getSupportFragmentManager());
+        mLoanIssueAdapter.setFragmentManager(getActivity().getSupportFragmentManager());
         recyclerView.setAdapter(mLoanIssueAdapter);
         return mRootView;
+    }
+
+    private void drawLoanDue() {
+        if (mMember.hasLoanDue(getContext())) {
+            TextView lblInstalmentAmount = (TextView) cvLoanReturnDueAMF.findViewById(R.id.lblLoanReturnAmountAMF);
+            TextView lblNextInstalmentCount = (TextView) cvLoanReturnDueAMF.findViewById(R.id.lblLoanInstalmentTimeAMF);
+
+            final LoanIssue loanIssued = mMember.getActiveLoan(getContext());
+
+            final List<Transaction> loanReturnList = loanIssued.getLoanReturnTxnList(getContext());
+
+            final String instalmentAmount = Utility.formatAmountInRupees(getContext(), loanIssued.getLoanInstalmentAmount());
+            lblInstalmentAmount.setText(instalmentAmount);
+            String nextInstalmentString = Utility.formatNumberSuffix(loanReturnList.size() + 1)
+                    + " Instalment of " + loanIssued.getLoanInstalmentTimes();
+            lblNextInstalmentCount.setText(nextInstalmentString);
+
+            cvLoanReturnDueAMF.setVisibility(View.VISIBLE);
+            CardView loanReturn = (CardView) cvLoanReturnDueAMF.findViewById(R.id.cvLoanReturnAMF);
+            loanReturn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    final View remarksView = mInflater.inflate(R.layout.remarks_dialog_content, null);
+//                    final TextView txtNarration = (TextView) cvLoanReturnDueAMF.findViewById(R.id.txtRemarksLoanReturnDue);
+                    builder.setView(remarksView);
+                    builder.setMessage("Receive " + Utility.formatNumberSuffix(loanReturnList.size() + 1) + " instalment "
+                            + instalmentAmount + " from " + mMember.getName());
+
+                    builder.setPositiveButton("Receive", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final String strNarration = String.valueOf(
+                                    ((EditText) (remarksView.findViewById(R.id.txtRemarks))).getText());
+                            loanIssued.saveLoanReturn(getContext(), strNarration);
+                            mMember = Member.getMemberFromId(getContext(), mMember.getId());
+                            drawIssueLoanButton();
+                            drawLoanDue();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                }
+            });
+        } else {
+            cvLoanReturnDueAMF.setVisibility(View.GONE);
+        }
     }
 
     public void makeDeposit(long depositMonth, String remarks) {
@@ -139,79 +180,6 @@ public class AccountManipulationsFragment extends Fragment
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mMember = Member.getMemberFromId(context, getArguments().getLong(ARG_MEMBER_ID, -1));
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOAN_DUE_LOADER, null, this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMember = Member.getMemberFromId(getContext(), mMember.getId());
-        drawIssueLoanButton();
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case LOAN_DUE_LOADER:
-                if (null == mMember) return null;
-                return new CursorLoader(getContext(), SurakshaContract.LoanIssueEntry.CONTENT_URI,
-                        LoanIssueQuery.PROJECTION,
-                        SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
-                                + SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ?",
-                        new String[]{String.valueOf(mMember.getAccountNo())},
-                        SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
-                                + SurakshaContract.LoanIssueEntry._ID + " desc");
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        switch (loader.getId()) {
-            case LOAN_DUE_LOADER:
-                if (data == null || data.getCount() <= 0) {
-                    mLoanIssuedCardView.setVisibility(View.GONE);
-                } else {
-                    mLoanIssuedCardView.setVisibility(View.VISIBLE);
-                    mLoanIssueAdapter.swapCursor(data);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mLoanIssueAdapter.swapCursor(null);
-    }
-
-    private void drawIssueLoanButton() {
-        if (mMember.isHasLoan() || mMember.isLoanBlocked()) {
-            cvIssueLoan.setVisibility(View.GONE);
-        } else {
-            cvIssueLoan.setVisibility(View.VISIBLE);
-            cvIssueLoan.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), IssueLoanActivity.class);
-                    intent.putExtra(IssueLoanActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
-                    intent.putExtra(IssueLoanActivity.ARG_MEMBER_ID, mMember.getId());
-                    getActivity().startActivityForResult(intent, ISSUE_LOAN_ACTIVITY);
-                }
-            });
-        }
-    }
-
     private void drawDepositDue() {
         final CardView cvDepositDue = cvDepositDueAMF;
         if (mMember.hasDepositDue(getContext())) {
@@ -225,16 +193,18 @@ public class AccountManipulationsFragment extends Fragment
             cvDepositDue.findViewById(R.id.cvDepositAMF).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String remarks = ((EditText) cvDepositDue.findViewById(R.id.remarksEditText)).getText().toString();
-
+//                    final String remarks = ((EditText) cvDepositDue.findViewById(R.id.txtRemarksDepositDue)).getText().toString();
+                    final View remarksView = mInflater.inflate(R.layout.remarks_dialog_content, null);
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setMessage("Deposit " + depositAMount + " for " + mMember.getName() + " in account "
-                            + mMember.getAccountNo() + "\n" + remarks);
-
+                            + mMember.getAccountNo());
+                    builder.setView(remarksView);
                     builder.setPositiveButton("Deposit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            makeDeposit(nextDepositMonth.getTimeInMillis(), remarks);
+                            final String strNarration = String.valueOf(
+                                    ((EditText) (remarksView.findViewById(R.id.txtRemarks))).getText());
+                            makeDeposit(nextDepositMonth.getTimeInMillis(), strNarration);
                         }
                     });
                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -252,69 +222,104 @@ public class AccountManipulationsFragment extends Fragment
         }
     }
 
-    public class LoanIssuedRecyclerViewAdapter
-            extends RecyclerViewCursorAdapter<ViewHolder> {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mMember = Member.getMemberFromId(context, getArguments().getLong(ARG_MEMBER_ID, -1));
+    }
 
-        public LoanIssuedRecyclerViewAdapter() {
-        }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(LOAN_ISSUED_LOADER, null, this);
+    }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(getActivity())
-                    .inflate(R.layout.loan_issued_list_item, parent, false);
-            return new ViewHolder(view);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMember = Member.getMemberFromId(getContext(), mMember.getId());
+        drawIssueLoanButton();
+    }
 
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
-            // Set selected state; use a state list drawable to style the view
-            holder.bindData(cursor);
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case LOAN_ISSUED_LOADER:
+                if (null == mMember) return null;
+                return new CursorLoader(getContext(), SurakshaContract.LoanIssueEntry.CONTENT_URI,
+                        LoanIssueQuery.PROJECTION,
+                        SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
+                                + SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ? and "
+                                + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? and "
+                                + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? ",
+                        new String[]{String.valueOf(mMember.getAccountNo()),
+                                String.valueOf(SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER),
+                                String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)
+                        },
+                        SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
+                                + SurakshaContract.LoanIssueEntry._ID + " desc");
+            default:
+                return null;
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView amountLoanIssueItem;
-        public final TextView guarantorNameLoanIssueItem;
-        public final TextView issued_date_loan_issue_item;
-        public final TextView purpose_loan_issue_item;
-        public final TextView office_statement_loan_issue_item;
-        public final TextView officer_loan_issue_item;
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        public ViewHolder(View view) {
-            super(view);
-            mView = view;
-            amountLoanIssueItem = (TextView) view.findViewById(R.id.amountLoanIssueItem);
-            guarantorNameLoanIssueItem = (TextView) view.findViewById(R.id.guarantorNameLoanIssueItem);
-            issued_date_loan_issue_item = (TextView) view.findViewById(R.id.issued_date_loan_issue_item);
-            purpose_loan_issue_item = (TextView) view.findViewById(R.id.purpose_loan_issue_item);
-            office_statement_loan_issue_item = (TextView) view.findViewById(R.id.office_statement_loan_issue_item);
-            officer_loan_issue_item = (TextView) view.findViewById(R.id.officer_loan_issue_item);
+        switch (loader.getId()) {
+            case LOAN_ISSUED_LOADER:
+                if (data == null || data.getCount() <= 0) {
+                    mLoanIssuedCardView.setVisibility(View.GONE);
+                } else {
+                    mLoanIssuedCardView.setVisibility(View.VISIBLE);
+                    mLoanIssueAdapter.swapCursor(data);
+                }
+                break;
         }
+    }
 
-        public void bindData(final Cursor cursor) {
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mLoanIssueAdapter.swapCursor(null);
+    }
 
-            final Context context = getContext();
-            LoanIssue loanIssue = LoanIssue.getLoanIssueFromCursor(context, cursor);
-
-            amountLoanIssueItem.setText(Utility.formatAmountInRupees(context, loanIssue.getAmount()));
-            guarantorNameLoanIssueItem.setText(Member.getMemberFromAccountNumber(
-                    context, loanIssue.getSecurityAccountNo()).getName());
-            issued_date_loan_issue_item.setText(CalendarUtils.formatDate(loanIssue.getCreatedAt()));
-            purpose_loan_issue_item.setText(loanIssue.getPurpose());
-            office_statement_loan_issue_item.setText(loanIssue.getOfficeStatement());
-            officer_loan_issue_item.setText(Officer.getOfficerNameFromId(
-                    context, loanIssue.getTransaction().getOfficer_id()));
-            mView.setOnClickListener(new View.OnClickListener() {
+    private void drawIssueLoanButton() {
+        if (mMember.isHasLoan()) {
+            cvIssueLoan.setVisibility(View.GONE);
+            LoanIssue activeLoan = mMember.getActiveLoan(getContext());
+            int nextInstalmentCount = activeLoan.nextInstalmentCount(getContext());
+            int remainingInstalments = activeLoan.getLoanInstalmentTimes() - (nextInstalmentCount - 1);
+            lblLoanBlockedReason.setText(remainingInstalments + " remaining instalments");
+            lblLoanBlockedReason.setVisibility(View.VISIBLE);
+        } else if (mMember.isLoanBlocked()) {
+            cvIssueLoan.setVisibility(View.GONE);
+            LoanIssue bystanderLoan = mMember.getActiveBystanderLoan(getContext());
+            if (bystanderLoan != null) {
+                int nextInstalmentCount = bystanderLoan.nextInstalmentCount(getContext());
+                int remainingInstalments = bystanderLoan.bystanderReleaseInstalment() - (nextInstalmentCount - 1);
+                Member bystanderFor = bystanderLoan.getMember(getContext());
+                if (bystanderFor != null) {
+                    // TODO: 29-06-2016 change to string resource.
+                    lblLoanBlockedReason.setText(Html.fromHtml("Loan guarantor of <b>" + bystanderFor.getName()
+                            + " ["+bystanderFor.getAccountNo()+"]</b>. Capable to issue loan after <b>"
+                            + remainingInstalments + "</b> more instalments."));
+                    lblLoanBlockedReason.setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            lblLoanBlockedReason.setVisibility(View.GONE);
+            cvIssueLoan.setVisibility(View.VISIBLE);
+            cvIssueLoan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Context context = v.getContext();
-                    Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(context, AccountDetailActivity.class);
-//                    intent.putExtra("account_number", accountNumber);
-//                    context.startActivity(intent);
+                    Intent intent = new Intent(getContext(), IssueLoanActivity.class);
+                    intent.putExtra(IssueLoanActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
+                    intent.putExtra(IssueLoanActivity.ARG_MEMBER_ID, mMember.getId());
+                    startActivity(intent);
                 }
             });
         }
     }
+
+
 }

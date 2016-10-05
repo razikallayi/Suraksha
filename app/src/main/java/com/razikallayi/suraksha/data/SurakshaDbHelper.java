@@ -188,17 +188,17 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
     //    update member loan blocked to false
     private static final String SQL_UPDATE_DEFAULT_OFFICER_NAME_TO_SSP =
             "update " + SurakshaContract.OfficerEntry.TABLE_NAME + " set "
-                    + SurakshaContract.OfficerEntry.COLUMN_NAME + " = SSP"
+                    + SurakshaContract.OfficerEntry.COLUMN_NAME + " = 'SSP'"
                     + " where UPPER(" +
-                    SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = SYS";
+                    SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = 'SYS'";
 
 
     //    update member loan blocked to false
     private static final String SQL_UPDATE_DEFAULT_OFFICER_USERNAME_TO_SSP =
             "update " + SurakshaContract.OfficerEntry.TABLE_NAME + " set "
-                    + SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = SSP"
+                    + SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = 'SSP'"
                     + " where UPPER(" +
-                    SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = SYS";
+                    SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = 'SYS'";
 
 
     private static final String CAPITALIZE_MEMBER_NAME =
@@ -255,7 +255,6 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_UPDATE_MEMBER_ACCOUNT_NUMBER);
             db.execSQL(SQL_UPDATE_MEMBER_HAS_LOAN_TO_FALSE);
             db.execSQL(SQL_UPDATE_MEMBER_IS_LOAN_BLOCKED_TO_FALSE);
-            db.execSQL(SQL_INSERT_DEVELOPER_OFFICER);
             db.execSQL(CAPITALIZE_OFFICER_NAME);
             db.execSQL(CAPITALIZE_OFFICER_USERNAME);
             db.execSQL(SQL_UPDATE_DEFAULT_OFFICER_NAME_TO_SSP);

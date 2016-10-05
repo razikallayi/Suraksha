@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+
+<android.support.design.widget.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/remark_dialog_layout"
-    android:paddingStart="@dimen/spacing_large"
+    style="@style/Suraksha.InputField"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/remarks"
     android:paddingEnd="@dimen/spacing_large"
-    android:layout_height="match_parent">
+    android:paddingStart="@dimen/spacing_large">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Remarks : "
-        android:textSize="@dimen/font_small"
-        android:textStyle="bold|italic" />
-
-    <EditText
-        android:id="@+id/remarksEditText"
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/txtRemarks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:contentDescription="Remarks"
-        />
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textSize="@dimen/font_smaller"-->
-        <!--android:text="Note: You cannot undo the deposit transaction later"-->
-        <!--android:textStyle="italic" />-->
-
-</LinearLayout>
+        android:inputType="textCapSentences" />
+</android.support.design.widget.TextInputLayout>

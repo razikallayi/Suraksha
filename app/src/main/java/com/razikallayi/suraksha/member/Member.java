@@ -56,6 +56,7 @@ public class Member implements Serializable {
 
     }
 
+    @Deprecated
     public Member(String name) {
         this.name = name;
     }
@@ -97,9 +98,8 @@ public class Member implements Serializable {
     }
 
     public static Member getMemberFromId(Context context, long id) {
-        // TODO: 28-05-2016 Use id to load member. use in selection. Use BuildMemberUri
-
-        Cursor cursor=  context.getContentResolver().query(SurakshaContract.MemberEntry.buildMemberUri(id),
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.MemberEntry.buildMemberUri(id),
                 Member.MemberQuery.PROJECTION, null, null, null);
 
         return getMemberFromCursor(cursor);
@@ -114,9 +114,18 @@ public class Member implements Serializable {
         return getMemberFromCursor(cursor);
     }
 
+//    public static Member getBasicMemberFromAccountNumber(Context context, int accountNumber) {
+//        Cursor cursor = context.getContentResolver().query(
+//                SurakshaContract.MemberEntry.CONTENT_URI, MemberQuery.PROJECTION,
+//                SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO + " = ? ",
+//                new String[]{String.valueOf(accountNumber)},
+//                null);
+//        return getMemberFromCursor(cursor);
+//    }
+
     public static Member getMemberFromCursor(Cursor cursor) {
-        Member m = new Member();
-        if (cursor != null) {
+        if (cursor.getCount() > 0) {
+            Member m = new Member();
             cursor.moveToFirst();
 
             m.id = cursor.getLong(MemberQuery.COL_ID);
@@ -140,9 +149,10 @@ public class Member implements Serializable {
             m.createdAt = cursor.getLong(MemberQuery.COL_CREATED_AT);
             m.updatedAt = cursor.getLong(MemberQuery.COL_UPDATED_AT);
             m.setAvatar(cursor.getBlob(MemberQuery.COL_AVATAR));
+            cursor.close();
+            return m;
         }
-        cursor.close();
-        return m;
+        return null;
     }
 
     public static ContentValues getMemberContentValues(Member member) {
@@ -173,22 +183,6 @@ public class Member implements Serializable {
         return values;
     }
 
-    public static List<Integer> fetchAccountNumbers(Context context, long memberId) {
-        List<Integer> acNumbers = new ArrayList<>();
-        //Fetching accountNumbers
-        Cursor cursorAccountNumbers = context.getContentResolver().query(
-                SurakshaContract.AccountEntry.buildAccountsOfMemberUri(memberId), new String[]{
-                        SurakshaContract.AccountEntry.TABLE_NAME + "."
-                                + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER}, null, null, null);
-        if (cursorAccountNumbers != null) {
-            while (cursorAccountNumbers.moveToNext()) {
-                acNumbers.add(cursorAccountNumbers.getInt(0));
-            }
-            cursorAccountNumbers.close();
-        }
-        return acNumbers;
-    }
-
     public static List<Transaction> fetchDeposits(Context context, String accountNumber) {
         Cursor cursor = context.getContentResolver().query(
                 SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
@@ -203,7 +197,8 @@ public class Member implements Serializable {
     //Get count of all active members
     public static int getActiveMembersCount(Context context) {
         // TODO: 19-06-2016 Check for Active members instead of all members. Use selection (where)
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.MemberEntry.CONTENT_URI, new String[]{SurakshaContract.MemberEntry._ID}, null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(SurakshaContract.MemberEntry.CONTENT_URI,
+                new String[]{SurakshaContract.MemberEntry._ID}, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
@@ -213,6 +208,27 @@ public class Member implements Serializable {
             cursor.close();
         }
         return count;
+    }
+
+    public LoanIssue getActiveLoan(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.LoanIssueEntry.CONTENT_URI, LoanIssue.LoanIssueQuery.PROJECTION,
+                SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ? and "
+                        + SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT + " = 0 ",
+                new String[]{String.valueOf(accountNo)},
+                null);
+        return LoanIssue.getLoanIssueFromCursor(context, cursor);
+    }
+
+    public LoanIssue getActiveBystanderLoan(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.LoanIssueEntry.CONTENT_URI,
+                LoanIssue.LoanIssueQuery.PROJECTION,
+                SurakshaContract.LoanIssueEntry.COLUMN_SECURITY_ACCOUNT_NUMBER + " = ? and "
+                        + SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT + " = 0 ",
+                new String[]{String.valueOf(accountNo)},
+                null);
+        return LoanIssue.getLoanIssueFromCursor(context, cursor);
     }
 
     private void incrementId(Context context) {
@@ -225,47 +241,25 @@ public class Member implements Serializable {
         }
     }
 
-    public boolean isHasLoan() {
-        return hasLoan;
-    }
-
-    public void setHasLoan(boolean hasLoan) {
-        this.hasLoan = hasLoan;
-    }
-
-    public boolean isLoanBlocked() {
-        return isLoanBlocked;
-    }
-
-    public void setLoanBlocked(boolean loanBlocked) {
-        isLoanBlocked = loanBlocked;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
     /**
-     * return contentValues from account object
+     * make deposit for given date
      *
      * @param context
      * @param date    1st date of month, Month and Year should be set
      * @param remarks
-     * @return Uri
+     * @return Transaction
      */
     public Transaction makeDeposit(Context context, long date, String remarks) {
         Transaction txnMonthlyDeposit = new Transaction(context, accountNo, Utility.getMonthlyDepositAmount(),
                 SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
                 remarks, AuthUtils.getAuthenticatedOfficerId(context));
         txnMonthlyDeposit.setDefinedDepositDate(date);
+        txnMonthlyDeposit.setCreatedAt(System.currentTimeMillis());
         ContentValues values = Transaction.getTxnContentValues(txnMonthlyDeposit);
         context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
         return txnMonthlyDeposit;
     }
+
 
     public boolean saveIsLoanBlocked(Context context, boolean isLoanBlocked) {
         ContentValues values = new ContentValues();
@@ -291,36 +285,8 @@ public class Member implements Serializable {
         return numRowsUpdated > 0;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", accountNo='" + accountNo + '\'' +
-                ", alias='" + alias + '\'' +
-                ", gender='" + gender + '\'' +
-                ", father='" + father + '\'' +
-                ", spouse='" + spouse + '\'' +
-                ", occupation='" + occupation + '\'' +
-                ", age=" + age +
-                ", mobile='" + mobile + '\'' +
-                ", remarks='" + remarks + '\'' +
-                ", address='" + address + '\'' +
-                ", nominee='" + nominee + '\'' +
-                ", relationWithNominee='" + relationWithNominee + '\'' +
-                ", addressOfNominee='" + addressOfNominee + '\'' +
-                ", hasLoan=" + hasLoan +
-                ", isLoanBlocked=" + isLoanBlocked +
-                ", isDeleted=" + isDeleted +
-                ", closedAt=" + closedAt +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 
-    public boolean hasLoanDue(Context context) {
-
-        /*
+    /*
         *
         * -if member not has loan return false
         * -check current date.
@@ -329,62 +295,25 @@ public class Member implements Serializable {
         * -check last loan return date
         * -if current date is 15 of next month  of loan issued date or loanReturn date, the loan is due
         * */
-        if (!CalendarUtils.isDueDate()) {
-            return false;
-        }
+    public boolean hasLoanDue(Context context) {
+
         if (!hasLoan) {
             return false;
         } else {
 //            LoanIssued date
-            LoanIssue loanIssued = LoanIssue.getActiveLoanForAccountNumber(context, accountNo);
+            LoanIssue loanIssued = getActiveLoan(context);
             Calendar nextInstalmentCalendar = getNextInstalmentCalendar(context, loanIssued);
             return nextInstalmentCalendar != null && CalendarUtils.getDueDate() >= nextInstalmentCalendar.getTimeInMillis();
-//            loanIssuedDateCalendar.setTimeInMillis(loanIssued.getCreatedAt());
-//            List<Transaction> loanReturnList =
-//                    Transaction.getLoanReturnForLoanIssueId(context, loanIssued.getId());
-//            if (loanReturnList.isEmpty()) {
-//                boolean sameMonthAndYear = CalendarUtils.readableDepositMonth(loanIssuedDateCalendar)
-//                        .equals(CalendarUtils.readableDepositMonth(CalendarUtils.getDueDate()));
-//                if (sameMonthAndYear) {
-//                    return false;
-//                }
-//                loanIssuedDateCalendar.set(Calendar.DATE, CalendarUtils.getDueDay()); //10th of issued month
-//                loanIssuedDateCalendar.add(Calendar.MONTH, 1); //10th of next month of issuing
-//                //check greater than 10th of current month
-//                return CalendarUtils.getDueDate() >= CalendarUtils.normalizeDate(loanIssuedDateCalendar.getTimeInMillis());
-//
-//            } else {
-//                long lastLoanReturnDate = loanReturnList.get(0).getCreatedAt();
-//                Calendar lastLoanReturnCalendar = Calendar.getInstance();
-//                lastLoanReturnCalendar.setTimeInMillis(lastLoanReturnDate);
-//                lastLoanReturnCalendar.add(Calendar.MONTH, 1);
-//                return CalendarUtils.getDueDate() >= CalendarUtils.normalizeDate(lastLoanReturnCalendar.getTimeInMillis());
-//            }
         }
     }
 
     public Calendar getNextInstalmentCalendar(Context context, LoanIssue loanIssued) {
-        if(hasLoan) {
-            List<Transaction> loanReturnList =
-                    Transaction.getLoanReturnForLoanIssueId(context, loanIssued.getId());
-
-            if (loanReturnList.isEmpty()) {
-                Calendar loanIssuedDateCalendar = Calendar.getInstance();
-                loanIssuedDateCalendar.setTimeInMillis(loanIssued.getCreatedAt());
-                loanIssuedDateCalendar.add(Calendar.MONTH, 1);
-                loanIssuedDateCalendar.set(Calendar.DATE,CalendarUtils.getDueDay());
-                loanIssuedDateCalendar = CalendarUtils.normalizeDate(loanIssuedDateCalendar);
-                return loanIssuedDateCalendar;
-
-            } else {
-                long lastLoanReturnDate = loanReturnList.get(0).getCreatedAt();
-                Calendar lastLoanReturnCalendar = Calendar.getInstance();
-                lastLoanReturnCalendar.setTimeInMillis(lastLoanReturnDate);
-                lastLoanReturnCalendar.add(Calendar.MONTH, 1);
-                lastLoanReturnCalendar.set(Calendar.DATE,CalendarUtils.getDueDay());
-                lastLoanReturnCalendar = CalendarUtils.normalizeDate(lastLoanReturnCalendar);
-                return lastLoanReturnCalendar;
-            }
+        if (hasLoan) {
+            Calendar loanIssuedDateCalendar = Calendar.getInstance();
+            loanIssuedDateCalendar.setTimeInMillis(loanIssued.getCreatedAt());
+            loanIssuedDateCalendar.add(Calendar.MONTH, loanIssued.nextInstalmentCount(context));
+            loanIssuedDateCalendar.set(Calendar.DATE, CalendarUtils.getDueDay());
+            return CalendarUtils.normalizeDate(loanIssuedDateCalendar);
         }
         return null;
     }
@@ -427,6 +356,7 @@ public class Member implements Serializable {
         return Transaction.getTxnListFromCursor(context, cursor);
     }
 
+    @Deprecated
     public List<Integer> fetchAccountNumbers(Context context) {
         List<Integer> acNumbers = new ArrayList<>();
         //Fetching accountNumbers
@@ -573,11 +503,35 @@ public class Member implements Serializable {
     }
 
     public String getAddressOfNominee() {
-        return addressOfNominee;
+        return WordUtils.toTitleCase(addressOfNominee);
     }
 
     public void setAddressOfNominee(String addressOfNominee) {
         this.addressOfNominee = addressOfNominee;
+    }
+
+    public boolean isHasLoan() {
+        return hasLoan;
+    }
+
+    public void setHasLoan(boolean hasLoan) {
+        this.hasLoan = hasLoan;
+    }
+
+    public boolean isLoanBlocked() {
+        return isLoanBlocked;
+    }
+
+    public void setLoanBlocked(boolean loanBlocked) {
+        isLoanBlocked = loanBlocked;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public int getAccountNo() {
@@ -612,7 +566,53 @@ public class Member implements Serializable {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", accountNo='" + accountNo + '\'' +
+                ", alias='" + alias + '\'' +
+                ", gender='" + gender + '\'' +
+                ", father='" + father + '\'' +
+                ", spouse='" + spouse + '\'' +
+                ", occupation='" + occupation + '\'' +
+                ", age=" + age +
+                ", mobile='" + mobile + '\'' +
+                ", remarks='" + remarks + '\'' +
+                ", address='" + address + '\'' +
+                ", nominee='" + nominee + '\'' +
+                ", relationWithNominee='" + relationWithNominee + '\'' +
+                ", addressOfNominee='" + addressOfNominee + '\'' +
+                ", hasLoan=" + hasLoan +
+                ", isLoanBlocked=" + isLoanBlocked +
+                ", isDeleted=" + isDeleted +
+                ", closedAt=" + closedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+
+
     public interface MemberQuery {
+//        String[] PROJECTION = {
+//                SurakshaContract.MemberEntry.TABLE_NAME + "." +SurakshaContract.MemberEntry._ID,
+//                SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry.COLUMN_NAME,
+//                SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO,
+//                SurakshaContract.MemberEntry.COLUMN_ADDRESS,
+//                SurakshaContract.MemberEntry.COLUMN_HAS_LOAN,
+//                SurakshaContract.MemberEntry.COLUMN_IS_LOAN_BLOCKED,
+//                SurakshaContract.MemberEntry.COLUMN_AVATAR
+//        };
+//        int COLM_ID = 0;
+//        int COLM_NAME = 1;
+//        int COLM_ACCOUNT_NO = 2;
+//        int COLM_ADDRESS = 3;
+//        int COLM_HAS_LOAN = 4;
+//        int COLM_IS_LOAN_BLOCKED = 5;
+//        int COLM_AVATAR = 6;
+
+
         String[] PROJECTION = {
                 SurakshaContract.MemberEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry.COLUMN_NAME,
                 SurakshaContract.MemberEntry.COLUMN_ALIAS,
@@ -660,4 +660,6 @@ public class Member implements Serializable {
         int COL_HAS_LOAN = 20;
 
     }
+
+
 }

@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.deposit.DepositFragment;
+import com.razikallayi.suraksha.loan.LoanIssuedFragment;
 import com.razikallayi.suraksha.member.MemberListActivity;
 
 import java.util.ArrayList;
@@ -112,13 +112,13 @@ public class AccountDetailActivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager, int accountNumber) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
 
-        DepositFragment depositFragment = (DepositFragment)
-                getSupportFragmentManager().findFragmentByTag(DepositFragment.TAG);
+        LoanIssuedFragment depositFragment = (LoanIssuedFragment)
+                getSupportFragmentManager().findFragmentByTag(LoanIssuedFragment.TAG);
         if (null == depositFragment) {
             Bundle arguments = new Bundle();
-            arguments.putInt(DepositFragment.ARG_ACCOUNT_NUMBER, accountNumber);
+            arguments.putInt(LoanIssuedFragment.ARG_ACCOUNT_NUMBER, accountNumber);
             //AccountList
-            depositFragment = new DepositFragment();
+            depositFragment = new LoanIssuedFragment();
             depositFragment.setArguments(arguments);
 //        getFragmentManager().beginTransaction()
 //                .replace(R.id.account_list_container, accountListFragment)

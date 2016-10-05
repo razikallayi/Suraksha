@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -69,7 +70,7 @@ public class SurakshaProvider extends ContentProvider {
         //This is an inner join which looks like
         //member INNER JOIN account ON account.member_id = Member._id
         sLoanIssueJoinTxnQueryBuilder.setTables(
-                SurakshaContract.LoanIssueEntry.TABLE_NAME + " JOIN " +
+                SurakshaContract.LoanIssueEntry.TABLE_NAME + " LEFT JOIN " +
                         SurakshaContract.TxnEntry.TABLE_NAME +
                         " ON " + SurakshaContract.TxnEntry.TABLE_NAME +
                         "." + SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID +
@@ -564,6 +565,10 @@ public class SurakshaProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         SurakshaContract.TxnEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case LOAN_ISSUE:
+                rowsDeleted = db.delete(
+                        SurakshaContract.LoanIssueEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -574,31 +579,36 @@ public class SurakshaProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
 
         switch (match) {
             case MEMBER:
-                normalizeMemberDate(values);
+//                normalizeMemberDate(values);
                 rowsUpdated = db.update(
                         SurakshaContract.MemberEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case ACCOUNT:
-                normalizeAccountDate(values);
+//                normalizeAccountDate(values);
                 rowsUpdated = db.update(
                         SurakshaContract.AccountEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case OFFICER:
-                normalizeOfficerDate(values);
+//                normalizeOfficerDate(values);
                 rowsUpdated = db.update(
                         SurakshaContract.OfficerEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case TXN:
-                normalizeTxnDate(values);
+//                normalizeTxnDate(values);
                 rowsUpdated = db.update(
                         SurakshaContract.TxnEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case LOAN_ISSUE:
+//                normalizeTxnDate(values);
+                rowsUpdated = db.update(
+                        SurakshaContract.LoanIssueEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

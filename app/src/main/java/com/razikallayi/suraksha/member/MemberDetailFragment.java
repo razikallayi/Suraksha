@@ -33,11 +33,8 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
      * represents.
      */
     public static final String ARG_MEMBER_ID = "member_id";
-
-    private long mMemberId;
-
     public static final int MEMBER_DETAIL_LOADER = 0;
-
+    private long mMemberId;
     private TextView mMemberName;
     private TextView mMemberAlias;
     private TextView mMemberGender;
@@ -53,7 +50,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     private TextView mMemberRemarks;
     //    private TextView mMemberClosedAt           ;
     private TextView mMemberCreatedAt;
-    private TextView mMemberUpdatedAt          ;
+    private TextView mMemberUpdatedAt;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -88,32 +85,11 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
             setHasOptionsMenu(true);
         }
         mMemberId = getArguments().getLong(ARG_MEMBER_ID);
-
-//        if (getArguments().containsKey(ARG_MEMBER_ID)) {
-//            Activity activity = this.getActivity();
-//            CollapsingToolbarLayout appBarLayout =
-//                    (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-//            if (appBarLayout != null) {
-//                appBarLayout.setTitle("Details");
-//            }
-//        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MEMBER_DETAIL_LOADER, null, this);
-
-
-//        //AccountList
-//        Bundle arguments = new Bundle();
-//        arguments.putString(AccountListFragment.ARG_MEMBER_ID,
-//                getArguments().getString(MemberDetailFragment.ARG_MEMBER_ID));
-//        AccountListFragment accountListFragment = new AccountListFragment();
-//        accountListFragment.setArguments(arguments);
-//        getFragmentManager().beginTransaction()
-//                .replace(R.id.account_list_container, accountListFragment)
-//                .commit();
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -123,7 +99,6 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_member_detail, container, false);
-
 
         mMemberName = (TextView) rootView.findViewById(R.id.tvMemberName);
         mMemberAlias = (TextView) rootView.findViewById(R.id.tvMemberAlias);
@@ -140,7 +115,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         mMemberRemarks = (TextView) rootView.findViewById(R.id.tvMemberRemarks);
 //        mMemberClosedAt             = (TextView) rootView.findViewById(R.id.tvMemberClosedAt           );
         mMemberCreatedAt = (TextView) rootView.findViewById(R.id.tvMemberCreatedAt);
-        mMemberUpdatedAt            = (TextView) rootView.findViewById(R.id.tvMemberUpdatedAt          );
+        mMemberUpdatedAt = (TextView) rootView.findViewById(R.id.tvMemberUpdatedAt);
 
         return rootView;
     }
@@ -167,22 +142,25 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         switch (loader.getId()) {
             case MEMBER_DETAIL_LOADER:
                 if (data != null && data.moveToFirst()) {
-                    mMemberName.setText(data.getString(Member.MemberQuery.COL_NAME));
-                    mMemberAlias.setText(data.getString(Member.MemberQuery.COL_ALIAS));
-                    mMemberGender.setText(data.getString(Member.MemberQuery.COL_GENDER));
-                    mMemberFather.setText(data.getString(Member.MemberQuery.COL_FATHER));
-                    mMemberSpouse.setText(data.getString(Member.MemberQuery.COL_SPOUSE));
-                    mMemberOccupation.setText(data.getString(Member.MemberQuery.COL_OCCUPATION));
-                    mMemberAge.setText(data.getString(Member.MemberQuery.COL_AGE));
-                    mMemberMobile.setText(data.getString(Member.MemberQuery.COL_MOBILE));
-                    mMemberAddress.setText(data.getString(Member.MemberQuery.COL_ADDRESS));
-                    mMemberNominee.setText(data.getString(Member.MemberQuery.COL_NOMINEE));
-                    mMemberRelationWithNominee.setText(data.getString(Member.MemberQuery.COL_RELATION_WITH_NOMINEE));
-                    mMemberAddressOfNominee.setText(data.getString(Member.MemberQuery.COL_ADDRESS_OF_NOMINEE));
-                    mMemberRemarks.setText(data.getString(Member.MemberQuery.COL_REMARKS));
+                    Member member = Member.getMemberFromCursor(data);
+                    if (member != null) {
+                        mMemberName.setText(member.getName());
+                        mMemberAlias.setText(member.getAlias());
+                        mMemberGender.setText(member.getGender());
+                        mMemberFather.setText(member.getFather());
+                        mMemberSpouse.setText(member.getSpouse());
+                        mMemberOccupation.setText(member.getOccupation());
+                        mMemberAge.setText(String.valueOf(member.getAge()));
+                        mMemberMobile.setText(member.getMobile());
+                        mMemberAddress.setText(member.getAddress());
+                        mMemberNominee.setText(member.getNominee());
+                        mMemberRelationWithNominee.setText(member.getRelationWithNominee());
+                        mMemberAddressOfNominee.setText(member.getAddressOfNominee());
+                        mMemberRemarks.setText(member.getRemarks());
 //                    mMemberClosedAt.setText(Utility.formatDateTime(data.getLong(Member.MemberQuery.COL_CLOSED_AT)));
-                    mMemberCreatedAt.setText(CalendarUtils.formatDateTime(data.getLong(Member.MemberQuery.COL_CREATED_AT)));
-                    mMemberUpdatedAt.setText(CalendarUtils.formatDateTime(data.getLong(Member.MemberQuery.COL_UPDATED_AT)));
+                        mMemberCreatedAt.setText(CalendarUtils.getFriendlyDayString(getContext(), member.getCreatedAt()));
+                        mMemberUpdatedAt.setText(CalendarUtils.getFriendlyDayString(getContext(), member.getUpdatedAt()));
+                    }
                 }
                 break;
         }
