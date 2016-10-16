@@ -85,7 +85,7 @@ public class LoanIssue implements Serializable {
                     cursor.getLong(LoanIssueQuery.COL_FK_OFFICER_ID));
 
             txn.setId(cursor.getLong(LoanIssueQuery.COL_TXN_ID));
-            txn.setDefinedDepositDate(cursor.getLong(LoanIssueQuery.COL_DEFINED_DEPOSIT_DATE));
+            txn.setDepositForDate(cursor.getLong(LoanIssueQuery.COL_DEFINED_DEPOSIT_DATE));
             txn.setLoanPayedId(loanIssue.id);
             txn.setCreatedAt(loanIssue.createdAt);
             txn.setUpdatedAt(loanIssue.updatedAt);
@@ -324,7 +324,7 @@ public class LoanIssue implements Serializable {
                 SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
                 SurakshaContract.TxnEntry.COLUMN_LEDGER,
                 SurakshaContract.TxnEntry.COLUMN_NARRATION,
-                SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
+                SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE,
                 SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
                 SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
         };

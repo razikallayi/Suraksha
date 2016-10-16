@@ -330,7 +330,7 @@ public class SurakshaProvider extends ContentProvider {
                 selectionArgs = selectionArgs != null ? selectionArgs : new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER)};
                 retCursor = mOpenHelper.getReadableDatabase().query(SurakshaContract.TxnEntry.TABLE_NAME,
                         projection, selection, selectionArgs,
-                        null, null, SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE + " DESC");
+                        null, null, SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE + " DESC");
                 break;
             }
             case TXN_GET_TOTAL_DEPOSIT: {
@@ -460,10 +460,10 @@ public class SurakshaProvider extends ContentProvider {
 
     private void normalizeTxnDate(ContentValues values) {
         // normalize the date value
-        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE)) {
-            if (values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE) > 0) {
-                long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE);
-                values.put(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE, CalendarUtils.normalizeDate(dateValue));
+        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE)) {
+            if (values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE) > 0) {
+                long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE);
+                values.put(SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE, CalendarUtils.normalizeDate(dateValue));
             }
         }
 

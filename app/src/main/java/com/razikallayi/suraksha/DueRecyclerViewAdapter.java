@@ -128,13 +128,13 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
                     SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
                     SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
                     "Monthly Deposit", AuthUtils.getAuthenticatedOfficerId(mContext));
-            txnPayDue.setDefinedDepositDate(months[0]);
+            txnPayDue.setDepositForDate(months[0]);
             ContentValues values = Transaction.getTxnContentValues(txnPayDue);
             Cursor cursorDataExist = mContext.getContentResolver()
                     .query(SurakshaContract.TxnEntry.CONTENT_URI,
                             new String[]{SurakshaContract.TxnEntry._ID},
                             SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER +" = ? AND "
-                                    + SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE +" = ? ",
+                                    + SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE +" = ? ",
                             new String[]{String.valueOf(mAccountNumber),String.valueOf(months[0])},null);
 
             Uri success=null;

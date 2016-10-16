@@ -9,63 +9,71 @@
 
     <TextView
         android:id="@+id/depositMonth"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:accessibilityLiveRegion="polite"
-        android:fontFamily="sans-serif-condensed"
-        android:paddingBottom="@dimen/spacing_very_tiny"
-        android:paddingTop="@dimen/spacing_normal"
+        android:fontFamily="sans-serif-light"
+        android:padding="@dimen/spacing_very_tiny"
+        android:textColor="@color/dark_blue"
+        android:textAlignment="center"
         android:text="Month YEAR"
-        android:textSize="@dimen/font_normal"
-        android:textStyle="bold" />
+        android:textSize="@dimen/font_large" />
 
-    <TextView
-        android:id="@+id/depositAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/depositMonth"
-        android:layout_alignParentEnd="true"
-        android:accessibilityLiveRegion="polite"
-        android:fontFamily="sans-serif-condensed"
-        android:text="1000"
-        android:textSize="@dimen/font_normal" />
+    <!--<TextView-->
+        <!--android:id="@+id/depositAmount"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBaseline="@id/depositMonth"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:accessibilityLiveRegion="polite"-->
+        <!--android:fontFamily="sans-serif-condensed"-->
+        <!--android:text="1000"-->
+        <!--android:textSize="@dimen/font_normal" />-->
 
     <TextView
         android:id="@+id/depositCreatedAt"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/depositMonth"
         android:accessibilityLiveRegion="polite"
+        android:textAlignment="center"
         android:text="June 01 2016"
-        android:textSize="@dimen/font_smaller"
-        android:textStyle="bold" />
+        android:textSize="@dimen/font_small"
+        />
 
     <TextView
         android:id="@+id/depositOfficer"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/depositMonth"
         android:layout_marginRight="@dimen/spacing_very_tiny"
         android:layout_toRightOf="@id/depositCreatedAt"
         android:accessibilityLiveRegion="polite"
+        android:textAlignment="center"
         android:text="officer"
-        android:textSize="@dimen/font_smaller"
-        android:textStyle="bold" />
+        android:textSize="@dimen/font_small"
+         />
 
 
     <TextView
         android:id="@+id/depositRemarks"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/depositCreatedAt"
         android:accessibilityLiveRegion="polite"
-        android:text="asdsadasd sample"
-        android:textSize="@dimen/font_smaller" />
+        android:textAlignment="center"
+        android:textColor="@color/flat_blue"
+        android:visibility="gone"
+        android:text="here there might be a lot of content. This is just a sample"
+        android:textSize="@dimen/font_medium" />
 
     <View
         android:id="@+id/depositListItemBottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/depositRemarks"
-        android:background="@color/colorSeparatorLine" />
+        android:background="@color/colorSeparatorLine"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        />
 </LinearLayout>

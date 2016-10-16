@@ -4,7 +4,7 @@ package com.razikallayi.suraksha.deposit;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,12 +41,12 @@ public class DepositFragment extends Fragment {
         mDepositRecyclerView.setHasFixedSize(true);
 
 //        // use a linear layout manager
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-//        mDepositRecyclerView.setLayoutManager(layoutManager);
-
-        // use a linear layout manager
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mDepositRecyclerView.setLayoutManager(layoutManager);
+
+        // use a grid layout manager with 4 columns
+//        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
+//        mDepositRecyclerView.setLayoutManager(layoutManager);
 
         //get AccountNumber From Intent
         mAccountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER);

@@ -155,7 +155,7 @@ public class SurakshaContract {
         public static final String TABLE_NAME = "transactions";
         public static final String COLUMN_FK_ACCOUNT_NUMBER = "fk_account_number";
         public static final String COLUMN_AMOUNT = "amount";
-        public static final String COLUMN_DEFINED_DEPOSIT_DATE = "deposit_for_date";
+        public static final String COLUMN_DEPOSIT_FOR_DATE = "deposit_for_date";
         public static final String COLUMN_FK_LOAN_PAYED_ID = "loan_payed_id";
         public static final String COLUMN_VOUCHER_TYPE = "voucher_type";
         public static final String COLUMN_LEDGER = "ledger";

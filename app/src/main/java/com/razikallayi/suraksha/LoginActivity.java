@@ -104,12 +104,12 @@ public class LoginActivity extends AppCompatActivity {
         mUsernameView.setText(username);
         mPasswordView.setText(password);
         Handler handler  =new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                attemptLogin();
-            }
-        },300);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                attemptLogin();
+//            }
+//        },300);
 
     }
 

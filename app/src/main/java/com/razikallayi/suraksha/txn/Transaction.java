@@ -23,7 +23,7 @@ public class Transaction implements Serializable {
     private int ledger;
     private String narration;
     private long officer_id;
-    private long definedDepositDate = -1;
+    private long depositForDate = -1;
     private long loanPayedId = -1;
     private long createdAt;
     private long updatedAt;
@@ -151,7 +151,7 @@ public class Transaction implements Serializable {
                     c.getLong(TxnQuery.COL_FK_OFFICER_ID));
 
             txn.id = c.getLong(TxnQuery.COL_ID);
-            txn.definedDepositDate = c.getLong(TxnQuery.COL_DEFINED_DEPOSIT_DATE);
+            txn.depositForDate = c.getLong(TxnQuery.COL_DEFINED_DEPOSIT_DATE);
             txn.loanPayedId = c.getInt(TxnQuery.COL_FK_LOAN_PAYED_ID);
             txn.createdAt = c.getLong(TxnQuery.COL_CREATED_AT);
             txn.updatedAt = c.getLong(TxnQuery.COL_UPDATED_AT);
@@ -164,7 +164,7 @@ public class Transaction implements Serializable {
         ContentValues values = new ContentValues();
         values.put(SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER, txn.getAccountNumber());
         values.put(SurakshaContract.TxnEntry.COLUMN_AMOUNT, txn.getAmount());
-        values.put(SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE, txn.getDefinedDepositMonth());
+        values.put(SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE, txn.getDefinedDepositMonth());
         values.put(SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID, txn.getLoanPayedId());
         values.put(SurakshaContract.TxnEntry.COLUMN_LEDGER, txn.getLedger());
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
@@ -208,11 +208,11 @@ public class Transaction implements Serializable {
     }
 
     public long getDefinedDepositMonth() {
-        return definedDepositDate;
+        return depositForDate;
     }
 
-    public void setDefinedDepositDate(long definedDepositDate) {
-        this.definedDepositDate = definedDepositDate;
+    public void setDepositForDate(long depositForDate) {
+        this.depositForDate = depositForDate;
     }
 
     public long getId() {
@@ -294,7 +294,7 @@ public class Transaction implements Serializable {
                 SurakshaContract.TxnEntry.COLUMN_NARRATION,
                 SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_CREATED_AT,
                 SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT,
-                SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
+                SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE,
                 SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
                 SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID
         };

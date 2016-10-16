@@ -106,7 +106,7 @@ public class TxnReportActivity extends BaseActivity implements
                     c.getInt(Transaction.TxnQuery.COL_LEDGER), c.getString(Transaction.TxnQuery.COL_NARRATION),
                     c.getLong(Transaction.TxnQuery.COL_FK_OFFICER_ID));
             txn.setId(c.getLong(Transaction.TxnQuery.COL_ID));
-            txn.setDefinedDepositDate(c.getLong(Transaction.TxnQuery.COL_DEFINED_DEPOSIT_DATE));
+            txn.setDepositForDate(c.getLong(Transaction.TxnQuery.COL_DEFINED_DEPOSIT_DATE));
             txn.setLoanPayedId(c.getInt(Transaction.TxnQuery.COL_FK_LOAN_PAYED_ID));
             txn.setOfficer_id(c.getInt(Transaction.TxnQuery.COL_FK_OFFICER_ID));
             txn.setCreatedAt(c.getLong(Transaction.TxnQuery.COL_CREATED_AT));

@@ -17,11 +17,6 @@ import java.util.GregorianCalendar;
  */
 public class CalendarUtils extends GregorianCalendar {
 
-
-    // Format used for storing dates in the database.  ALso used for converting those strings
-    // back into date objects for comparison/processing.
-    public static final String DATE_FORMAT = "yyyyMMdd";
-
     public static String formatDateTime(long dateInMilliseconds) {
         if (dateInMilliseconds == 0L) {
             return "";
@@ -211,7 +206,7 @@ public class CalendarUtils extends GregorianCalendar {
      */
     public static String getFormattedMonthDay(Context context, long dateInMillis) {
 //        SimpleDateFormat dbDateFormat = new SimpleDateFormat(CalendarUtils.DATE_FORMAT);
-        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd EEE");
+        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMM dd EEE");
         if (!isCurrentYear(dateInMillis)) {
             monthDayFormat = new SimpleDateFormat("MMM dd, yyyy");
         }

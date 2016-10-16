@@ -76,7 +76,7 @@
         android:layout_height="1dp"
         android:layout_columnSpan="2"
         android:layout_marginTop="@dimen/spacing_tiny"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_very_tiny"
+        android:layout_marginEnd="@dimen/spacing_very_tiny"
         android:background="@color/red" />
 </GridLayout>

@@ -78,7 +78,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.TxnEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_AMOUNT + INT_TYPE + COMMA_SEP +
-                    SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + INT_TYPE + NOT_NULL + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_LEDGER + INT_TYPE + COMMA_SEP +

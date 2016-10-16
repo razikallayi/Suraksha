@@ -84,7 +84,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
             // The Cursor is now set to the right position
             txn.setId(cursor.getLong(COL_ID));
             txn.setAmount(cursor.getDouble(COL_AMOUNT));
-            txn.setDefinedDepositDate(cursor.getLong(COL_MONTH_OF_DEPOSIT));
+            txn.setDepositForDate(cursor.getLong(COL_MONTH_OF_DEPOSIT));
             txn.setVoucherType(cursor.getInt(COL_VOUCHER_TYPE));
             txn.setLedger(cursor.getInt(COL_LEDGER));
             txn.setLoanPayedId(cursor.getInt(COL_FK_LOAN_PAYED_ID));
@@ -140,7 +140,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
             SurakshaContract.TxnEntry.TABLE_NAME+"."+SurakshaContract.TxnEntry._ID,
             SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER,
             SurakshaContract.TxnEntry.COLUMN_AMOUNT,
-            SurakshaContract.TxnEntry.COLUMN_DEFINED_DEPOSIT_DATE,
+            SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE,
             SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
             SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE,
             SurakshaContract.TxnEntry.COLUMN_LEDGER,
@@ -184,7 +184,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
 //                if (data != null && data.moveToFirst()) {
 //                    txn.setId(cursor.getLong(COL_ID));
 //                    txn.setAmount(cursor.getDouble(COL_AMOUNT));
-//                    txn.setDefinedDepositDate(cursor.getInt(COL_MONTH_OF_DEPOSIT));
+//                    txn.setDepositForDate(cursor.getInt(COL_MONTH_OF_DEPOSIT));
 //                }
 //                break;
 //        }

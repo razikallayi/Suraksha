@@ -117,7 +117,7 @@ public class Account implements Serializable {
         Transaction txnMonthlyDeposit = new Transaction(context, accountNumber, Utility.getMonthlyDepositAmount(),
                 SurakshaContract.TxnEntry.RECEIPT_VOUCHER, SurakshaContract.TxnEntry.DEPOSIT_LEDGER,
                 remarks, AuthUtils.getAuthenticatedOfficerId(context));
-        txnMonthlyDeposit.setDefinedDepositDate(date);
+        txnMonthlyDeposit.setDepositForDate(date);
         ContentValues values = Transaction.getTxnContentValues(txnMonthlyDeposit);
         context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
         return txnMonthlyDeposit;

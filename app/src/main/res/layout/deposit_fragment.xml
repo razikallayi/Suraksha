@@ -7,6 +7,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:cardElevation="15dp"
         app:cardBackgroundColor="@color/white">
 
         <LinearLayout
@@ -18,26 +20,24 @@
                 android:id="@+id/depositMemberAcNo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/colorSecondary"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:maxLines="1"
                 android:minWidth="52dp"
-                android:text="accountNo"
-                android:textColor="@color/white"
+                android:text="101"
                 android:textSize="@dimen/font_large"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/depositMemberName"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:ellipsize="marquee"
                 android:fontFamily="sans-serif-light"
                 android:maxLines="1"
-                android:padding="@dimen/spacing_very_tiny"
                 android:text="name"
                 android:textSize="@dimen/font_larger" />
 
@@ -57,7 +57,8 @@
         layout="@layout/deposit_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="52dp" />
+        android:layout_marginBottom="50dp"
+        />
 
     <!--<android.support.v4.widget.NestedScrollView-->
     <!--android:layout_width="match_parent"-->

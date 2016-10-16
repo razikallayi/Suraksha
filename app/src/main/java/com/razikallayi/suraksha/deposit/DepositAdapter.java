@@ -45,7 +45,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deposited_list_item, parent, false);
-        // set the view's size, margins, paddings and layout parameters
+        // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
 
@@ -54,17 +54,17 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mAmountTextView.setText(Utility.formatAmountInRupees(holder.mAmountTextView.getContext(),
-                Utility.getMonthlyDepositAmount()));
+//        holder.mAmountTextView.setText(Utility.formatAmountInRupees(holder.mAmountTextView.getContext(),
+//                Utility.getMonthlyDepositAmount()));
         Transaction depositedTxns = mDepositedTxnList.get(position);
         String monthAndYear = CalendarUtils.readableDepositMonth(depositedTxns.getDefinedDepositMonth());
         holder.mMonthTextView.setText(monthAndYear);
-        holder.mCreatedAtTextView.setText(CalendarUtils.formatDateTime(depositedTxns.getCreatedAt()));
-        holder.mCreatedAtTextView.setVisibility(View.VISIBLE);
+        holder.mCreatedAtTextView.setText(CalendarUtils.getFriendlyDayString(mContext,depositedTxns.getCreatedAt()));
         holder.mOfficerTextView.setText(Officer.getOfficerFromId(mContext, depositedTxns.getOfficer_id()).getName());
-        holder.mOfficerTextView.setVisibility(View.VISIBLE);
-        holder.mRemarksTextView.setText(depositedTxns.getNarration());
-        holder.mRemarksTextView.setVisibility(View.VISIBLE);
+        if(!depositedTxns.getNarration().equals("")) {
+            holder.mRemarksTextView.setText(depositedTxns.getNarration());
+            holder.mRemarksTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -125,7 +125,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public LinearLayout mDepositItemLayout;
-        public TextView mAmountTextView;
+//        public TextView mAmountTextView;
         public TextView mCreatedAtTextView;
         public TextView mOfficerTextView;
         public TextView mRemarksTextView;
@@ -135,7 +135,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
             super(v);
             mDepositItemLayout = (LinearLayout) v.findViewById(R.id.deposit_item_layout);
             mMonthTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositMonth);
-            mAmountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositAmount);
+//            mAmountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositAmount);
             mCreatedAtTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositCreatedAt);
             mOfficerTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositOfficer);
             mRemarksTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositRemarks);
