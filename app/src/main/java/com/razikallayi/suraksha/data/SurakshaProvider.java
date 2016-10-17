@@ -44,10 +44,10 @@ public class SurakshaProvider extends ContentProvider {
             SurakshaContract.AccountEntry.TABLE_NAME +
                     "." + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
     //location.location_setting = ? AND date >= ?
-    private static final String sMemberNameOrAccountSelection =
-            SurakshaContract.MemberEntry.TABLE_NAME +
-                    "." + SurakshaContract.MemberEntry.COLUMN_NAME + " = ? OR " +
-                    SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
+//    private static final String sMemberNameOrAccountSelection =
+//            SurakshaContract.MemberEntry.TABLE_NAME +
+//                    "." + SurakshaContract.MemberEntry.COLUMN_NAME + " = ? OR " +
+//                    SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER + " = ? ";
 
     static {
         sAccountsOfMemberQueryBuilder = new SQLiteQueryBuilder();

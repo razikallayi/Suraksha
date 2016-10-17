@@ -36,6 +36,7 @@
     <color name="gray_dark">#5F5F5F</color>
     <color name="semi_black">#ae000000</color>
     <color name="black">#323232</color>
+    <color name="full_black">#323232</color>
 
     <!-- colors indicators-->
     <color name="danger">#b1271d</color>
@@ -56,4 +57,7 @@
     <color name="light_blue">#29b6f6</color>
 
     <color name="black_overlay">#66000000</color>
+
+
+    <color name="lateDepositBgColor">#ef9a9a</color>
 </resources>

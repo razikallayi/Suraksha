@@ -17,7 +17,6 @@ import com.razikallayi.suraksha.utils.Utility;
 import com.razikallayi.suraksha.utils.WordUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class Member implements Serializable {
     private long closedAt;
     private long createdAt;
     private long updatedAt;
-    private List<Integer> accountNumbers = null;
+//    private List<Integer> accountNumbers = null;
 
 
     public Member() {
@@ -183,16 +182,16 @@ public class Member implements Serializable {
         return values;
     }
 
-    public static List<Transaction> fetchDeposits(Context context, String accountNumber) {
-        Cursor cursor = context.getContentResolver().query(
-                SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
-                Transaction.TxnQuery.PROJECTION,
-                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND "
-                        + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
-                new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), accountNumber},
-                SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " DESC");
-        return Transaction.getTxnListFromCursor(context, cursor);
-    }
+//    public static List<Transaction> fetchDeposits(Context context, String accountNumber) {
+//        Cursor cursor = context.getContentResolver().query(
+//                SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
+//                Transaction.TxnQuery.PROJECTION,
+//                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND "
+//                        + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
+//                new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER), accountNumber},
+//                SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " DESC");
+//        return Transaction.getTxnListFromCursor(context, cursor);
+//    }
 
     //Get count of all active members
     public static int getActiveMembersCount(Context context) {
@@ -303,7 +302,7 @@ public class Member implements Serializable {
 //            LoanIssued date
             LoanIssue loanIssued = getActiveLoan(context);
             Calendar nextInstalmentCalendar = getNextInstalmentCalendar(context, loanIssued);
-            return nextInstalmentCalendar != null && CalendarUtils.getDueDate() >= nextInstalmentCalendar.getTimeInMillis();
+            return nextInstalmentCalendar != null && CalendarUtils.getDepositStartDay() >= nextInstalmentCalendar.getTimeInMillis();
         }
     }
 
@@ -336,12 +335,12 @@ public class Member implements Serializable {
     }
 
     public boolean hasDepositDue(Context context) {
-        if (!CalendarUtils.isDueDate()) {
+        if (!CalendarUtils.isDepositStartDay()) {
             return false;
         }
         Calendar nextDepositMonth = getNextDepositMonthCalendar(context);
         nextDepositMonth.set(Calendar.DATE, CalendarUtils.getDueDay());
-        return CalendarUtils.getDueDate() >= CalendarUtils.normalizeDate(nextDepositMonth.getTimeInMillis());
+        return CalendarUtils.getDepositStartDay() >= CalendarUtils.normalizeDate(nextDepositMonth.getTimeInMillis());
     }
 
     public List<Transaction> fetchDeposits(Context context) {
@@ -356,27 +355,46 @@ public class Member implements Serializable {
         return Transaction.getTxnListFromCursor(context, cursor);
     }
 
-    @Deprecated
-    public List<Integer> fetchAccountNumbers(Context context) {
-        List<Integer> acNumbers = new ArrayList<>();
-        //Fetching accountNumbers
-        Cursor cursorAccountNumbers = context.getContentResolver().query(
-                SurakshaContract.AccountEntry.buildAccountsOfMemberUri(this.id), new String[]{
-                        SurakshaContract.AccountEntry.TABLE_NAME + "."
-                                + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER}, null, null, null);
-        if (cursorAccountNumbers != null) {
-            while (cursorAccountNumbers.moveToNext()) {
-                acNumbers.add(cursorAccountNumbers.getInt(0));
-            }
-            cursorAccountNumbers.close();
+    public int getTotalDeposits(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.buildFetchAllDepositsUri(),
+                new String[]{
+                        SurakshaContract.TxnEntry.TABLE_NAME + "." + SurakshaContract.TxnEntry._ID} ,
+                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND "
+                        + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
+                new String[]{String.valueOf(SurakshaContract.TxnEntry.DEPOSIT_LEDGER),
+                        String.valueOf(accountNo)},null);
+
+        if (cursor==null || cursor.getCount() <= 0) {
+            return 0;
+        }else {
+            int count = cursor.getCount();
+            cursor.close();
+            return count;
         }
-        this.accountNumbers = acNumbers;
-        return acNumbers;
     }
 
-    public List<Integer> getAccountNumbers() {
-        return accountNumbers;
-    }
+//    @Deprecated
+//    public List<Integer> fetchAccountNumbers(Context context) {
+//        List<Integer> acNumbers = new ArrayList<>();
+//        //Fetching accountNumbers
+//        Cursor cursorAccountNumbers = context.getContentResolver().query(
+//                SurakshaContract.AccountEntry.buildAccountsOfMemberUri(this.id), new String[]{
+//                        SurakshaContract.AccountEntry.TABLE_NAME + "."
+//                                + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER}, null, null, null);
+//        if (cursorAccountNumbers != null) {
+//            while (cursorAccountNumbers.moveToNext()) {
+//                acNumbers.add(cursorAccountNumbers.getInt(0));
+//            }
+//            cursorAccountNumbers.close();
+//        }
+//        this.accountNumbers = acNumbers;
+//        return acNumbers;
+//    }
+
+//    public List<Integer> getAccountNumbers() {
+//        return accountNumbers;
+//    }
 
     public byte[] getAvatar() {
         return ImageUtils.drawableToByteArray(avatar);

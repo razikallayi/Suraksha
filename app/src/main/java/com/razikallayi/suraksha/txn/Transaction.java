@@ -9,6 +9,7 @@ import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -127,6 +128,14 @@ public class Transaction implements Serializable {
             cursor.close();
         }
         return amount;
+    }
+
+
+    public boolean isLateDeposit(){
+        Calendar depositForDate = Calendar.getInstance();
+        depositForDate.setTimeInMillis(this.depositForDate);
+        depositForDate.add(Calendar.DAY_OF_MONTH,15);
+        return createdAt > depositForDate.getTimeInMillis();
     }
 
 

@@ -17,6 +17,8 @@ import java.util.GregorianCalendar;
  */
 public class CalendarUtils extends GregorianCalendar {
 
+    private static int mDepositStartDay = 10;//Normal deposit date is 10 every month
+
     public static String formatDateTime(long dateInMilliseconds) {
         if (dateInMilliseconds == 0L) {
             return "";
@@ -41,30 +43,21 @@ public class CalendarUtils extends GregorianCalendar {
     }
 
     public static int getDueDay() {
-        return 10;
+        return mDepositStartDay;
     }
 
-    public static long getDueDate() {
+    public static long getDepositStartDay() {
         Calendar dueDate = getInstance();
         dueDate = normalizeDate(dueDate);
         dueDate.set(Calendar.DATE, getDueDay());
         return dueDate.getTimeInMillis();
     }
 
-    public static boolean isDueDate() {
-        return System.currentTimeMillis() > getDueDate();
+    public static boolean isDepositStartDay() {
+        return System.currentTimeMillis() > getDepositStartDay();
     }
 
-    public static Calendar getDepositEndDate() {
-        Calendar c = getInstance();
-        c.set(DATE, 1);
-        c.set(MONTH, DECEMBER);
-        c.add(YEAR, 2);
-        c.setTimeInMillis(normalizeDate(c.getTimeInMillis()));
-        return c;
-    }
-
-    public static final String readableDepositMonth(Calendar calendar) {
+    public static String readableDepositMonth(Calendar calendar) {
         String month = new DateFormatSymbols().getMonths()[calendar.get(MONTH)];
         int year = calendar.get(YEAR);
 
@@ -74,7 +67,7 @@ public class CalendarUtils extends GregorianCalendar {
         return month;
     }
 
-    public static final String readableDepositMonth(long longDate) {
+    public static String readableDepositMonth(long longDate) {
         Calendar c = getInstance();
         c.setTimeInMillis(normalizeDate(longDate));
         return readableDepositMonth(c);

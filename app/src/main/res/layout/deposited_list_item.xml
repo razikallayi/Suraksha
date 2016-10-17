@@ -3,8 +3,8 @@
     android:id="@+id/deposit_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:drawable/list_selector_background"
     android:focusable="true"
+    android:paddingTop="@dimen/spacing_large"
     android:orientation="vertical">
 
     <TextView
@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:accessibilityLiveRegion="polite"
         android:fontFamily="sans-serif-light"
-        android:padding="@dimen/spacing_very_tiny"
-        android:textColor="@color/dark_blue"
+        android:padding="@dimen/spacing_extra_tiny"
+        android:textColor="@color/full_black"
         android:textAlignment="center"
         android:text="Month YEAR"
         android:textSize="@dimen/font_large" />
@@ -34,24 +34,20 @@
         android:id="@+id/depositCreatedAt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/depositMonth"
         android:accessibilityLiveRegion="polite"
         android:textAlignment="center"
         android:text="June 01 2016"
-        android:textSize="@dimen/font_small"
+        android:textSize="@dimen/font_medium"
         />
 
     <TextView
         android:id="@+id/depositOfficer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/depositMonth"
-        android:layout_marginRight="@dimen/spacing_very_tiny"
-        android:layout_toRightOf="@id/depositCreatedAt"
         android:accessibilityLiveRegion="polite"
         android:textAlignment="center"
         android:text="officer"
-        android:textSize="@dimen/font_small"
+        android:textSize="@dimen/font_smaller"
          />
 
 
@@ -59,21 +55,17 @@
         android:id="@+id/depositRemarks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/depositCreatedAt"
         android:accessibilityLiveRegion="polite"
         android:textAlignment="center"
-        android:textColor="@color/flat_blue"
-        android:visibility="gone"
+        android:textColor="#500"
         android:text="here there might be a lot of content. This is just a sample"
-        android:textSize="@dimen/font_medium" />
+        android:textSize="@dimen/font_small" />
 
     <View
         android:id="@+id/depositListItemBottomLine"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/depositRemarks"
+        android:layout_height="0.5dp"
         android:background="@color/colorSeparatorLine"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_large"
         />
 </LinearLayout>
