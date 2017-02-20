@@ -31,11 +31,11 @@ public abstract class BaseActivity extends AppCompatActivity
     private boolean mHasLoaded = false;
     private Context mContext;
 
-    private static final int FIVE_SECONDS = 5000; //5 seconds
+    private static final int THIRTY_SECONDS = 30000; //30 seconds
     private static final int FIFTEEN_MINUTES = 900000; //15 minutes
 
 
-    protected static final int mMinLockTime = FIFTEEN_MINUTES; // TODO: 17-06-2016 change to five seconds on Production
+    protected static final int mMinLockTime = THIRTY_SECONDS;
     protected static final int mMinOfficerLockTime = FIFTEEN_MINUTES;
 
     public static Officer authOfficer;
@@ -147,6 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity
             launchLockScreen();
         } else {
             mHasLoaded = true;
+            AuthUtils.writeLockTime(mContext);
         }
     }
 
@@ -170,30 +171,6 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
 
-    private void setOfficer() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            View navHeader = navigationView.getHeaderView(0);
-            TextView lblOfficer = (TextView) navHeader.findViewById(R.id.officer_nav_header);
-            if (lblOfficer != null && AuthUtils.isLoggedIn(navigationView.getContext())) {
-                lblOfficer.setText(AuthUtils.getAuthenticatedOfficer(navigationView.getContext()).getName());
-            }
-        }
-    }
-
-    protected void skipLockOnce() {
-        mSkipLockOnce = true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -223,5 +200,32 @@ public abstract class BaseActivity extends AppCompatActivity
         }
         return true;
     }
+
+    private void setOfficer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            View navHeader = navigationView.getHeaderView(0);
+            TextView lblOfficer = (TextView) navHeader.findViewById(R.id.officer_nav_header);
+            if (lblOfficer != null && AuthUtils.isLoggedIn(navigationView.getContext())) {
+                lblOfficer.setText(AuthUtils.getAuthenticatedOfficer(navigationView.getContext()).getName());
+            }
+        }
+    }
+
+    protected void skipLockOnce() {
+        mSkipLockOnce = true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
 
 }

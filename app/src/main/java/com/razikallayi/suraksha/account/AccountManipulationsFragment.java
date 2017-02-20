@@ -4,15 +4,10 @@ package com.razikallayi.suraksha.account;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.deposit.DepositActivity;
 import com.razikallayi.suraksha.loan.IssueLoanActivity;
 import com.razikallayi.suraksha.loan.LoanActivity;
 import com.razikallayi.suraksha.loan.LoanIssue;
-import com.razikallayi.suraksha.loan.LoanIssue.LoanIssueQuery;
-import com.razikallayi.suraksha.loan.LoanIssuedRecyclerViewAdapter;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
@@ -38,8 +30,7 @@ import com.razikallayi.suraksha.utils.Utility;
 import java.util.Calendar;
 import java.util.List;
 
-public class AccountManipulationsFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AccountManipulationsFragment extends Fragment {
     public static final String TAG = AccountManipulationsFragment.class.getSimpleName();
     /**
      * The fragment argument representing the item ID that this fragment
@@ -49,8 +40,6 @@ public class AccountManipulationsFragment extends Fragment
 
     private final int LOAN_ISSUED_LOADER = 0X000001;
     private Member mMember;
-    private LoanIssuedRecyclerViewAdapter mLoanIssueAdapter;
-    private CardView mLoanIssuedCardView;
     private LayoutInflater mInflater;
     private TextView lblLoanBlockedReason;
     private CardView cvIssueLoan;
@@ -60,6 +49,14 @@ public class AccountManipulationsFragment extends Fragment
     public AccountManipulationsFragment() {
         // Required empty public constructor
     }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mMember = Member.getMemberFromId(context, getArguments().getLong(ARG_MEMBER_ID, -1));
+    }
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -101,13 +98,6 @@ public class AccountManipulationsFragment extends Fragment
         cvDepositDueAMF = (CardView) mRootView.findViewById(R.id.cvDepositDueAMF);
         drawDepositDue();
 
-
-        mLoanIssuedCardView = (CardView) mRootView.findViewById(R.id.loanIssuedCardView);
-        RecyclerView recyclerView = (RecyclerView) mLoanIssuedCardView.findViewById(R.id.loanIssuedList);
-        mLoanIssueAdapter = new LoanIssuedRecyclerViewAdapter();
-        mLoanIssueAdapter.setFragmentManager(getActivity().getSupportFragmentManager());
-        mLoanIssueAdapter.setFragmentManager(getActivity().getSupportFragmentManager());
-        recyclerView.setAdapter(mLoanIssueAdapter);
         return mRootView;
     }
 
@@ -222,16 +212,10 @@ public class AccountManipulationsFragment extends Fragment
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mMember = Member.getMemberFromId(context, getArguments().getLong(ARG_MEMBER_ID, -1));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOAN_ISSUED_LOADER, null, this);
     }
 
     @Override
@@ -239,49 +223,10 @@ public class AccountManipulationsFragment extends Fragment
         super.onResume();
         mMember = Member.getMemberFromId(getContext(), mMember.getId());
         drawIssueLoanButton();
+        drawLoanDue();
+        drawDepositDue();
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        switch (id) {
-            case LOAN_ISSUED_LOADER:
-                if (null == mMember) return null;
-                return new CursorLoader(getContext(), SurakshaContract.LoanIssueEntry.CONTENT_URI,
-                        LoanIssueQuery.PROJECTION,
-                        SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
-                                + SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER + " = ? and "
-                                + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? and "
-                                + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? ",
-                        new String[]{String.valueOf(mMember.getAccountNo()),
-                                String.valueOf(SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER),
-                                String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)
-                        },
-                        SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
-                                + SurakshaContract.LoanIssueEntry._ID + " desc");
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        switch (loader.getId()) {
-            case LOAN_ISSUED_LOADER:
-                if (data == null || data.getCount() <= 0) {
-                    mLoanIssuedCardView.setVisibility(View.GONE);
-                } else {
-                    mLoanIssuedCardView.setVisibility(View.VISIBLE);
-                    mLoanIssueAdapter.swapCursor(data);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mLoanIssueAdapter.swapCursor(null);
-    }
 
     private void drawIssueLoanButton() {
         if (mMember.isHasLoan()) {
@@ -289,7 +234,7 @@ public class AccountManipulationsFragment extends Fragment
             LoanIssue activeLoan = mMember.getActiveLoan(getContext());
             int nextInstalmentCount = activeLoan.nextInstalmentCount(getContext());
             int remainingInstalments = activeLoan.getLoanInstalmentTimes() - (nextInstalmentCount - 1);
-            lblLoanBlockedReason.setText(remainingInstalments + " remaining instalments");
+            lblLoanBlockedReason.setText(String.format("%s %s", remainingInstalments, " remaining instalments"));
             lblLoanBlockedReason.setVisibility(View.VISIBLE);
         } else if (mMember.isLoanBlocked()) {
             cvIssueLoan.setVisibility(View.GONE);
@@ -301,7 +246,7 @@ public class AccountManipulationsFragment extends Fragment
                 if (bystanderFor != null) {
                     // TODO: 29-06-2016 change to string resource.
                     lblLoanBlockedReason.setText(Html.fromHtml("Loan guarantor of <b>" + bystanderFor.getName()
-                            + " ["+bystanderFor.getAccountNo()+"]</b>. Capable to issue loan after <b>"
+                            + " [" + bystanderFor.getAccountNo() + "]</b>. Capable to issue loan after <b>"
                             + remainingInstalments + "</b> more instalments."));
                     lblLoanBlockedReason.setVisibility(View.VISIBLE);
                 }

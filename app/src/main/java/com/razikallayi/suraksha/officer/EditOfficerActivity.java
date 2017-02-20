@@ -2,6 +2,7 @@ package com.razikallayi.suraksha.officer;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
@@ -18,11 +19,14 @@ import android.widget.Toast;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.SmsUtils;
 
 public class EditOfficerActivity extends BaseActivity {
     public static final String ARG_OFFICER_ID = "officer_id";
-
+    private long officerId;
+    private Officer mOfficer;
+    private Context mContext;
     private EditText txtName, txtPassword, txtUsername, txtMobile, txtAddress;
     private Switch switchIsAdmin;
 
@@ -56,7 +60,10 @@ public class EditOfficerActivity extends BaseActivity {
         txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
         switchIsAdmin = (Switch) sv.findViewById(R.id.switchIsAdmin);
 
-        setOfficerDetailsFromId(getIntent().getLongExtra(ARG_OFFICER_ID, -1));
+        mContext = getApplicationContext();
+        officerId = getIntent().getLongExtra(ARG_OFFICER_ID, -1);
+        mOfficer = Officer.getOfficerFromId(mContext, officerId);
+        fillOfficerDetails(mOfficer);
 
         //Button Create Officer
         final Button mEditOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
@@ -99,6 +106,8 @@ public class EditOfficerActivity extends BaseActivity {
     }
 
 
+
+
     private Officer getOfficerDetailsFromInput() {
         //EditText Fields
         String name = txtName.getText().toString();
@@ -108,22 +117,31 @@ public class EditOfficerActivity extends BaseActivity {
         String address = txtAddress.getText().toString();
         boolean isAdmin = switchIsAdmin.isChecked();
 
-        Officer officer = new Officer(getApplicationContext(), name, mobile, username, password, address, isAdmin);
-        officer.setUpdatedAt(System.currentTimeMillis());
-        return officer;
+        mOfficer.setName(name);
+        mOfficer.setMobile(mobile);
+        mOfficer.setUsername(username);
+        mOfficer.setPassword(password);
+        mOfficer.setAddress(address);
+        mOfficer.setAdmin(isAdmin);
+        return mOfficer;
     }
 
-    private Officer setOfficerDetailsFromId(long officerId) {
-        if (officerId == -1) {
+    private Officer fillOfficerDetails(Officer officer) {
+        if (officer.getId() == -1) {
             return null;
         }
-        Officer officer = Officer.getOfficerFromId(getApplicationContext(), officerId);
         txtName.setText(officer.getName());
         txtMobile.setText(officer.getMobile());
         txtUsername.setText(officer.getUsername());
         txtPassword.setText(String.valueOf(officer.getPassword()));
         txtAddress.setText(officer.getAddress());
         switchIsAdmin.setChecked(officer.isAdmin());
+
+        if(officer.getId() == AuthUtils.getAuthenticatedOfficerId(mContext)){
+            switchIsAdmin.setEnabled(false);
+        }else{
+            switchIsAdmin.setEnabled(true);
+        }
 
         return officer;
     }
@@ -143,7 +161,7 @@ public class EditOfficerActivity extends BaseActivity {
         protected Boolean doInBackground(Void... params) {
             //Save Officer
             ContentValues values = Officer.getOfficerContentValues(mOfficer);
-            getApplicationContext().getContentResolver().update(
+            mContext.getContentResolver().update(
                     SurakshaContract.OfficerEntry.CONTENT_URI, values,
                     SurakshaContract.OfficerEntry._ID + "=?",
                     new String[]{String.valueOf(getIntent().getLongExtra(ARG_OFFICER_ID, -1))});
@@ -155,10 +173,10 @@ public class EditOfficerActivity extends BaseActivity {
             super.onPostExecute(success);
             mEditOfficerTask = null;
             if (success) {
-                Toast.makeText(getApplicationContext(), getString(R.string.officer_updated_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.officer_updated_successfully), Toast.LENGTH_SHORT).show();
                 finish();
             } else {
-                Toast.makeText(getApplicationContext(), "Cannot update officer details. ", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Cannot update mOfficer details. ", Toast.LENGTH_LONG).show();
             }
         }
 

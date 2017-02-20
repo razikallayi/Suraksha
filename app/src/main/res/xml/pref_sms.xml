@@ -27,14 +27,14 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:dependency="enable_sms"
-        android:key="sms_after_loan_payed"
-        android:title="Loan Payed" />
+        android:key="sms_after_loan_issued"
+        android:title="Loan Issued" />
 
-    <!--<CheckBoxPreference-->
-        <!--android:defaultValue="true"-->
-        <!--android:dependency="enable_sms"-->
-        <!--android:key="sms_after_loan_return"-->
-        <!--android:title="Loan Return" />-->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:dependency="enable_sms"
+        android:key="sms_after_loan_return"
+        android:title="Loan Return" />
 
 
 </PreferenceScreen>

@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -90,17 +89,17 @@ public class MemberListActivity extends BaseActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Handle the register member action
-                    Intent intent = new Intent(getApplicationContext(), RegisterMemberActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        if (fab != null) {
+//            fab.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // Handle the register member action
+//                    Intent intent = new Intent(getApplicationContext(), RegisterMemberActivity.class);
+//                    startActivity(intent);
+//                }
+//            });
+//        }
 
         if (findViewById(R.id.member_details_view_pager_container) != null) {
             // The detail container view will be present only in the

@@ -25,8 +25,11 @@ public class LoanActivity extends BaseActivity {
         }
         LoanIssuedFragment loanIssuedFragment = new LoanIssuedFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_ACCOUNT_NUMBER, getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1));
+        int accountNumber = getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1);
+        bundle.putInt(ARG_ACCOUNT_NUMBER, accountNumber);
         loanIssuedFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.loanFragment, loanIssuedFragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack("LoanReturnFragment")
+                .replace(R.id.loanFragment, loanIssuedFragment).commit();
     }
 }

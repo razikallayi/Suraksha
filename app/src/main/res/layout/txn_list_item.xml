@@ -15,7 +15,6 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <TextView
                 android:id="@+id/txnAccountNo"
                 android:layout_width="wrap_content"
@@ -49,17 +48,28 @@
                 <!--android:layout_height="24dp"-->
                 <!--android:src="@drawable/ic_transaction_48dp" />-->
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/txnLedgerImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:padding="@dimen/spacing_very_tiny"
+                    android:src="@drawable/ic_24_loan_rupee_plastered"
+                    android:visibility="gone"
+                    />
 
                 <TextView
                     android:id="@+id/txnLedger"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
+                    android:layout_toEndOf="@id/txnLedgerImage"
+                    android:textColor="@color/colorSecondaryAccent"
                     android:text="LEDGER"
                     android:textSize="@dimen/font_normal" />
 
@@ -68,8 +78,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-thin"
-                    android:textColor="@color/gray_dark"
+                    android:textColor="@color/black"
                     android:text="2016, 3:46PM"
+                    android:layout_below="@id/txnLedger"
                     android:textSize="@dimen/font_small" />
 
                 <TextView
@@ -77,9 +88,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
+                    android:layout_below="@id/txnCreatedAt"
                     android:text="sys"
                     android:textSize="@dimen/font_medium" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="0dp"

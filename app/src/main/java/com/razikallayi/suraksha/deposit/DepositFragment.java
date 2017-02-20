@@ -16,6 +16,8 @@ import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.utils.Utility;
 
+import static com.razikallayi.suraksha.R.id.tvActonButton;
+
 public class DepositFragment extends Fragment {
     public static final String TAG = DepositFragment.class.getSimpleName();
     /**
@@ -40,6 +42,7 @@ public class DepositFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.deposit_fragment, container, false);
         RecyclerView depositRecyclerView = (RecyclerView) rootView.findViewById(R.id.deposited_list);
         depositRecyclerView.setHasFixedSize(true);
+        depositRecyclerView.setNestedScrollingEnabled(false);
 
 //        // use a linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -59,16 +62,19 @@ public class DepositFragment extends Fragment {
         mTotalDepositAmount = (TextView) rootView.findViewById(R.id.tvTotalDepositAmount);
         mTotalDepositAmount.setText(Utility.formatAmountInRupees(mContext,depositCount * Utility.getMonthlyDepositAmount()));
 
-        TextView memberNameTv = (TextView) rootView.findViewById(R.id.depositMemberName);
+        TextView memberNameTv = (TextView) rootView.findViewById(R.id.tvMemberName);
         memberNameTv.setText(mMember.getName());
-        TextView memberAcNoTv = (TextView) rootView.findViewById(R.id.depositMemberAcNo);
+        TextView memberAddressTv = (TextView) rootView.findViewById(R.id.tvMemberAddress);
+        memberAddressTv.setText(mMember.getAddress());
+        TextView memberAcNoTv = (TextView) rootView.findViewById(R.id.tvAcNo);
         memberAcNoTv.setText(String.valueOf(mMember.getAccountNo()));
 
         // specify an adapter
         final DepositAdapter depositAdapter = new DepositAdapter(getContext(), mMember);
         depositRecyclerView.setAdapter(depositAdapter);
 
-        Button makeDepositBtn = (Button) rootView.findViewById(R.id.makeDepositButton);
+        Button makeDepositBtn = (Button) rootView.findViewById(tvActonButton);
+        makeDepositBtn.setText("Make Deposit");
         if (makeDepositBtn != null) {
             makeDepositBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

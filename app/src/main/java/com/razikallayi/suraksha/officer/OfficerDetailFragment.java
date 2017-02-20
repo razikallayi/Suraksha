@@ -8,16 +8,18 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.MemberDetailActivity;
 import com.razikallayi.suraksha.member.MemberListActivity;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 /**
  * A fragment representing a single Member detail screen.
@@ -41,7 +43,6 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
     private TextView mOfficerAddress;
     private TextView mOfficerCreatedAt;
     private TextView mOfficerUpdatedAt;
-    private ImageView mOfficerEdit;
 
 
     private static final String[] OFFICER_COLUMNS = new String[] {
@@ -72,6 +73,8 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
 //        if (getArguments().containsKey(ARG_OFFICER_ID)) {
 //            Activity activity = this.getActivity();
 //            CollapsingToolbarLayout appBarLayout =
@@ -99,6 +102,25 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
         super.onActivityCreated(savedInstanceState);
 
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_officer_details_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.edit_officer) {
+            Intent editOfficer = new Intent(getContext(),EditOfficerActivity.class);
+            editOfficer.putExtra(EditOfficerActivity.ARG_OFFICER_ID,
+                    getArguments().getLong(ARG_OFFICER_ID));
+            startActivity(editOfficer);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
@@ -115,7 +137,6 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
         mOfficerAddress   = (TextView) rootView.findViewById(R.id.tvOfficerAddress );
         mOfficerCreatedAt = (TextView) rootView.findViewById(R.id.tvOfficerCreatedAt );
         mOfficerUpdatedAt = (TextView) rootView.findViewById(R.id.tvOfficerUpdatedAt );
-        mOfficerEdit      = (ImageView) rootView.findViewById(R.id.iv_edit_officer );
 
         return rootView;
     }
@@ -148,21 +169,11 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
                     mOfficerAddress.setText(data.getString(COL_ADDRESS));
                     mOfficerCreatedAt.setText(CalendarUtils.formatDateTime(data.getLong(COL_CREATED_AT)));
                     mOfficerUpdatedAt.setText(CalendarUtils.formatDateTime(data.getLong(COL_UPDATED_AT)));
-                    if(data.getInt(COL_IS_ADMIN)==1?true:false){
+                    if(data.getInt(COL_IS_ADMIN) == 1){
                         mOfficerIsAdmin.setVisibility(View.VISIBLE);
                     }else {
                         mOfficerIsAdmin.setVisibility(View.GONE);
                     }
-
-                    mOfficerEdit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent editOfficer = new Intent(getContext(),EditOfficerActivity.class);
-                            editOfficer.putExtra(EditOfficerActivity.ARG_OFFICER_ID,
-                                    getArguments().getLong(ARG_OFFICER_ID));
-                            startActivity(editOfficer);
-                        }
-                    });
                 }
                 break;
         }

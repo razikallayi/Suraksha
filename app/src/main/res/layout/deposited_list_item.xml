@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/deposit_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,9 +8,18 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/depositCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12"
+        android:textSize="@dimen/font_huge"
+        android:fontFamily="sans-serif-thin"/>
+
+    <TextView
         android:id="@+id/depositMonth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/depositCount"
         android:accessibilityLiveRegion="polite"
         android:fontFamily="sans-serif-light"
         android:padding="@dimen/spacing_extra_tiny"
@@ -34,8 +43,10 @@
         android:id="@+id/depositCreatedAt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/depositCount"
         android:accessibilityLiveRegion="polite"
         android:textAlignment="center"
+        android:layout_below="@id/depositMonth"
         android:text="June 01 2016"
         android:textSize="@dimen/font_medium"
         />
@@ -44,6 +55,8 @@
         android:id="@+id/depositOfficer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/depositCount"
+        android:layout_below="@id/depositCreatedAt"
         android:accessibilityLiveRegion="polite"
         android:textAlignment="center"
         android:text="officer"
@@ -58,6 +71,8 @@
         android:accessibilityLiveRegion="polite"
         android:textAlignment="center"
         android:textColor="#500"
+        android:layout_toEndOf="@+id/depositCount"
+        android:layout_below="@id/depositOfficer"
         android:text="here there might be a lot of content. This is just a sample"
         android:textSize="@dimen/font_small" />
 
@@ -65,7 +80,8 @@
         android:id="@+id/depositListItemBottomLine"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_below="@id/depositRemarks"
         android:background="@color/colorSeparatorLine"
         android:layout_marginTop="@dimen/spacing_large"
         />
-</LinearLayout>
+</RelativeLayout>

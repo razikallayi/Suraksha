@@ -13,220 +13,276 @@
     tools:context=".HomeActivity"
     tools:showIn="@layout/app_bar_base">
 
-    <Button
-        android:id="@+id/btnDebug"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:visibility="gone"
-        android:text="Debug" />
-
-
-    <Button
-        android:id="@+id/btnRegistration"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Member Registration" />
-
-    <Button
-        android:id="@+id/btnMemberList"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Members" />
-
-    <Button
-        android:id="@+id/btnCreateOfficer"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create Officer" />
-
-    <Button
-        android:id="@+id/btnTxnReport"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Report" />
-
-
-    <Button
-        android:id="@+id/btnLogout"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout" />
-
-    <!-- A CardView with a linear view inside-->
-    <android.support.v7.widget.CardView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/llContentBase"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <!-- A CardView with a linear view inside-->
+            <android.support.v7.widget.CardView
+                android:id="@+id/statusCard"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="3"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Registered members"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <TextView
+                            android:id="@+id/tvActiveMembers"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|end"
+                            android:padding="10dp"
+                            android:text="test32"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="3"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Working Money Fund"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <TextView
+                            android:id="@+id/tvWmf"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|end"
+                            android:padding="10dp"
+                            android:text="test32"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Total Deposit"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <TextView
+                            android:id="@+id/tvTotalDeposit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|end"
+                            android:padding="10dp"
+                            android:text="213132.0"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Total Loan Payed"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <TextView
+                            android:id="@+id/tvTotalLoanPayed"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|end"
+                            android:padding="10dp"
+                            android:text="213132.0"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|start"
+                            android:padding="10dp"
+                            android:text="Total Loan Return"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <TextView
+                            android:id="@+id/tvTotalLoanReturn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:accessibilityLiveRegion="polite"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center|end"
+                            android:padding="10dp"
+                            android:text="213132.0"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView style="@style/HomeCards"
+                android:visibility="gone">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="3"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:text="Registered members"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:id="@+id/debug_fa_icon"
+                    style="@style/HomeFAIcons"
+                    android:textColor="@color/blue_dull"
+                    android:text="@string/fa_ic_debug" />
+
+                <Button
+                    android:id="@+id/btnDebug"
+                    style="@style/HomeButtons"
+                    android:text="Debug"
+                    />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView style="@style/HomeCards">
 
                 <TextView
-                    android:id="@+id/tvActiveMembers"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    android:text="test32"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+                    android:id="@+id/member_add_fa_icon"
+                    style="@style/HomeFAIcons"
+                    android:textColor="@color/red_dull"
+                    android:text="@string/fa_ic_member_add" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnRegistration"
+                    style="@style/HomeButtons"
+                    android:text="Member Registration" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView style="@style/HomeCards">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="3"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:text="Working Money Fund"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:id="@+id/members_fa_icon"
+                    style="@style/HomeFAIcons"
+                    android:textColor="@color/green_dull"
+                    android:text="@string/fa_ic_member_details" />
+
+                <Button
+                    android:id="@+id/btnMemberList"
+                    style="@style/HomeButtons"
+                    android:text="Members"
+                    />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView style="@style/HomeCards">
 
                 <TextView
-                    android:id="@+id/tvWmf"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    android:text="test32"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+                    android:id="@+id/officer_fa_icon"
+                    style="@style/HomeFAIcons"
+                    android:textColor="@color/teal_dull"
+                    android:text="@string/fa_ic_officer" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnCreateOfficer"
+                    style="@style/HomeButtons"
+                    android:text="Create Officer" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView style="@style/HomeCards">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:text="Total Deposit"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:id="@+id/reports_fa_icon"
+                    style="@style/HomeFAIcons"
+                    android:textColor="@color/purple_dull"
+                    android:text="@string/fa_ic_reports" />
+
+                <Button
+                    android:id="@+id/btnTxnReport"
+                    style="@style/HomeButtons"
+                    android:text="Reports" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView style="@style/HomeCards"
+                android:layout_marginBottom="10dp">
 
                 <TextView
-                    android:id="@+id/tvTotalDeposit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    android:text="213132.0"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
+                    android:id="@+id/lock_fa_icon"
+                    style="@style/HomeFAIcons"
+                    android:textColor="@color/orange_dull"
+                    android:text="@string/fa_ic_lock" />
 
+                <Button
+                    android:id="@+id/btnLogout"
+                    style="@style/HomeButtons"
+                    android:text="Logout" />
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:text="Total Loan Payed"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <TextView
-                    android:id="@+id/tvTotalLoanPayed"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    android:text="213132.0"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|start"
-                    android:padding="10dp"
-                    android:text="Total Loan Return"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <TextView
-                    android:id="@+id/tvTotalLoanReturn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:accessibilityLiveRegion="polite"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center|end"
-                    android:padding="10dp"
-                    android:text="213132.0"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-            </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

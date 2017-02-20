@@ -6,9 +6,9 @@
     <!--<color name="colorPrimaryDark">#77063b</color>-->
     <!--<color name="colorAccent">#ffffff</color>-->
 
-    <color name="colorPrimary">#4c8eaf</color>
-    <color name="colorPrimaryDark">#053652</color>
-    <color name="colorAccent">#e3683f</color>
+    <color name="colorPrimary">#795548</color>
+    <color name="colorPrimaryDark">#3e2723</color>
+    <color name="colorAccent">#b9365b</color>
 
     <color name="colorPrimaryLight">#2d929f</color>
     <color name="colorSecondary">#6a03bf</color>
@@ -50,6 +50,16 @@
     <color name="yellow">#ffCC00</color>
     <color name="purple">#ab47bc</color>
     <color name="green">#43a047</color>
+    <color name="maroon">#880e4f</color>
+    <color name="brown">#4e342e</color>
+
+
+    <color name="green_dull">#81c784</color>
+    <color name="blue_dull">#64b5f6</color>
+    <color name="red_dull">#e57373</color>
+    <color name="teal_dull">#4db6ac</color>
+    <color name="orange_dull">#ffb74d</color>
+    <color name="purple_dull">#ba68c8</color>
 
     <color name="dark_blue">#1a237e</color>
     <color name="blue">#0277bd</color>

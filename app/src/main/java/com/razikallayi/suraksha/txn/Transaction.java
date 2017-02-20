@@ -100,7 +100,23 @@ public class Transaction implements Serializable {
         return amount;
     }
 
-
+/*
+    //Get Instalment count of loan return
+    public int getInstalmentCount(Context context) {
+        Cursor cursor = context.getContentResolver().query(SurakshaContract.TxnEntry.buildGetTotalDeposit(),
+                null, SurakshaContract.TxnEntry._ID + "= ?", new String[]{String.valueOf(this.loanPayedId)},
+                null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        Double amount = null;
+        if (cursor != null) {
+            amount = cursor.getDouble(0);
+            cursor.close();
+        }
+        return amount;
+    }
+*/
     //Get Total Loan Payed amount in suraksha
     public static Double getTotalLoanPayed(Context context) {
 
@@ -179,7 +195,12 @@ public class Transaction implements Serializable {
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
         values.put(SurakshaContract.TxnEntry.COLUMN_NARRATION, txn.getNarration());
         values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer_id());
-        values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, txn.getCreatedAt());
+        if(txn.createdAt == 0) {
+            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        }else{
+            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, txn.createdAt);
+        }
+        values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, System.currentTimeMillis());
 
         return values;
     }

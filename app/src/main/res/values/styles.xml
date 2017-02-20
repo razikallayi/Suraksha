@@ -47,5 +47,26 @@
 
     <style name="SurakshaLight.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="HomeButtons" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:textColor">@color/maroon</item>
+    </style>
+    <style name="HomeFAIcons" parent="@style/AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:textSize">@dimen/font_extra_huge</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="HomeCards" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
 
 </resources>

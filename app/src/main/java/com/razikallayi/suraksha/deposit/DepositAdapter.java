@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +64,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
 //        holder.mAmountTextView.setText(Utility.formatAmountInRupees(holder.mAmountTextView.getContext(),
 //                Utility.getMonthlyDepositAmount()));
         Transaction depositedTxns = mDepositedTxnList.get(position);
+        holder.mCountTextView.setText(String.valueOf(this.getItemCount() - position));
         long depositMonth = depositedTxns.getDefinedDepositMonth();
         String monthAndYear = CalendarUtils.readableDepositMonth(depositMonth);
         holder.mMonthTextView.setText(monthAndYear);
@@ -90,7 +91,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
         return mDepositedTxnList.size();
     }
 
-     void onMakeDepositClick(View view, LayoutInflater inflater) {
+    void onMakeDepositClick(View view, LayoutInflater inflater) {
         //Get Next deposit Month
         Calendar depositMonth = mMember.getNextDepositMonthCalendar(mDepositedTxnList);
 
@@ -122,7 +123,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
 
     }
 
-    public void makeDeposit(long depositMonth, String remarks) {
+    private void makeDeposit(long depositMonth, String remarks) {
         Transaction txn = mMember.makeDeposit(mContext, depositMonth, remarks);
         mDepositedTxnList = mMember.fetchDeposits(mContext);
         notifyDataSetChanged();
@@ -131,7 +132,7 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
             String message = mMember.getName() + ", your " + mContext.getResources().getString(R.string.app_name)
                     + " account " + mMember.getAccountNo()
                     + " is credited with a deposit of " + (int) txn.getAmount()
-                    + CalendarUtils.readableDepositMonth(txn.getDefinedDepositMonth());
+                    + " " + CalendarUtils.readableDepositMonth(txn.getDefinedDepositMonth());
             boolean result = SmsUtils.sendSms(message, mobileNumber);
             if (result) {
                 Toast.makeText(mContext, "SMS sent to " + mMember.getName(), Toast.LENGTH_SHORT).show();
@@ -145,8 +146,9 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        LinearLayout mDepositItemLayout;
+        RelativeLayout mDepositItemLayout;
 //      TextView mAmountTextView;
+        TextView mCountTextView;
         TextView mCreatedAtTextView;
         TextView mOfficerTextView;
         TextView mRemarksTextView;
@@ -154,9 +156,10 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
 
         public ViewHolder(View v) {
             super(v);
-            mDepositItemLayout = (LinearLayout) v.findViewById(R.id.deposit_item_layout);
+            mDepositItemLayout = (RelativeLayout) v.findViewById(R.id.deposit_item_layout);
             mMonthTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositMonth);
 //          mAmountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositAmount);
+            mCountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositCount);
             mCreatedAtTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositCreatedAt);
             mOfficerTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositOfficer);
             mRemarksTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositRemarks);

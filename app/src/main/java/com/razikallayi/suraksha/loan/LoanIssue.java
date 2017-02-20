@@ -36,6 +36,19 @@ public class LoanIssue implements Serializable {
     public LoanIssue() {
     }
 
+    public static LoanIssue getLoanIssue(Context context, long loanIssueId) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.LoanIssueEntry.buildLoanIssueUri(loanIssueId),
+                LoanIssueQuery.PROJECTION
+                , null, null, null);
+        if (cursor == null || cursor.getCount()==0) {
+            return null;
+        }
+        cursor.moveToFirst();
+        return getLoanIssueFromCursor(context,cursor);
+    }
+
+
     public LoanIssue(int accountNumber, double amount, String purpose, int securityAccountNo, int loanInstalmentTimes, String officeStatement) {
         this.accountNumber = accountNumber;
         this.amount = amount;
@@ -57,7 +70,11 @@ public class LoanIssue implements Serializable {
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_SECURITY_ACCOUNT_NUMBER, loanIssue.securityAccountNo);
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_OFFICE_STATEMENT, loanIssue.officeStatement);
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT, loanIssue.closedAt);
-        values.put(SurakshaContract.LoanIssueEntry.COLUMN_CREATED_AT, loanIssue.createdAt);
+        if(loanIssue.createdAt == 0) {
+            values.put(SurakshaContract.LoanIssueEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        }else{
+            values.put(SurakshaContract.LoanIssueEntry.COLUMN_CREATED_AT, loanIssue.createdAt);
+        }
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_UPDATED_AT, loanIssue.updatedAt);
 
         return values;
@@ -65,7 +82,7 @@ public class LoanIssue implements Serializable {
 
     public static LoanIssue getLoanIssueFromCursor(Context context, Cursor cursor) {
         LoanIssue loanIssue = new LoanIssue();
-        if (cursor.getCount() > 0) {
+        if (cursor!=null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             loanIssue = new LoanIssue(cursor.getInt(LoanIssueQuery.COL_FK_ACCOUNT_NUMBER),
                     cursor.getDouble(LoanIssueQuery.COL_AMOUNT),
@@ -135,7 +152,7 @@ public class LoanIssue implements Serializable {
     }
 
     public int bystanderReleaseInstalment() {
-        return getLoanInstalmentTimes() / 2;
+        return (int) Math.ceil((double) getLoanInstalmentTimes() / 2);
     }
 
     /**
@@ -146,12 +163,12 @@ public class LoanIssue implements Serializable {
      * @return Uri
      */
     public Transaction saveLoanReturn(Context context, String narration) {
-        int nextInstalmentCount = nextInstalmentCount(context);
+        int nextInstalmentCount = this.nextInstalmentCount(context);
 
-        int maxLoanInstalmentTime = getLoanInstalmentTimes();
+        int maxLoanInstalmentTime = this.getLoanInstalmentTimes();
         //Check if instalment is already complete
         if (nextInstalmentCount > maxLoanInstalmentTime) {
-            closeLoanIssued(context);
+            this.closeLoan(context);
             getMember(context).saveHasLoan(context, false);
             return null;
         }
@@ -161,33 +178,41 @@ public class LoanIssue implements Serializable {
                 SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER,
                 narration, AuthUtils.getAuthenticatedOfficerId(context));
         txnLoanReturn.setLoanPayedId(id);
-        txnLoanReturn.setCreatedAt(System.currentTimeMillis());
 
         ContentValues values = Transaction.getTxnContentValues(txnLoanReturn);
         context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
+        this.getLoanReturnTxnList(context);
 
         //If maximum instalment reached, close loan and free member
         if (nextInstalmentCount == maxLoanInstalmentTime) {
-            closeLoanIssued(context);
+            this.closeLoan(context);
             getMember(context).saveHasLoan(context, false);
         }
 
         //       if total loan returned amount is half of loan issued, security member lock is freed
-        if (nextInstalmentCount == bystanderReleaseInstalment()) {
+        if (nextInstalmentCount == this.bystanderReleaseInstalment()) {
             getSecurityMember(context).saveIsLoanBlocked(context, false);
         }
         return txnLoanReturn;
     }
 
-    public void closeLoanIssued(Context context) {
+    public void closeLoan(Context context) {
         ContentValues values = new ContentValues();
-        values.put(SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT, System.currentTimeMillis());
-        values.put(SurakshaContract.LoanIssueEntry.COLUMN_UPDATED_AT, System.currentTimeMillis());
-
+        long currentTime = System.currentTimeMillis();
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT, currentTime);
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_UPDATED_AT, currentTime);
         context.getContentResolver().update(SurakshaContract.LoanIssueEntry.CONTENT_URI, values,
                 SurakshaContract.LoanIssueEntry._ID + "= ?", new String[]{String.valueOf(this.id)});
+        this.closedAt = currentTime;
+        this.updatedAt = currentTime;
     }
 
+    public boolean isClosed(){
+        if (this.closedAt>0){
+            return true;
+        }
+        return false;
+    }
     public Transaction getTransaction() {
         return transaction;
     }

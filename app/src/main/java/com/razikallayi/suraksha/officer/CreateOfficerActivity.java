@@ -3,6 +3,7 @@ package com.razikallayi.suraksha.officer;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
@@ -62,27 +63,7 @@ public class CreateOfficerActivity extends BaseActivity {
         mCreateOfficer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String password = txtPassword.getText().toString();
-                //Validating name column
-                if (TextUtils.isEmpty(txtName.getText().toString())) {
-                    txtName.setError(getString(R.string.name_is_required));
-                    txtName.requestFocus();
-                } else if (!TextUtils.isEmpty(txtMobile.getText().toString()) && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString())) {
-                    txtMobile.setError(getString(R.string.invalid_mobile_number));
-                    txtMobile.requestFocus();
-                } else if (TextUtils.isEmpty(txtUsername.getText().toString())) {
-                    txtUsername.setError(getString(R.string.username_is_required));
-                    txtUsername.requestFocus();
-                } else if (TextUtils.isEmpty(password)) {
-                    txtPassword.setError(getString(R.string.password_is_required));
-                    txtPassword.requestFocus();
-                } else if (password.length() < 4) {
-                    txtPassword.setError(getString(R.string.pin_should_be_minimum_4_digits));
-                    txtPassword.requestFocus();
-                } else if (!TextUtils.isDigitsOnly(password)) {
-                    txtPassword.setError(getString(R.string.pin_should_be_a_number));
-                    txtPassword.requestFocus();
-                } else {   //no errors in input
+                if(validateInputs()){   //no errors in input
                     mCreateOfficer.setEnabled(false);
                     Officer officer = getOfficerDetailsFromInput();
                     //Add the member to database
@@ -96,6 +77,54 @@ public class CreateOfficerActivity extends BaseActivity {
         });
     }
 
+    private boolean validateInputs(){
+        String password = txtPassword.getText().toString();
+        if (TextUtils.isEmpty(txtName.getText().toString().trim())) {
+            txtName.setError(getString(R.string.name_is_required));
+            txtName.requestFocus();
+            return false;
+        }
+        if (!TextUtils.isEmpty(txtMobile.getText().toString().trim())
+                && !SmsUtils.isValidMobileNumber(txtMobile.getText().toString().trim())) {
+            txtMobile.setError(getString(R.string.invalid_mobile_number));
+            txtMobile.requestFocus();
+            return false;
+        }
+        if (TextUtils.isEmpty(txtUsername.getText().toString().trim())) {
+            txtUsername.setError(getString(R.string.username_is_required));
+            txtUsername.requestFocus();
+            return false;
+        }
+        if (!TextUtils.isEmpty(txtUsername.getText().toString().trim())) {
+            Cursor cursor = getApplicationContext().getContentResolver().query(
+                    SurakshaContract.OfficerEntry.buildCheckOfficerExistUri(
+                            txtUsername.getText().toString().trim().toUpperCase()),null,null,null,null);
+            if (cursor.getCount() > 0) {
+                txtUsername.setError(getString(R.string.username_already_exist));
+                txtUsername.requestFocus();
+                return false;
+            }
+            cursor.close();
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            txtPassword.setError(getString(R.string.password_is_required));
+            txtPassword.requestFocus();
+            return false;
+        }
+        if (password.length() < 4) {
+            txtPassword.setError(getString(R.string.pin_should_be_minimum_4_digits));
+            txtPassword.requestFocus();
+            return false;
+        }
+        if (!TextUtils.isDigitsOnly(password)) {
+            txtPassword.setError(getString(R.string.pin_should_be_a_number));
+            txtPassword.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
 
     private Officer getOfficerDetailsFromInput() {
         //EditText Fields
@@ -107,7 +136,6 @@ public class CreateOfficerActivity extends BaseActivity {
         boolean isAdmin = switchIsAdmin.isChecked();
 
         Officer officer = new Officer(getApplicationContext(), name, mobile, username, password, address, isAdmin);
-        officer.setCreatedAt(System.currentTimeMillis());
         return officer;
     }
 

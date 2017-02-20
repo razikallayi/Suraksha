@@ -70,6 +70,7 @@
     <string name="title_create_officer">Create Officer</string>
     <string name="title_edit_officer">Edit Officer</string>
     <string name="username_is_required">Please enter username</string>
+    <string name="username_already_exist">Username already exist</string>
     <string name="password_is_required">Please enter pin</string>
     <string name="pin_should_be_a_number">Pin should be a number</string>
     <string name="pin_should_be_minimum_4_digits">Pin should have at least 4 digits</string>
@@ -104,6 +105,16 @@
 
     <string name="format_rupees">\u20B9<xliff:g id="rupee">%1.00f</xliff:g></string>
 
+
+
+    <!--FontAwsome Icons-->
+    <string name="fa_ic_member_details">&#xf2bb;</string>
+    <string name="fa_ic_member_add">&#xf234;</string>
+    <string name="fa_ic_reports">&#xf298;</string>
+    <string name="fa_ic_officer">&#xf27e;</string>
+    <string name="fa_ic_lock">&#xf023;</string>
+    <string name="fa_ic_debug">&#xf188;</string>
+
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 
@@ -127,6 +138,7 @@
     <string name="security_member_cannot_be_empty">Please select a security member</string>
     <string name="title_activity_settings">Settings</string>
 
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -141,6 +153,8 @@
     <string name="pref_default_display_name">John Smith</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+
+
     <string-array name="pref_example_list_titles">
         <item>Always</item>
         <item>When possible</item>

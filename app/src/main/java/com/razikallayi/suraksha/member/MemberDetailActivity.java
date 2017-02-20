@@ -50,7 +50,6 @@ public class MemberDetailActivity extends BaseActivity {
         if (null != savedInstanceState) {
             mMemberId = savedInstanceState.getLong(ARG_MEMBER_ID);
             mMemberName = savedInstanceState.getString(ARG_MEMBER_NAME);
-
         } else {
             mMemberId = getIntent().getLongExtra(ARG_MEMBER_ID, -1);
             mMemberName = getIntent().getStringExtra(ARG_MEMBER_NAME);

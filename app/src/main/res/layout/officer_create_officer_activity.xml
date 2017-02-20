@@ -109,8 +109,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:contentDescription="Create User"
-                android:text="@string/title_create_officer"
-                android:textStyle="bold" />
+                android:text="@string/title_create_officer" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

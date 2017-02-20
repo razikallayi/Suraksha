@@ -9,10 +9,11 @@
     <TextView android:text="@string/instalment" />
 
     <TextView
-        android:id="@+id/amountLoanIssueItem"
+        android:id="@+id/instalment_count_loan_return_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/spacing_medium"
         android:fontFamily="sans-serif-condensed"
         android:text="3"
         android:textSize="@dimen/font_large"
@@ -21,10 +22,11 @@
     <TextView android:text="@string/date" />
 
     <TextView
-        android:id="@+id/issued_date_loan_issue_item"
+        android:id="@+id/date_loan_return_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/spacing_medium"
         android:text="March 2016"
         android:textColor="@color/black"
         android:textSize="@dimen/font_medium" />
@@ -32,18 +34,20 @@
     <TextView android:text="Amount" />
 
     <TextView
-        android:id="@+id/guarantorNameLoanIssueItem"
+        android:id="@+id/amount_loan_return_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/spacing_medium"
         android:text="1000"
         android:textSize="@dimen/font_small" />
 
     <TextView android:text="Remarks" />
 
     <TextView
-        android:id="@+id/purpose_loan_issue_item"
-        android:layout_gravity="end"
+        android:id="@+id/remarks_loan_return_item"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/spacing_medium"
         android:text="delayed because they were not at home"
         android:textSize="@dimen/font_small" />
 
@@ -51,10 +55,11 @@
     <TextView android:text="Officer" />
 
     <TextView
-        android:id="@+id/officer_loan_issue_item"
+        android:id="@+id/officer_loan_return_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/spacing_medium"
         android:text="SSP"
         android:textSize="@dimen/font_small" />
 </GridLayout>

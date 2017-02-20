@@ -25,43 +25,64 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/loanAMF"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/text_margin"
-                    android:background="@color/red"
-                    android:text="@string/loan" />
+                    android:layout_weight="1"
+                    card_view:cardBackgroundColor="@color/red_dull">
 
+                    <TextView
+                        android:id="@+id/loanAMF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/text_margin"
+                        android:textSize="@dimen/font_large"
+                        android:textAlignment="center"
+                        android:text="@string/loan" />
+                </android.support.v7.widget.CardView>
 
-                <TextView
-                    android:id="@+id/depositAMF"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/text_margin"
-                    android:background="@color/yellow"
-                    android:text="@string/deposit" />
+                    android:layout_weight="1"
+                    card_view:cardBackgroundColor="@color/orange_dull">
+
+                    <TextView
+                        android:id="@+id/depositAMF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:padding="@dimen/text_margin"
+                        android:text="@string/deposit"
+                        android:textSize="@dimen/font_large" />
+                </android.support.v7.widget.CardView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal">
+                android:padding="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                >
 
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/cvIssueLoan"
                     android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_extra_tiny"
-                    android:layout_weight="1"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    card_view:cardBackgroundColor="@color/blue_dull">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:padding="@dimen/text_margin"
+                        android:padding="@dimen/spacing_tiny"
                         android:text="@string/issue_loan"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/font_large"
                         android:textStyle="bold" />
                 </android.support.v7.widget.CardView>
 
@@ -216,35 +237,6 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/loanIssuedCardView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_weight="1"
-                android:visibility="visible"
-                card_view:cardCornerRadius="0dp"
-                card_view:cardUseCompatPadding="true"
-                card_view:contentPadding="@dimen/spacing_tiny">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/loan_issued"
-                    android:textColor="@color/gray" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/loanIssuedList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_small"
-                    app:layoutManager="LinearLayoutManager"
-                    tools:context=".account.AccountManipulationsFragment"
-                    tools:listitem="@layout/loan_issued_list_item" />
-
-            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

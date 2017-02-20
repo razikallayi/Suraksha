@@ -50,6 +50,7 @@ import java.util.concurrent.ExecutionException;
 public class EditMemberActivity extends BaseActivity {
 
     public static final String ARG_MEMBER_ID = "member_id";
+    private Member member;
     //Intent to pick Contact
     private static final int PICK_CONTACT_REQUEST = 1;
     //Intent to pick avatar from gallery
@@ -65,10 +66,8 @@ public class EditMemberActivity extends BaseActivity {
     private ImageView imageViewAvatar;
     private byte[] memberAvatar = null;
     private Spinner mRelationWithNomineeSpinner;
-    private CheckBox isAcceptedTerms;
     private RegisterMemberTask mRegisterMemberTask = null;
 
-    private Member memberBeforeEditing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +103,7 @@ public class EditMemberActivity extends BaseActivity {
         txtNominee = (EditText) sv.findViewById(R.id.txtNominee);
         txtAddressOfNominee = (EditText) sv.findViewById(R.id.txtAddressOfNominee);
         txtRemarks = (EditText) sv.findViewById(R.id.txtRemarks);
-        isAcceptedTerms = (CheckBox) sv.findViewById(R.id.accept_terms);
+        CheckBox isAcceptedTerms = (CheckBox) sv.findViewById(R.id.accept_terms);
         isAcceptedTerms.setVisibility(View.GONE);
 
         //Spinner
@@ -123,13 +122,15 @@ public class EditMemberActivity extends BaseActivity {
 
 
         imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
-        memberBeforeEditing = setMemberDetailsFromId(getIntent().getLongExtra(ARG_MEMBER_ID, -1));
-        mRelationWithNomineeSpinner.setSelection(adapter.getPosition(memberBeforeEditing.getRelationWithNominee()));
+        long memberId = getIntent().getLongExtra(ARG_MEMBER_ID, -1);
+        member = Member.getMemberFromId(getApplicationContext(), memberId);
+        fillMemberDetails(member);
+        mRelationWithNomineeSpinner.setSelection(adapter.getPosition(member.getRelationWithNominee()));
 
         // get selected radio button from radioGroup
         RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
         int oldMemberGender;
-        if (memberBeforeEditing.getGender().equals("Male")) {
+        if (member.getGender().equals("Male")) {
             oldMemberGender = R.id.rdoMale;
         } else {
             oldMemberGender = R.id.rdoFemale;
@@ -259,13 +260,21 @@ public class EditMemberActivity extends BaseActivity {
         String relationWithNominee = mRelationWithNomineeSpinner.getSelectedItem().toString();
         String remarks = txtRemarks.getText().toString();
         if (relationWithNominee.equals(mRelationWithNomineeSpinner.getItemAtPosition(0))) {
-            relationWithNominee = memberBeforeEditing.getRelationWithNominee();
+            relationWithNominee = member.getRelationWithNominee();
         }
-        Member member = new Member(getApplicationContext(), name, alias, gender, father, spouse,
-                occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
-        member.setAccountNo(memberBeforeEditing.getAccountNo());
-        member.setCreatedAt(memberBeforeEditing.getCreatedAt());
-        member.setUpdatedAt(System.currentTimeMillis());
+        member.setName(name);
+        member.setAlias(alias);
+        member.setGender(gender);
+        member.setFather( father);
+        member.setSpouse( spouse);
+        member.setOccupation(occupation);
+        member.setAge(age);
+        member.setMobile(mobile);
+        member.setAddress(address);
+        member.setNominee(nominee);
+        member.setRelationWithNominee(relationWithNominee);
+        member.setAddressOfNominee(addressOfNominee);
+        member.setRemarks(remarks);
         if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
         }
@@ -273,11 +282,10 @@ public class EditMemberActivity extends BaseActivity {
     }
 
 
-    private Member setMemberDetailsFromId(long memberId) {
-        if (memberId == -1) {
+    private Member fillMemberDetails(Member member) {
+        if (member.getId() == -1) {
             return null;
         }
-        Member member = Member.getMemberFromId(getApplicationContext(), memberId);
         //
         //    //Radio Button
         //        // get selected radio button from radioGroup
@@ -376,16 +384,16 @@ public class EditMemberActivity extends BaseActivity {
      * the user.
      */
     public class RegisterMemberTask extends AsyncTask<Void, Void, Boolean> {
-        private final Member mMember;
+        private final Member member;
 
         RegisterMemberTask(Member member) {
-            this.mMember = member;
+            this.member = member;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             //Save Member
-            ContentValues values = Member.getMemberContentValues(mMember);
+            ContentValues values = Member.getMemberContentValues(member);
             getContentResolver().update(
                     SurakshaContract.MemberEntry.CONTENT_URI, values,
                     SurakshaContract.MemberEntry._ID + "=?",
@@ -417,7 +425,7 @@ public class EditMemberActivity extends BaseActivity {
         Context mContext;
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.avatarProgress);
 
-        public saveAvatarTask(Context context) {
+        saveAvatarTask(Context context) {
             mContext = context;
         }
 
@@ -437,9 +445,7 @@ public class EditMemberActivity extends BaseActivity {
                         .get();
                 memberAvatar = ImageUtils.bitmapToByteArray(bitmap);
                 return bitmap;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
             return null;

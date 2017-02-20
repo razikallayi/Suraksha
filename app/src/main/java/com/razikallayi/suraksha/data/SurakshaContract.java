@@ -43,6 +43,7 @@ public class SurakshaContract {
 
     // Possible paths (appended to base content URI for possible URI's)
     public static final String PATH_OFFICER = "officer";
+    public static final String PATH_OFFICER_EXIST = "officer_exist";
 
     public static final String PATH_LOAN_ISSUE = "loan_issue";
 
@@ -169,7 +170,7 @@ public class SurakshaContract {
         //Change in Transaction, if you make any change here
         public static final int REGISTRATION_FEE_LEDGER = 1;
         public static final int DEPOSIT_LEDGER = 2;
-        public static final int LOAN_PAYED_LEDGER = 3;
+        public static final int LOAN_ISSUED_LEDGER = 3;
         public static final int LOAN_RETURN_LEDGER = 4;
         public static final int WORKING_COST_LEDGER = 5;
 
@@ -273,6 +274,11 @@ public class SurakshaContract {
         public static Uri buildLoanIssueUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
+        public static String getLoanIssueId(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
         public static long getLoanIssueIdFromUri(Uri uri) {
             return Long.valueOf(uri.getPathSegments().get(1));
         }
@@ -306,6 +312,15 @@ public class SurakshaContract {
         public static String getOfficerId(Uri uri) {
             return uri.getPathSegments().get(1);
         }
+
+        public static Uri buildCheckOfficerExistUri(String username) {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_OFFICER_EXIST).appendPath(username).build();
+        }
+
+        public static String getUsername(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
     }
 
 

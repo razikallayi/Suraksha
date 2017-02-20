@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
@@ -176,8 +177,10 @@ public class Member implements Serializable {
         values.put(SurakshaContract.MemberEntry.COLUMN_IS_LOAN_BLOCKED, member.isLoanBlocked);
         values.put(SurakshaContract.MemberEntry.COLUMN_CLOSED_AT, member.closedAt);
         values.put(SurakshaContract.MemberEntry.COLUMN_IS_DELETED, member.isDeleted);
-        values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, member.createdAt);
-        values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, member.updatedAt);
+        if(member.createdAt == 0) {
+            values.put(SurakshaContract.MemberEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        }
+        values.put(SurakshaContract.MemberEntry.COLUMN_UPDATED_AT, System.currentTimeMillis());
 
         return values;
     }
@@ -335,10 +338,11 @@ public class Member implements Serializable {
     }
 
     public boolean hasDepositDue(Context context) {
-        if (!CalendarUtils.isDepositStartDay()) {
+        /*if (!CalendarUtils.isDepositStartDay()) {
             return false;
-        }
+        }*/
         Calendar nextDepositMonth = getNextDepositMonthCalendar(context);
+        Log.d("FISH", "hasDepositDue: "+nextDepositMonth);
         nextDepositMonth.set(Calendar.DATE, CalendarUtils.getDueDay());
         return CalendarUtils.getDepositStartDay() >= CalendarUtils.normalizeDate(nextDepositMonth.getTimeInMillis());
     }

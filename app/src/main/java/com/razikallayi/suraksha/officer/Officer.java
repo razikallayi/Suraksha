@@ -58,6 +58,8 @@ public class Officer {
             o.password = cursor.getString(OfficerQuery.COL_PASSWORD);
             o.address = cursor.getString(OfficerQuery.COL_ADDRESS);
             o.setAdmin(cursor.getInt(OfficerQuery.COL_IS_ADMIN) == 1);
+            o.createdAt = cursor.getLong(OfficerQuery.COL_CREATED_AT);
+            o.updatedAt = cursor.getLong(OfficerQuery.COL_UPDATED_AT);
             cursor.close();
             return o;
         }
@@ -108,7 +110,10 @@ public class Officer {
         values.put(SurakshaContract.OfficerEntry.COLUMN_PASSWORD, officer.getPassword());
         values.put(SurakshaContract.OfficerEntry.COLUMN_ADDRESS, officer.getAddress());
         values.put(SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN, officer.isAdmin() ? 1 : 0);
-        values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        if(officer.createdAt==0) {
+            values.put(SurakshaContract.OfficerEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
+        }
+        values.put(SurakshaContract.OfficerEntry.COLUMN_UPDATED_AT, System.currentTimeMillis());
 
         return values;
     }
@@ -148,11 +153,11 @@ public class Officer {
     }
 
     public String getUsername() {
-        return username;
+        return username.toUpperCase();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.toUpperCase();
     }
 
     public String getPassword() {

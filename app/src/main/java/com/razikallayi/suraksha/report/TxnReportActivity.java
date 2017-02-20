@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
@@ -33,9 +34,10 @@ public class TxnReportActivity extends BaseActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
         DatePickerDialog.OnDateSetListener {
 
-    public static final int TXN_LOADER = 500;
+    public static final int TXN_LOADER = 0X500;
     public LinkedHashMap<Long, List<Transaction>> mTransactionsMap;
     public List<ListItem> mItems;
+    public TxnAdapter mTxnAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,10 @@ public class TxnReportActivity extends BaseActivity implements
 //        String time = "You picked the following time: "+hourOfDay+"h"+minute;
 //        timeTextView.setText(time);
         String date = "You picked the following date: " + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-        TextView dateTextView = (TextView) findViewById(R.id.txnDate);
-        dateTextView.setText(date);
+
+        Toast.makeText(this, date, Toast.LENGTH_SHORT).show();
+//        TextView dateTextView = (TextView) findViewById(R.id.txnDate);
+//        dateTextView.setText(date);
     }
 
     @Override
@@ -138,8 +142,8 @@ public class TxnReportActivity extends BaseActivity implements
         }
 
         RecyclerView transactionRecyclerView = (RecyclerView) findViewById(R.id.txnRecyclerView);
-        TxnAdapter adapter = new TxnAdapter(getLayoutInflater(), mItems);
-        transactionRecyclerView.setAdapter(adapter);
+        mTxnAdapter = new TxnAdapter(getLayoutInflater(), mItems);
+        transactionRecyclerView.setAdapter(mTxnAdapter);
     }
 
     @Override
@@ -192,7 +196,13 @@ public class TxnReportActivity extends BaseActivity implements
                 View itemView = mLayoutInflater.inflate(R.layout.txn_list_item_header, parent, false);
                 return new HeaderViewHolder(itemView);
             } else {
-                View itemView = mLayoutInflater.inflate(R.layout.txn_list_item, parent, false);
+                final View itemView = mLayoutInflater.inflate(R.layout.txn_list_item, parent, false);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
                 return new TxnViewHolder(itemView);
             }
         }

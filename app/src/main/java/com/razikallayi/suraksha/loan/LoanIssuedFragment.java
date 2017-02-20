@@ -1,7 +1,6 @@
 package com.razikallayi.suraksha.loan;
 
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,23 +25,19 @@ public class LoanIssuedFragment extends Fragment implements LoaderManager.Loader
     public static final String ARG_ACCOUNT_NUMBER = "account_number";
     private static final int LOAN_ISSUED_LOADER = 0x123;
     private int accountNumber;
-    private LoanIssuedRecyclerViewAdapter mLoanIssueAdapter;
+    private LoanIssuedAdapter mLoanIssueAdapter;
 
     public LoanIssuedFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        accountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER, -1);
-    }
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.loan_issued_fragment, container, false);
+        accountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER, -1);
         RecyclerView loanIssuedRecyclerView = (RecyclerView) rootView.findViewById(R.id.loan_issued_list);
-        Log.d("FISH", "onCreateView: in fragment");
 //        loanIssuedRecyclerView.setHasFixedSize(true);
 
 //        // use a linear layout manager
@@ -56,7 +50,7 @@ public class LoanIssuedFragment extends Fragment implements LoaderManager.Loader
 //        loanIssuedRecyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter
-        mLoanIssueAdapter = new LoanIssuedRecyclerViewAdapter();
+        mLoanIssueAdapter = new LoanIssuedAdapter();
         mLoanIssueAdapter.setFragmentManager(getActivity().getSupportFragmentManager());
         loanIssuedRecyclerView.setAdapter(mLoanIssueAdapter);
 
@@ -80,7 +74,7 @@ public class LoanIssuedFragment extends Fragment implements LoaderManager.Loader
                                 + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? and "
                                 + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? ",
                         new String[]{String.valueOf(accountNumber),
-                                String.valueOf(SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER),
+                                String.valueOf(SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER),
                                 String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)
                         },
                         SurakshaContract.LoanIssueEntry.TABLE_NAME + "."
@@ -104,9 +98,4 @@ public class LoanIssuedFragment extends Fragment implements LoaderManager.Loader
     public void onLoaderReset(Loader<Cursor> loader) {
         mLoanIssueAdapter.swapCursor(null);
     }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, long loanIssueId);
-    }
-
 }

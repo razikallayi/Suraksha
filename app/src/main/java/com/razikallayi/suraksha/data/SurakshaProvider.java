@@ -33,7 +33,9 @@ public class SurakshaProvider extends ContentProvider {
     static final int TXN_TOTAL_LOAN_RETURN = 361;
     static final int OFFICER = 400;
     static final int OFFICER_ID = 401;
+    static final int OFFICER_EXIST = 402;
     static final int LOAN_ISSUE = 500;
+    static final int LOAN_ISSUE_ID = 501;
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sAccountsOfMemberQueryBuilder;
@@ -118,6 +120,7 @@ public class SurakshaProvider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, SurakshaContract.PATH_OFFICER, OFFICER);
         matcher.addURI(authority, SurakshaContract.PATH_OFFICER + "/#", OFFICER_ID);
+        matcher.addURI(authority, SurakshaContract.PATH_OFFICER_EXIST + "/*", OFFICER_EXIST);
 
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT, ACCOUNT);
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_NUMBER + "/#", ACCOUNT_NUMBER);
@@ -135,6 +138,7 @@ public class SurakshaProvider extends ContentProvider {
         matcher.addURI(authority, SurakshaContract.PATH_TXN_TOTAL_LOAN_RETURN, TXN_TOTAL_LOAN_RETURN);
 
         matcher.addURI(authority, SurakshaContract.PATH_LOAN_ISSUE, LOAN_ISSUE);
+        matcher.addURI(authority, SurakshaContract.PATH_LOAN_ISSUE + "/#", LOAN_ISSUE_ID);
 
         return matcher;
     }
@@ -281,8 +285,21 @@ public class SurakshaProvider extends ContentProvider {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.OfficerEntry.TABLE_NAME,
                         projection,
-                        idSelection,
-                        new String[]{id},
+                        idSelection,new String[]{id},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case OFFICER_EXIST: {
+                String username = SurakshaContract.OfficerEntry.getUsername(uri);
+                String selectionUsername = SurakshaContract.OfficerEntry.TABLE_NAME +
+                        "." + SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = ? ";
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.OfficerEntry.TABLE_NAME,
+                        new String[] {SurakshaContract.OfficerEntry._ID},
+                        selectionUsername,new String[]{username},
                         null,
                         null,
                         sortOrder
@@ -350,7 +367,7 @@ public class SurakshaProvider extends ContentProvider {
                         SurakshaContract.TxnEntry.TABLE_NAME,
                         new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"},
                         SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? AND " + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ?",
-                        new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER), String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)},
+                        new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER), String.valueOf(SurakshaContract.TxnEntry.PAYMENT_VOUCHER)},
                         null,
                         null,
                         null
@@ -374,6 +391,20 @@ public class SurakshaProvider extends ContentProvider {
                         mOpenHelper.getReadableDatabase(),
                         projection,
                         selection, selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case LOAN_ISSUE_ID: {
+                String id = SurakshaContract.LoanIssueEntry.getLoanIssueId(uri);
+                String idSelection = SurakshaContract.LoanIssueEntry.TABLE_NAME +
+                        "." + SurakshaContract.LoanIssueEntry._ID + " = ? ";
+                retCursor = sLoanIssueJoinTxnQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
+                        projection,
+                        idSelection, new String[]{id},
                         null,
                         null,
                         sortOrder

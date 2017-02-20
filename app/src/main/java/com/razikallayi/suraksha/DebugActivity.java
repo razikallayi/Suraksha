@@ -81,9 +81,24 @@ public class DebugActivity extends BaseActivity {
         });
 
 
+        Button btnImportFromAsset = new Button(this);
+        btnImportFromAsset.setText("Import Data from Asset");
+        btnImportFromAsset.setBackgroundColor(Color.YELLOW);
+        btnImportFromAsset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    importFromAsset(SurakshaDbHelper.DATABASE_NAME);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         LinearLayout ll = (LinearLayout) findViewById(R.id.lldebug);
         ll.addView(btnExport);
         ll.addView(btnImport);
+        ll.addView(btnImportFromAsset);
     }
 
 
@@ -117,6 +132,14 @@ public class DebugActivity extends BaseActivity {
         }
     }
 
+
+    private void importFromAsset(String backupName) throws IOException {
+//        File sd = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
+//                File.separator + "Your Backup Folder"+
+//                File.separator );
+
+
+    }
 
     private void importFromCard(String backupName) {
 //        File sd = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +

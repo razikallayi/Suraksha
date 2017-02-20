@@ -1,6 +1,5 @@
 package com.razikallayi.suraksha.utils;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -30,15 +29,15 @@ public class SmsUtils {
     }
 
 
-    public static boolean smsEnabledAfterLoanPayed(Context context) {
+    public static boolean smsEnabledAfterLoanIssued(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_payed", false);
     }
 
-//    public static boolean smsEnabledAfterLoanReturn(Context context){
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//        return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_return", false);
-//    }
+    public static boolean smsEnabledAfterLoanReturn(Context context){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_return", false);
+    }
 
 
     public static boolean sendSms(String message, String mobileNumber) {
@@ -49,19 +48,6 @@ public class SmsUtils {
             SmsManager sms = SmsManager.getDefault();
             Log.d("FISH SmsUtils", "sendSms: sending message" + mobileNumber + " : " + message);
             sms.sendTextMessage(mobileNumber, null, message, null, null);
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean sendSms(String message, String mobileNumber, PendingIntent sentIntent) {
-        if (mobileNumber.isEmpty()) {
-            return false;
-        }
-        if (isValidMobileNumber(mobileNumber)) {
-            SmsManager sms = SmsManager.getDefault();
-            Log.d("FISH SmsUtils", "sendSms: sending message" + mobileNumber + " : " + message);
-            sms.sendTextMessage(mobileNumber, null, message, sentIntent, null);
             return true;
         }
         return false;

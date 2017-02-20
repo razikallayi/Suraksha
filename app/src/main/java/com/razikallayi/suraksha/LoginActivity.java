@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         mUsernameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        mockLogin("RAZI","4976");
+//        mockLogin('username','pwd');
 
         mRecentOfficer = SettingsUtils.getOfficerUsername(getApplicationContext());
         if (null != mRecentOfficer) {
@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
         private final String mPin;
 
         UserLoginTask(String username, String password) {
-            mUsername = username;
+            mUsername = username.toUpperCase();
             mPin = password;
         }
 

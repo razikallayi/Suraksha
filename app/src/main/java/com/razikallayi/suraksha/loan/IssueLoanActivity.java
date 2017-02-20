@@ -49,7 +49,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
 
     public static final String ARG_MEMBER_ID = "member_id";
     public static final String ARG_ACCOUNT_NUMBER = "account_number";
-    private static final int SECURITY_MEMBER_NAME_LOADER = 0;
+    private static final int SECURITY_MEMBER_NAME_LOADER = 0X43;
 
     private Member mMember;
     private LoanIssue mLoanIssue;
@@ -276,7 +276,6 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
 
         LoanIssue loanIssue = new LoanIssue(mMember.getAccountNo(), amount, purpose,
                 securityAccountNo, times, officeStatement);
-        loanIssue.setCreatedAt(System.currentTimeMillis());
         loanIssue.setMember(mMember);
         return loanIssue;
     }
@@ -422,10 +421,11 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                     mLoanIssue.getAccountNumber(),
                     mLoanIssue.getAmount(),
                     SurakshaContract.TxnEntry.PAYMENT_VOUCHER,
-                    SurakshaContract.TxnEntry.LOAN_PAYED_LEDGER,
+                    SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER,
                     mLoanIssue.getPurpose(),
                     AuthUtils.getAuthenticatedOfficerId(context));
             txnIssueLoan.setLoanPayedId(loanIssueId);
+//            txnIssueLoan.setCreatedAt(System.currentTimeMillis());
             values = Transaction.getTxnContentValues(txnIssueLoan);
             context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
 
@@ -434,7 +434,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             mMember.saveIsLoanBlocked(context, true);
             //Set Security Member loan Blocked
             securityMember.saveIsLoanBlocked(context, true);
-            if (SmsUtils.smsEnabledAfterLoanPayed(context)) {
+            if (SmsUtils.smsEnabledAfterLoanIssued(context)) {
                 String mobileNumber = mMember.getMobile();
                 String message = mMember.getName() + ", Rs"
                         + (int) mLoanIssue.getAmount() + " loan sanctioned in your "

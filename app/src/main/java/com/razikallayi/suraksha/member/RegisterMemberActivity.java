@@ -287,7 +287,6 @@ public class RegisterMemberActivity extends BaseActivity {
         }
         Member member = new Member(getApplicationContext(), name, alias, gender, father, spouse,
                 occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
-        member.setCreatedAt(System.currentTimeMillis());
         if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
         }
