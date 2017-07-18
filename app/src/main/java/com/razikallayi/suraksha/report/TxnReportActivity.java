@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.loan.LoanIssue;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.txn.Transaction;
@@ -221,12 +222,23 @@ public class TxnReportActivity extends BaseActivity implements
                 viewHolder.mMemberName.setText(Member.getMemberFromAccountNumber(getApplicationContext(), txnItem.txn.getAccountNumber()).getName());
                 viewHolder.mAmountView.setText(Utility.formatAmountInRupees(getApplicationContext(),
                         txnItem.txn.getAmount()));
+
+                viewHolder.mMonthView.setVisibility(View.GONE);
                 if (txnItem.txn.getDefinedDepositMonth() != -1) {
                     viewHolder.mMonthView.setText(CalendarUtils.readableDepositMonth(txnItem.txn.getDefinedDepositMonth()));
-                } else {
-                    viewHolder.mMonthView.setVisibility(View.GONE);
+                    viewHolder.mMonthView.setVisibility(View.VISIBLE);
                 }
-                viewHolder.mLedger.setText(Transaction.getLedgerName(txnItem.txn.getLedger()));
+
+                int ledgerId = txnItem.txn.getLedger();
+                String ledgerName = Transaction.getLedgerName(ledgerId);
+                if (ledgerId == 3) {//LOAN ISSUED
+                    LoanIssue loanIssue = LoanIssue.getLoanIssue(getApplicationContext(), txnItem.txn.getLoanPayedId());
+                    String issuedDate = CalendarUtils.formatDate(loanIssue.getIssuedAt());
+                    viewHolder.mMonthView.setText(issuedDate);
+                    viewHolder.mMonthView.setVisibility(View.VISIBLE);
+                }
+
+                viewHolder.mLedger.setText(ledgerName);
                 viewHolder.mVoucherName.setText(Transaction.getVoucherName(txnItem.txn.getVoucherType()));
                 viewHolder.mCreatedAt.setText(CalendarUtils.formatDateTime(txnItem.txn.getCreatedAt()));
                 viewHolder.mCreatedBy.setText(Officer.getOfficerFromId(getApplicationContext(),

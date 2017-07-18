@@ -60,11 +60,17 @@ public class CalendarUtils extends GregorianCalendar {
     public static String readableDepositMonth(Calendar calendar) {
         String month = new DateFormatSymbols().getMonths()[calendar.get(MONTH)];
         int year = calendar.get(YEAR);
+        return month.concat(" " + String.valueOf(year));
+    }
 
-        if (year >= getSurakshaStartDate().get(YEAR)) {
-            return month.concat(" " + String.valueOf(year));
-        }
-        return month;
+    public static String readableShortDepositMonth(Calendar calendar) {
+        String month = new DateFormatSymbols().getShortMonths()[calendar.get(MONTH)].toUpperCase();
+
+//        if(calendar.get(YEAR) == Calendar.getInstance().get(YEAR)){
+//            return month;
+//        }
+        int year = calendar.get(YEAR);
+        return month.concat(" " + String.valueOf(year));
     }
 
     public static String readableDepositMonth(long longDate) {
@@ -85,17 +91,17 @@ public class CalendarUtils extends GregorianCalendar {
 
     // To make it easy to query for the exact date, we normalize all dates that go into
     // the database to the start of the the Julian day at UTC.
-    public static long normalizeDate(long startDate) {
+    public static long normalizeDate(long dateWithTime) {
         // normalize the start date to the beginning of the (UTC) day
         Calendar date = getInstance();
-        date.setTimeInMillis(startDate);
+        date.setTimeInMillis(dateWithTime);
         Calendar standardDate = Calendar.getInstance();
         standardDate.setTimeInMillis(0);
         standardDate.set(date.get(YEAR), date.get(MONTH), date.get(DATE));
         return standardDate.getTimeInMillis();
 //        Time time = new Time();
-//        time.set(startDate);
-//        int julianDay = Time.getJulianDay(startDate, time.gmtoff);
+//        time.set(dateWithTime);
+//        int julianDay = Time.getJulianDay(dateWithTime, time.gmtoff);
 //        return time.setJulianDay(julianDay);
     }
 
@@ -106,6 +112,13 @@ public class CalendarUtils extends GregorianCalendar {
         Calendar standardDate = Calendar.getInstance();
         standardDate.setTimeInMillis(0);
         standardDate.set(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE));
+        return standardDate;
+    }
+
+    public static Calendar normalizeDate(int year, int month, int date) {
+        Calendar standardDate = Calendar.getInstance();
+        standardDate.setTimeInMillis(0);
+        standardDate.set(year, month, date);
         return standardDate;
     }
 

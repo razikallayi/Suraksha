@@ -142,7 +142,13 @@
             android:label="@string/title_deposit" />
         <activity
             android:name=".loan.LoanActivity"
-            android:label="@string/title_loan" />
+            android:label="@string/title_loan_return" />
+        <activity android:name=".loan.LoanReturnActivity"
+            android:label="@string/title_loan_return"/>
+        <activity android:name=".loan.LoanIssuedActivity"
+            android:label="@string/title_loan_issue"/>
+        <activity android:name=".loan.LoanReturnedListActivity"
+            android:label="@string/title_loan_returned"></activity>
     </application>
 
 </manifest>

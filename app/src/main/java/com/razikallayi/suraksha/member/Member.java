@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.data.SurakshaContract;
@@ -219,6 +218,7 @@ public class Member implements Serializable {
                         + SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT + " = 0 ",
                 new String[]{String.valueOf(accountNo)},
                 null);
+        cursor.moveToFirst();
         return LoanIssue.getLoanIssueFromCursor(context, cursor);
     }
 
@@ -298,7 +298,6 @@ public class Member implements Serializable {
         * -if current date is 15 of next month  of loan issued date or loanReturn date, the loan is due
         * */
     public boolean hasLoanDue(Context context) {
-
         if (!hasLoan) {
             return false;
         } else {
@@ -312,7 +311,7 @@ public class Member implements Serializable {
     public Calendar getNextInstalmentCalendar(Context context, LoanIssue loanIssued) {
         if (hasLoan) {
             Calendar loanIssuedDateCalendar = Calendar.getInstance();
-            loanIssuedDateCalendar.setTimeInMillis(loanIssued.getCreatedAt());
+            loanIssuedDateCalendar.setTimeInMillis(loanIssued.getIssuedAt());
             loanIssuedDateCalendar.add(Calendar.MONTH, loanIssued.nextInstalmentCount(context));
             loanIssuedDateCalendar.set(Calendar.DATE, CalendarUtils.getDueDay());
             return CalendarUtils.normalizeDate(loanIssuedDateCalendar);
@@ -342,7 +341,6 @@ public class Member implements Serializable {
             return false;
         }*/
         Calendar nextDepositMonth = getNextDepositMonthCalendar(context);
-        Log.d("FISH", "hasDepositDue: "+nextDepositMonth);
         nextDepositMonth.set(Calendar.DATE, CalendarUtils.getDueDay());
         return CalendarUtils.getDepositStartDay() >= CalendarUtils.normalizeDate(nextDepositMonth.getTimeInMillis());
     }

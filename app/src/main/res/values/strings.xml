@@ -106,8 +106,8 @@
     <string name="format_rupees">\u20B9<xliff:g id="rupee">%1.00f</xliff:g></string>
 
 
-
     <!--FontAwsome Icons-->
+    <string name="fa_ic_calendar">&#xf073;</string>
     <string name="fa_ic_member_details">&#xf2bb;</string>
     <string name="fa_ic_member_add">&#xf234;</string>
     <string name="fa_ic_reports">&#xf298;</string>
@@ -173,6 +173,8 @@
     <string name="pref_header_loan">Loan</string>
     <string name="pref_title_max_loan_amount">Maximum Loanable Amount</string>
     <string name="pref_title_loan_instalment_times">Loan Instalment Times</string>
+    <string name="pref_title_default_loan_issue_date">Default Loan Issue Date</string>
+    <string name="pref_title_default_loan_return_date">Default Loan Return Date</string>
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
@@ -192,14 +194,20 @@
     <string name="loan_return">Loan Return</string>
     <string name="instalment">Instalment</string>
     <string name="deposit">Deposit</string>
+    <string name="deposits">Deposits</string>
+    <string name="summery">Summery</string>
     <string name="make_deposit">Make Deposit</string>
     <string name="loan">Loan</string>
     <string name="date">Date</string>
-    <string name="title_loan">Loan</string>
+    <string name="title_loan_return">Loan Return</string>
+    <string name="title_loan_returned">Loan Returned</string>
     <string name="title_activity_account_summery">Account Summery</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="send_reminder">Send Reminder</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_home">Account Summery</string>
+    <string name="title_dashboard">Account Summery</string>
+    <string name="title_notifications">Account Summery</string>
+
 
 </resources>

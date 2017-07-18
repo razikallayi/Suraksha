@@ -23,6 +23,12 @@ public class SmsUtils {
 //        return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_create_account", false);
 //    }
 
+
+    public static boolean smsEnabled(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("enable_sms", false);
+    }
+
     public static boolean smsEnabledAfterDeposit(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_deposit", false);
@@ -34,7 +40,7 @@ public class SmsUtils {
         return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_payed", false);
     }
 
-    public static boolean smsEnabledAfterLoanReturn(Context context){
+    public static boolean smsEnabledAfterLoanReturn(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_return", false);
     }

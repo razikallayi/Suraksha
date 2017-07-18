@@ -29,7 +29,7 @@ public class LoanActivity extends BaseActivity {
         bundle.putInt(ARG_ACCOUNT_NUMBER, accountNumber);
         loanIssuedFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .addToBackStack("LoanReturnFragment")
+                .addToBackStack(LoanReturnedFragment.TAG)
                 .replace(R.id.loanFragment, loanIssuedFragment).commit();
     }
 }

@@ -29,31 +29,33 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    card_view:cardBackgroundColor="@color/red_dull">
+                    card_view:cardBackgroundColor="@color/green_dull">
 
                     <TextView
                         android:id="@+id/loanAMF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:padding="@dimen/text_margin"
-                        android:textSize="@dimen/font_large"
+                        android:text="@string/loan"
                         android:textAlignment="center"
-                        android:text="@string/loan" />
+                        android:textSize="@dimen/font_large" />
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    card_view:cardBackgroundColor="@color/orange_dull">
+                    card_view:cardBackgroundColor="@color/blue_dull">
 
                     <TextView
                         android:id="@+id/depositAMF"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
+                        android:layout_gravity="center_vertical"
                         android:padding="@dimen/text_margin"
-                        android:text="@string/deposit"
+                        android:text="@string/deposits"
+                        android:textAlignment="center"
                         android:textSize="@dimen/font_large" />
                 </android.support.v7.widget.CardView>
             </LinearLayout>
@@ -61,17 +63,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_normal"
                 android:layout_marginBottom="@dimen/spacing_normal"
-                >
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:padding="@dimen/spacing_medium">
 
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/cvIssueLoan"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_extra_tiny"
+                    android:layout_weight="1"
                     android:visibility="visible"
                     card_view:cardBackgroundColor="@color/blue_dull">
 
@@ -112,6 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
+                    android:layout_marginBottom="20dp"
                     card_view:cardCornerRadius="2dp"
                     card_view:contentPadding="@dimen/spacing_tiny">
 
@@ -177,6 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
+                    android:layout_marginBottom="20dp"
                     card_view:cardCornerRadius="2dp"
                     card_view:contentPadding="@dimen/spacing_tiny">
 
@@ -237,6 +240,66 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cvSummeryAMF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="2dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                card_view:contentPadding="@dimen/spacing_tiny">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/summery" />
+
+
+                    <TextView
+                        android:id="@+id/lblSummeryAMF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center"
+                        android:text="Pending loan: March,April,May\nPending Deposit: June July\nTotal:25000"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/font_large" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/summerySms"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_tiny"
+                            card_view:cardBackgroundColor="@color/brown"
+                            card_view:cardCornerRadius="2dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:paddingBottom="@dimen/spacing_very_tiny"
+                                android:paddingEnd="@dimen/spacing_small"
+                                android:paddingStart="@dimen/spacing_small"
+                                android:paddingTop="@dimen/spacing_very_tiny"
+                                android:text="@string/send_reminder"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/font_large" />
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

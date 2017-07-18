@@ -498,15 +498,22 @@ public class SurakshaProvider extends ContentProvider {
             }
         }
 
-//        // normalize the date value
-//        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_CREATED_AT)) {
-//            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_CREATED_AT);
-//            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
-//        }
-//        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT)) {
-//            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT);
-//            values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
-//        }
+        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE)) {
+            if (values.getAsLong(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE) > 0) {
+                long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE);
+                values.put(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE, CalendarUtils.normalizeDate(dateValue));
+            }
+        }
+
+        // normalize the date value
+        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_CREATED_AT)) {
+            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_CREATED_AT);
+            values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, CalendarUtils.normalizeDate(dateValue));
+        }
+        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT)) {
+            long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT);
+            values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, CalendarUtils.normalizeDate(dateValue));
+        }
     }
 
     @Nullable

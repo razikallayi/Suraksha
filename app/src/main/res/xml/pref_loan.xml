@@ -16,4 +16,12 @@
         android:maxLines="1"
         android:title="@string/pref_title_loan_instalment_times" />
 
+    <com.razikallayi.suraksha.DatePreference
+        android:key="default_loan_issue_date"
+        android:title="@string/pref_title_default_loan_issue_date" />
+
+    <!--<com.razikallayi.suraksha.DatePreference-->
+        <!--android:key="default_loan_return_date"-->
+        <!--android:title="@string/pref_title_default_loan_return_date" />-->
+
 </PreferenceScreen>

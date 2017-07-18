@@ -19,8 +19,9 @@ import android.widget.Toast;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.deposit.DepositActivity;
 import com.razikallayi.suraksha.loan.IssueLoanActivity;
-import com.razikallayi.suraksha.loan.LoanActivity;
 import com.razikallayi.suraksha.loan.LoanIssue;
+import com.razikallayi.suraksha.loan.LoanIssuedActivity;
+import com.razikallayi.suraksha.loan.LoanReturnActivity;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
@@ -42,9 +43,9 @@ public class AccountManipulationsFragment extends Fragment {
     private Member mMember;
     private LayoutInflater mInflater;
     private TextView lblLoanBlockedReason;
-    private CardView cvIssueLoan;
-    private CardView cvDepositDueAMF;
-    private CardView cvLoanReturnDueAMF;
+    private CardView cvIssueLoan, cvDepositDueAMF, cvLoanReturnDueAMF, cvSummeryAMF;
+    private LoanIssue loanIssued;
+    private List<Transaction> loanReturnList;
 
     public AccountManipulationsFragment() {
         // Required empty public constructor
@@ -68,8 +69,8 @@ public class AccountManipulationsFragment extends Fragment {
         loan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), LoanActivity.class);
-                intent.putExtra(LoanActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
+                Intent intent = new Intent(getContext(), LoanIssuedActivity.class);
+                intent.putExtra(LoanIssuedActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
                 startActivity(intent);
 
             }
@@ -98,6 +99,9 @@ public class AccountManipulationsFragment extends Fragment {
         cvDepositDueAMF = (CardView) mRootView.findViewById(R.id.cvDepositDueAMF);
         drawDepositDue();
 
+        cvSummeryAMF = (CardView) mRootView.findViewById(R.id.cvSummeryAMF);
+        drawSummery();
+
         return mRootView;
     }
 
@@ -106,9 +110,8 @@ public class AccountManipulationsFragment extends Fragment {
             TextView lblInstalmentAmount = (TextView) cvLoanReturnDueAMF.findViewById(R.id.lblLoanReturnAmountAMF);
             TextView lblNextInstalmentCount = (TextView) cvLoanReturnDueAMF.findViewById(R.id.lblLoanInstalmentTimeAMF);
 
-            final LoanIssue loanIssued = mMember.getActiveLoan(getContext());
-
-            final List<Transaction> loanReturnList = loanIssued.getLoanReturnTxnList(getContext());
+            loanIssued = mMember.getActiveLoan(getContext());
+            loanReturnList = loanIssued.getLoanReturnTxnList(getContext());
 
             final String instalmentAmount = Utility.formatAmountInRupees(getContext(), loanIssued.getLoanInstalmentAmount());
             lblInstalmentAmount.setText(instalmentAmount);
@@ -121,6 +124,10 @@ public class AccountManipulationsFragment extends Fragment {
             loanReturn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), LoanReturnActivity.class);
+                    LoanReturnActivity.setLoanIssue(loanIssued);
+                    startActivity(intent);
+/*
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     final View remarksView = mInflater.inflate(R.layout.remarks_dialog_content, null);
 //                    final TextView txtNarration = (TextView) cvLoanReturnDueAMF.findViewById(R.id.txtRemarksLoanReturnDue);
@@ -146,6 +153,8 @@ public class AccountManipulationsFragment extends Fragment {
                         }
                     });
                     builder.show();
+                    */
+
                 }
             });
         } else {
@@ -213,9 +222,53 @@ public class AccountManipulationsFragment extends Fragment {
     }
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void drawSummery() {
+        String summery = "";
+        TextView lblSummeryAMF = (TextView) cvSummeryAMF.findViewById(R.id.lblSummeryAMF);
+        double total = 0;
+        if (mMember.hasDepositDue(getContext())) {
+            //Get Next deposit Month
+            final Calendar nextDepositMonth = mMember.getNextDepositMonthCalendar(getContext());
+            String summeryPendingMonths = "";
+            Calendar calCurrentDate = Calendar.getInstance();
+            calCurrentDate.setTimeInMillis(CalendarUtils.normalizeDate(System.currentTimeMillis()));
+            while (nextDepositMonth.getTimeInMillis() < calCurrentDate.getTimeInMillis()) {
+                summeryPendingMonths += CalendarUtils.readableShortDepositMonth(nextDepositMonth)
+                        + ": \t" + Utility.formatAmountInRupees(getContext(), Utility.getMonthlyDepositAmount())
+                        + "\n";
+                nextDepositMonth.add(Calendar.MONTH, 1);
+                total += Utility.getMonthlyDepositAmount();
+            }
+            summery += summeryPendingMonths;
+        }
+
+        if (mMember.hasLoanDue(getContext())) {
+            String instalmentAmount = Utility.formatAmountInRupees(getContext(), loanIssued.getLoanInstalmentAmount());
+            String summeryPendingLoans = "";
+            for (int i = loanReturnList.size() + 1; i <= loanIssued.getLoanInstalmentTimes(); i++) {
+                summeryPendingLoans += Utility.formatNumberSuffix(i) + " Instalment : " + instalmentAmount
+                        + "\n";
+                total += loanIssued.getLoanInstalmentAmount();
+            }
+            summery += summeryPendingLoans;
+        }
+        summery += "Total : " + Utility.formatAmountInRupees(getContext(), total);
+        lblSummeryAMF.setText(summery);
+
+        View summerySms = cvSummeryAMF.findViewById(R.id.summerySms);
+        final String finalSummery = summery;
+        summerySms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SmsUtils.smsEnabled(getContext())) {
+                    boolean result = SmsUtils.sendSms(finalSummery, mMember.getMobile());
+                    if (result) {
+                        Toast.makeText(getContext(), "SMS sent to " + mMember.getName(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
     }
 
     @Override
@@ -239,31 +292,40 @@ public class AccountManipulationsFragment extends Fragment {
         } else if (mMember.isLoanBlocked()) {
             cvIssueLoan.setVisibility(View.GONE);
             LoanIssue bystanderLoan = mMember.getActiveBystanderLoan(getContext());
+            //if the member is a bystander for another loan
             if (bystanderLoan != null) {
                 int nextInstalmentCount = bystanderLoan.nextInstalmentCount(getContext());
                 int remainingInstalments = bystanderLoan.bystanderReleaseInstalment() - (nextInstalmentCount - 1);
                 Member bystanderFor = bystanderLoan.getMember(getContext());
+                //Show the details of bystander as reason to block loan
                 if (bystanderFor != null) {
                     // TODO: 29-06-2016 change to string resource.
                     lblLoanBlockedReason.setText(Html.fromHtml("Loan guarantor of <b>" + bystanderFor.getName()
                             + " [" + bystanderFor.getAccountNo() + "]</b>. Capable to issue loan after <b>"
                             + remainingInstalments + "</b> more instalments."));
                     lblLoanBlockedReason.setVisibility(View.VISIBLE);
+                } else {
+                    //Check the logic here. I think this else block is not needed
+                    showLoanIssueButton();
                 }
             }
         } else {
-            lblLoanBlockedReason.setVisibility(View.GONE);
-            cvIssueLoan.setVisibility(View.VISIBLE);
-            cvIssueLoan.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), IssueLoanActivity.class);
-                    intent.putExtra(IssueLoanActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
-                    intent.putExtra(IssueLoanActivity.ARG_MEMBER_ID, mMember.getId());
-                    startActivity(intent);
-                }
-            });
+            showLoanIssueButton();
         }
+    }
+
+    private void showLoanIssueButton() {
+        lblLoanBlockedReason.setVisibility(View.GONE);
+        cvIssueLoan.setVisibility(View.VISIBLE);
+        cvIssueLoan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), IssueLoanActivity.class);
+                intent.putExtra(IssueLoanActivity.ARG_ACCOUNT_NUMBER, mMember.getAccountNo());
+                intent.putExtra(IssueLoanActivity.ARG_MEMBER_ID, mMember.getId());
+                startActivity(intent);
+            }
+        });
     }
 
 

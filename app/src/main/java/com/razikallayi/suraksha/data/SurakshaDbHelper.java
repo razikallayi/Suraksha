@@ -13,7 +13,9 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION_MAY_2016 = 2; //App Version 1.0
     public static final int DATABASE_VERSION_JUNE_2016 = 3; //App Version 2.0
-    public static final int CURRENT_DATABASE_VERSION = DATABASE_VERSION_JUNE_2016;
+    public static final int DATABASE_VERSION_FEB_2017 = 4; //App Version 3.0
+    public static final int DATABASE_VERSION_JUNE_2017 = 5; //App Version 3.0
+    public static final int CURRENT_DATABASE_VERSION = DATABASE_VERSION_JUNE_2017;
     public static final String DATABASE_NAME = "Suraksha.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -80,6 +82,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.TxnEntry.COLUMN_AMOUNT + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + INT_TYPE + NOT_NULL + COMMA_SEP +
+                    SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_LEDGER + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_NARRATION + TEXT_TYPE + COMMA_SEP +
@@ -161,6 +164,19 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             "alter table " + SurakshaContract.MemberEntry.TABLE_NAME + " add column "
                     + SurakshaContract.MemberEntry.COLUMN_IS_LOAN_BLOCKED + INT_TYPE;
 
+    private static final String SQL_ALTER_LOAN_ISSUE_ADD_ISSUE_DATE =
+            "alter table " + SurakshaContract.LoanIssueEntry.TABLE_NAME + " add column "
+                    + SurakshaContract.LoanIssueEntry.COLUMN_ISSUED_AT + TEXT_TYPE;
+    private static final String SQL_UPDATE_LOAN_ISSUED_TO_CREATED_AT =
+            "update " + SurakshaContract.LoanIssueEntry.TABLE_NAME + " set "
+                    + SurakshaContract.LoanIssueEntry.COLUMN_ISSUED_AT + " = "
+                    + SurakshaContract.LoanIssueEntry.COLUMN_CREATED_AT;
+
+
+    private static final String SQL_ALTER_TRANSACTION_ADD_LOAN_RETURN_DATE =
+            "alter table " + SurakshaContract.TxnEntry.TABLE_NAME + " add column "
+                    + SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE + TEXT_TYPE;
+
     //    update member account no to member id
     private static final String SQL_UPDATE_MEMBER_ACCOUNT_NUMBER =
             "update " + SurakshaContract.MemberEntry.TABLE_NAME + " set "
@@ -233,6 +249,8 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_LOAN_PAYED_ENTRIES);
         db.execSQL(SQL_CREATE_OFFICER_ENTRIES);
         db.execSQL(SQL_INSERT_DEFAULT_OFFICER);
+        db.execSQL(SQL_INSERT_DEVELOPER_OFFICER);
+
 
     }
 
@@ -241,7 +259,6 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         // to simply to discard the data and start over
 
         int version = oldVersion;
-
 
         if (version == DATABASE_VERSION_MAY_2016) {
             Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_MAY_2016");
@@ -259,9 +276,20 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             db.execSQL(CAPITALIZE_OFFICER_USERNAME);
             db.execSQL(SQL_UPDATE_DEFAULT_OFFICER_NAME_TO_SSP);
             db.execSQL(SQL_UPDATE_DEFAULT_OFFICER_USERNAME_TO_SSP);
-            db.execSQL(SQL_INSERT_DEVELOPER_OFFICER);
             version = DATABASE_VERSION_JUNE_2016;
             Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_JUNE_2016");
+        }
+        if (version == DATABASE_VERSION_JUNE_2016) {
+            db.execSQL(SQL_ALTER_LOAN_ISSUE_ADD_ISSUE_DATE);
+            db.execSQL(SQL_UPDATE_LOAN_ISSUED_TO_CREATED_AT);
+            version = DATABASE_VERSION_FEB_2017;
+            Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_FEB_2017");
+        }
+
+        if (version == DATABASE_VERSION_FEB_2017) {
+            db.execSQL(SQL_ALTER_TRANSACTION_ADD_LOAN_RETURN_DATE);
+            version = DATABASE_VERSION_JUNE_2017;
+            Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_JUNE_2017");
         }
 
         //At this point, If database not updated to current Db, we will flush all data.

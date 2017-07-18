@@ -61,6 +61,55 @@ public class AccountSummeryFragment extends Fragment {
         }
     }
 
+
+
+//    private void drawSummery() {
+//        final CardView cvDepositDue = cvSummeryAMF;
+//        if (mMember.hasDepositDue(getContext())) {
+//            TextView lblSummeryAMF = (TextView) cvDepositDue.findViewById(R.id.lblSummeryAMF);
+//            //Get Next deposit Month
+//            final Calendar nextDepositMonth = mMember.getNextDepositMonthCalendar(getContext());
+//            String summeryPendingMonths = CalendarUtils.readableDepositMonth(nextDepositMonth);
+//            Calendar calCurrentDate = Calendar.getInstance();
+//            calCurrentDate.setTimeInMillis(CalendarUtils.normalizeDate(System.currentTimeMillis()));
+//            while (nextDepositMonth.getTimeInMillis() < calCurrentDate.getTimeInMillis()){
+//                summeryPendingMonths += CalendarUtils.readableDepositMonth(nextDepositMonth);
+//                nextDepositMonth.add(Calendar.MONTH,1);
+//            }
+//            lblSummeryAMF.setText(summeryPendingMonths);
+////
+////            final String depositAMount = Utility.formatAmountInRupees(getContext(), Utility.getMonthlyDepositAmount());
+////            ((TextView) cvDepositDue.findViewById(R.id.lblDepositAmountAMF)).setText(depositAMount);
+////            cvDepositDue.findViewById(R.id.cvDepositAMF).setOnClickListener(new View.OnClickListener() {
+////                @Override
+////                public void onClick(View v) {
+//////                    final String remarks = ((EditText) cvDepositDue.findViewById(R.id.txtRemarksDepositDue)).getText().toString();
+////                    final View remarksView = mInflater.inflate(R.layout.remarks_dialog_content, null);
+////                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+////                    builder.setMessage("Deposit " + depositAMount + " for " + mMember.getName() + " in account "
+////                            + mMember.getAccountNo());
+////                    builder.setView(remarksView);
+////                    builder.setPositiveButton("Deposit", new DialogInterface.OnClickListener() {
+////                        @Override
+////                        public void onClick(DialogInterface dialog, int which) {
+////                            final String strNarration = String.valueOf(
+////                                    ((EditText) (remarksView.findViewById(R.id.txtRemarks))).getText());
+////                            makeDeposit(nextDepositMonth.getTimeInMillis(), strNarration);
+////                        }
+////                    });
+////                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+////                        @Override
+////                        public void onClick(DialogInterface dialog, int which) {
+////                            dialog.cancel();
+////                        }
+////                    });
+////                    builder.show();
+////                }
+////            });
+//        }
+//    }
+//
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

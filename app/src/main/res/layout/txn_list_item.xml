@@ -106,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
                     android:text="Month"
+                    android:lines="1"
                     android:textSize="@dimen/font_medium" />
             </LinearLayout>
 

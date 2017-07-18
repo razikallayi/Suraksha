@@ -158,6 +158,7 @@ public class SurakshaContract {
         public static final String COLUMN_AMOUNT = "amount";
         public static final String COLUMN_DEPOSIT_FOR_DATE = "deposit_for_date";
         public static final String COLUMN_FK_LOAN_PAYED_ID = "loan_payed_id";
+        public static final String COLUMN_LOAN_RETURN_DATE = "loan_return_date";
         public static final String COLUMN_VOUCHER_TYPE = "voucher_type";
         public static final String COLUMN_LEDGER = "ledger";
         public static final String COLUMN_FK_OFFICER_ID = "fk_officer_id";
@@ -267,6 +268,7 @@ public class SurakshaContract {
         public static final String COLUMN_LOAN_INSTALMENT_TIMES = "loan_instalment_times";
         public static final String COLUMN_LOAN_INSTALMENT_AMOUNT = "loan_instalment_amount";
         public static final String COLUMN_OFFICE_STATEMENT = "office_statement";
+        public static final String COLUMN_ISSUED_AT = "issued_at";
         public static final String COLUMN_CLOSED_AT = "closed_at";
         public static final String COLUMN_CREATED_AT = "created_at";
         public static final String COLUMN_UPDATED_AT = "updated_at";

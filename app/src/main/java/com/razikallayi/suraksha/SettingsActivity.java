@@ -18,14 +18,18 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.List;
+
+import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -48,7 +52,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = String.valueOf(value);
-            if(stringValue.trim().isEmpty()){
+            if (stringValue.trim().isEmpty()) {
                 return false;
             }
 
@@ -86,7 +90,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 }
 
-            } else {
+            }  else if (preference instanceof DatePreference) {
+                preference.setSummary(CalendarUtils.formatDate(Long.valueOf(stringValue)));
+            }else
+            {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
@@ -117,12 +124,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
+        Log.d(TAG, "bindPreferenceSummaryToValue: "+preference.getSummary());
         // Trigger the listener immediately with the preference's
         // current value.
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                        .getString(preference.getKey(),""));
     }
 
     @Override
@@ -202,6 +210,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
             return super.onCreateView(inflater, container, savedInstanceState);
         }
+
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
@@ -231,11 +240,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            container.setPadding(0,Utility.getActionBarHeight(getActivity()), 0, 0);
+            container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
             return super.onCreateView(inflater, container, savedInstanceState);
         }
+
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
@@ -259,6 +270,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_sms);
             setHasOptionsMenu(true);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
@@ -294,6 +306,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 //            // guidelines.
             bindPreferenceSummaryToValue(findPreference("max_loan_amount"));
             bindPreferenceSummaryToValue(findPreference("loan_instalment_times"));
+            bindPreferenceSummaryToValue(findPreference("default_loan_issue_date"));
+//            bindPreferenceSummaryToValue(findPreference("default_loan_return_date"));
         }
 
         @Override
