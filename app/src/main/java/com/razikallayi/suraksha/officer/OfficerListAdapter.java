@@ -66,7 +66,7 @@ public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAda
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mOfficerName = (TextView) view.findViewById(R.id.content);
+            mOfficerName = view.findViewById(R.id.content);
         }
 
         @Override

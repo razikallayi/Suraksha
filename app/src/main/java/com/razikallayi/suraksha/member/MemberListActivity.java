@@ -77,7 +77,7 @@ public class MemberListActivity extends BaseActivity
         setContentView(R.layout.member_list_activity);
 // TODO: 28-06-2016 check if save instance state is null. [Ref]See resposnsive ui->40.Built 2pane tablet ui
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (toolbar != null) {
             toolbar.setTitle(getTitle());
@@ -113,7 +113,7 @@ public class MemberListActivity extends BaseActivity
         // The MemberListAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
         mMemberListAdapter = new MemberListAdapter();
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.member_list);
+        final RecyclerView recyclerView = findViewById(R.id.member_list);
 
         mMemberListAdapter.setOnItemClickListener(new MemberListAdapter.OnItemClickListener() {
             @Override
@@ -122,17 +122,17 @@ public class MemberListActivity extends BaseActivity
                     RecyclerView.State state = new RecyclerView.State();
 
                     View rootView = findViewById(R.id.member_details_view_pager_container);
-                    TextView nameTextView = (TextView) rootView.findViewById(R.id.nameMember);
+                    TextView nameTextView = rootView.findViewById(R.id.nameMember);
                     nameTextView.setText(memberName);
                     //Load Avatar
                     LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
                     loadAvatarTask.execute(memberId);
 
-                    ViewPager viewPager = (ViewPager) findViewById(R.id.member_detail_container);
+                    ViewPager viewPager = findViewById(R.id.member_detail_container);
                     if (viewPager != null) {
                         setupViewPager(viewPager, memberId);
                     }
-                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+                    TabLayout tabLayout = findViewById(R.id.tabs);
                     if (viewPager != null && tabLayout != null) {
                         tabLayout.setupWithViewPager(viewPager);
                     }
@@ -314,16 +314,16 @@ public class MemberListActivity extends BaseActivity
             super.onPostExecute(member);
 
             //Address Or Mobile
-            TextView tvMobile = (TextView) findViewById(R.id.mobileMember);
+            TextView tvMobile = findViewById(R.id.mobileMember);
             String mobileOrAddress = member.getAddress().isEmpty() ? member.getMobile() : member.getAddress();
             tvMobile.setText(mobileOrAddress);
 
             //AccountNumber
-            TextView lblAccountNumber = (TextView) findViewById(R.id.lblAccountNumberInTitle);
+            TextView lblAccountNumber = findViewById(R.id.lblAccountNumberInTitle);
             String accountNumber = String.valueOf(member.getAccountNo());
             lblAccountNumber.setText(accountNumber);
 
-            ImageView ivAvatar = (ImageView) findViewById(R.id.avatarMember);
+            ImageView ivAvatar = findViewById(R.id.avatarMember);
             if (member.getAvatarDrawable() != null) {
                 ivAvatar.setImageDrawable(member.getAvatarDrawable());
                 ivAvatar.setOnClickListener(new View.OnClickListener() {

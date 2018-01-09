@@ -53,7 +53,7 @@ public class DailyTransactionActivity extends BaseActivity implements LoaderMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_transaction);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
@@ -72,7 +72,7 @@ public class DailyTransactionActivity extends BaseActivity implements LoaderMana
 */
         mDailyTxnAdapter = new DailyTransactionAdapter(getSupportFragmentManager(), Transaction.TxnQuery.PROJECTION,null);
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.view_pager_container);
+        mViewPager = findViewById(R.id.view_pager_container);
         mViewPager.setAdapter(mDailyTxnAdapter);
 
          /*

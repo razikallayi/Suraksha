@@ -530,7 +530,7 @@ public class Member implements Serializable {
         this.addressOfNominee = addressOfNominee;
     }
 
-    public boolean isHasLoan() {
+    public boolean hasLoan() {
         return hasLoan;
     }
 

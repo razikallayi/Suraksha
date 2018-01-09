@@ -122,10 +122,10 @@ public class MemberListAdapter extends RecyclerViewCursorAdapter<MemberListAdapt
         public MemberListViewHolder(final View view) {
             super(view);
             mView = view;
-            mAvatarView = (ImageView) view.findViewById(R.id.avatar);
-            mNameView = (TextView) view.findViewById(R.id.name);
-            mAddressView = (TextView) view.findViewById(R.id.address);
-            mAccountNumberView = (TextView) view.findViewById(R.id.lblAccountNumber);
+            mAvatarView = view.findViewById(R.id.avatar);
+            mNameView = view.findViewById(R.id.name);
+            mAddressView = view.findViewById(R.id.address);
+            mAccountNumberView = view.findViewById(R.id.lblAccountNumber);
 //            mAccountNumbersView = (LinearLayout) view.findViewById(R.id.llAccountNumbers);
         }
 

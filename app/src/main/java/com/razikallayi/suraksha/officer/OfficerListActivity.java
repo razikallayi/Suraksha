@@ -23,7 +23,7 @@ public class OfficerListActivity extends BaseActivity
         setContentView(R.layout.officer_list_activity);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (toolbar != null) {
             toolbar.setTitle(getTitle());

@@ -38,7 +38,7 @@ public class EditOfficerActivity extends BaseActivity {
         setContentView(R.layout.officer_create_officer_activity);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
@@ -52,13 +52,13 @@ public class EditOfficerActivity extends BaseActivity {
         //Enable full view scroll while soft keyboard is shown
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        NestedScrollView sv = (NestedScrollView) findViewById(R.id.create_officer_form);
-        txtName = (EditText) sv.findViewById(R.id.txtName);
-        txtUsername = (EditText) sv.findViewById(R.id.txtUsername);
-        txtPassword = (EditText) sv.findViewById(R.id.txtPassword);
-        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
-        switchIsAdmin = (Switch) sv.findViewById(R.id.switchIsAdmin);
+        NestedScrollView sv = findViewById(R.id.create_officer_form);
+        txtName = sv.findViewById(R.id.txtName);
+        txtUsername = sv.findViewById(R.id.txtUsername);
+        txtPassword = sv.findViewById(R.id.txtPassword);
+        txtMobile = sv.findViewById(R.id.txtMobile);
+        txtAddress = sv.findViewById(R.id.txtAddress);
+        switchIsAdmin = sv.findViewById(R.id.switchIsAdmin);
 
         mContext = getApplicationContext();
         officerId = getIntent().getLongExtra(ARG_OFFICER_ID, -1);
@@ -66,7 +66,7 @@ public class EditOfficerActivity extends BaseActivity {
         fillOfficerDetails(mOfficer);
 
         //Button Create Officer
-        final Button mEditOfficer = (Button) sv.findViewById(R.id.btnCreateOfficer);
+        final Button mEditOfficer = sv.findViewById(R.id.btnCreateOfficer);
         mEditOfficer.setText(getString(R.string.update));
         mEditOfficer.setOnClickListener(new View.OnClickListener() {
             @Override

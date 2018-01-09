@@ -1,4 +1,4 @@
-package com.razikallayi.suraksha.loan;
+package com.razikallayi.suraksha.deposit;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.DatePickerFragment;
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.loan.LoanIssue;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.CalendarUtils;
@@ -25,16 +26,15 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class LoanReturnActivity extends BaseActivity {
-    public static final String ARG_LOAN_RETURN_TXT_ID = "loan_return_txt_id";
-    public static final String ARG_LOAN_ISSUE_ID = "loan_issue_id";
-    private LoanIssue mLoanIssue;
-    private Transaction mLoanReturnTxn;
+public class MakeDepositActivity extends BaseActivity {
+    private static LoanIssue sLoanIssue;
     private EditText txtDateLoanReturn;
-    private EditText txtRemarks;
     private long loanReturnDate = 0;
     private List<Transaction> loanReturnList;
-    private boolean editMode = false;
+
+    public static void setLoanIssue(LoanIssue loanIssue) {
+        sLoanIssue = loanIssue;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,35 +43,13 @@ public class LoanReturnActivity extends BaseActivity {
 
         setupEnvironment();
 
-        if (editMode) {
-            getSupportActionBar().setTitle(R.string.update_loan_return);
-        }
-
-        long loanIssueId = getIntent().getLongExtra(ARG_LOAN_ISSUE_ID, -1);
-        long loanReturnTxnId = getIntent().getLongExtra(ARG_LOAN_RETURN_TXT_ID, -1);
-        if (loanReturnTxnId != -1) {
-            editMode = true;
-            mLoanReturnTxn = Transaction.getTxnFromId(this, loanReturnTxnId);
-            loanIssueId = mLoanReturnTxn.getLoanPayedId();
-        }
-        if (loanIssueId != -1) {
-            mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
-        }
-
-        loanReturnList = mLoanIssue.getLoanReturnTxnList(getApplicationContext());
-        final String instalmentAmount = Utility.formatAmountInRupees(getApplicationContext(), mLoanIssue.getLoanInstalmentAmount());
-        String receiveString = "Receive ";
-        if (editMode) {
-            receiveString = "Update ";
-        }
-        String loanReturnInfo = receiveString + Utility.formatNumberSuffix(loanReturnList.size() + 1) + " instalment "
-                + instalmentAmount + " from " + mLoanIssue.getMember(getApplicationContext()).getName();
+        loanReturnList = sLoanIssue.getLoanReturnTxnList(getApplicationContext());
+        final String instalmentAmount = Utility.formatAmountInRupees(getApplicationContext(), sLoanIssue.getLoanInstalmentAmount());
+        String loanReturnInfo = "Receive " + Utility.formatNumberSuffix(loanReturnList.size() + 1) + " instalment "
+                + instalmentAmount + " from " + sLoanIssue.getMember(getApplicationContext()).getName();
         TextView loanReturnInfoTv = findViewById(R.id.loanReturnInfo);
         loanReturnInfoTv.setText(loanReturnInfo);
-        txtRemarks = findViewById(R.id.txtRemarks);
-        if (editMode) {
-            txtRemarks.setText(mLoanReturnTxn.getNarration());
-        }
+
         txtDateLoanReturn = findViewById(R.id.txtDateLoanReturn);
 
         attachCalendar();
@@ -86,29 +64,20 @@ public class LoanReturnActivity extends BaseActivity {
         });
 
         Button btnConfirmLoanReturn = findViewById(R.id.btnLoanReturn);
-        if (editMode) {
-            btnConfirmLoanReturn.setText(R.string.update_loan_return);
-        } else {
-            btnConfirmLoanReturn.setText("Confirm Return");
-        }
         btnConfirmLoanReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String remarks = txtRemarks.getText().toString();
+                String remarks = ((EditText) findViewById(R.id.txtRemarks)).getText().toString();
                 Context context = getApplicationContext();
-                if (editMode) {
-                    mLoanReturnTxn = mLoanIssue.updateLoanReturn(context, mLoanReturnTxn, loanReturnDate, remarks);
-                } else {
-                    mLoanReturnTxn = mLoanIssue.saveLoanReturn(context, loanReturnDate, remarks);
-                }
-                if (mLoanReturnTxn != null) {
-                    if (SmsUtils.smsEnabledAfterLoanReturn(context) && !editMode) {
-                        Member member = mLoanIssue.getMember(context);
+                Transaction loanReturnTxn = sLoanIssue.saveLoanReturn(context, loanReturnDate, remarks);
+                if (loanReturnTxn != null) {
+                    if (SmsUtils.smsEnabledAfterLoanReturn(context)) {
+                        Member member = sLoanIssue.getMember(context);
                         String mobileNumber = member.getMobile();
-                        String message = member.getName() + ", " + Utility.formatAmountInRupees(context, mLoanReturnTxn.getAmount())
+                        String message = member.getName() + ", " + Utility.formatAmountInRupees(context, loanReturnTxn.getAmount())
                                 + " is payed in " + context.getResources().getString(R.string.app_name)
                                 + " account " + member.getAccountNo()
-                                + " as Loan Return " + mLoanIssue.getLoanReturnTxnList(context).size();
+                                + " as Loan Return " + sLoanIssue.getLoanReturnTxnList(context).size();
 
                         boolean result = SmsUtils.sendSms(message, mobileNumber);
                         if (result) {
@@ -117,14 +86,24 @@ public class LoanReturnActivity extends BaseActivity {
                     }
                     finish();
                 } else {
-                    Toast.makeText(LoanReturnActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakeDepositActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void attachCalendar() {
-        txtDateLoanReturn.setText(CalendarUtils.formatDate(nextReturnDate()));
+        if (loanReturnDate == 0) {
+            if (loanReturnList.size() == 0) {
+                loanReturnDate = CalendarUtils.normalizeDate(System.currentTimeMillis());
+            } else {
+                Calendar lastReturnDate = new GregorianCalendar();
+                lastReturnDate.setTimeInMillis(loanReturnList.get(loanReturnList.size() - 1).getLoanReturnDate());
+                lastReturnDate.add(Calendar.MONTH, 1);
+                loanReturnDate = lastReturnDate.getTimeInMillis();
+            }
+        }
+        txtDateLoanReturn.setText(CalendarUtils.formatDate(loanReturnDate));
         txtDateLoanReturn.setKeyListener(null); //disable user input
         txtDateLoanReturn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,34 +122,12 @@ public class LoanReturnActivity extends BaseActivity {
         });
     }
 
-    private long nextReturnDate() {
-        if (editMode) {
-            return loanReturnDate = mLoanReturnTxn.getLoanReturnDate();
-        }
-        if (loanReturnDate != 0) {
-            return loanReturnDate;
-        }
-        Calendar nextReturnDate = new GregorianCalendar();
-        loanReturnList = mLoanIssue.getLoanReturnTxnList(getApplicationContext());
-        if (loanReturnList.size() != 0) {
-            nextReturnDate.setTimeInMillis(loanReturnList.get(loanReturnList.size() - 1).getLoanReturnDate());
-        } else {
-            nextReturnDate.setTimeInMillis(mLoanIssue.getIssuedAt());
-        }
-        nextReturnDate.add(Calendar.MONTH, 1);
-        if (nextReturnDate.getTimeInMillis() > System.currentTimeMillis()) {
-            return loanReturnDate = CalendarUtils.normalizeDate(System.currentTimeMillis());
-        } else {
-            return loanReturnDate = nextReturnDate.getTimeInMillis();
-        }
-    }
-
     private void popupCalendar() {
         final Calendar activeDate = Calendar.getInstance();
         activeDate.setTimeInMillis(loanReturnDate);
         final DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(activeDate);
         datePickerFragment.show(getSupportFragmentManager(), null);
-        datePickerFragment.setMinDate(mLoanIssue.getIssuedAt());
+        datePickerFragment.setMinDate(sLoanIssue.getIssuedAt());
         datePickerFragment.setOnDateSetListener(new DatePickerFragment.OnDateSetListener() {
             @Override
             public void getDate(Calendar cal) {

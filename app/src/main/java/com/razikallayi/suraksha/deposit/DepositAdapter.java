@@ -156,13 +156,13 @@ public class DepositAdapter extends RecyclerView.Adapter<DepositAdapter.ViewHold
 
         public ViewHolder(View v) {
             super(v);
-            mDepositItemLayout = (RelativeLayout) v.findViewById(R.id.deposit_item_layout);
-            mMonthTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositMonth);
+            mDepositItemLayout = v.findViewById(R.id.deposit_item_layout);
+            mMonthTextView = mDepositItemLayout.findViewById(R.id.depositMonth);
 //          mAmountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositAmount);
-            mCountTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositCount);
-            mCreatedAtTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositCreatedAt);
-            mOfficerTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositOfficer);
-            mRemarksTextView = (TextView) mDepositItemLayout.findViewById(R.id.depositRemarks);
+            mCountTextView = mDepositItemLayout.findViewById(R.id.depositCount);
+            mCreatedAtTextView = mDepositItemLayout.findViewById(R.id.depositCreatedAt);
+            mOfficerTextView = mDepositItemLayout.findViewById(R.id.depositOfficer);
+            mRemarksTextView = mDepositItemLayout.findViewById(R.id.depositRemarks);
         }
     }
 }

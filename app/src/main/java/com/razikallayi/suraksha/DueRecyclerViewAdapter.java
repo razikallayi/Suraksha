@@ -99,10 +99,10 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mLedger = (TextView) view.findViewById(R.id.txnLedger);
-            mMonthView = (TextView) view.findViewById(R.id.txnMonth);
-            mAmountView = (TextView) view.findViewById(R.id.txnAmount);
-            mPayButton = (TextView) view.findViewById(R.id.payButton);
+            mLedger = view.findViewById(R.id.txnLedger);
+            mMonthView = view.findViewById(R.id.txnMonth);
+            mAmountView = view.findViewById(R.id.txnAmount);
+            mPayButton = view.findViewById(R.id.payButton);
         }
 
         @Override

@@ -85,7 +85,8 @@ public class LoanIssue implements Serializable {
 
     public static LoanIssue getLoanIssueFromCursor(Context context, Cursor cursor) {
         LoanIssue loanIssue = new LoanIssue();
-        if (cursor != null && cursor.getCount() > 0) {
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
             loanIssue = new LoanIssue(cursor.getInt(LoanIssueQuery.COL_FK_ACCOUNT_NUMBER),
                     cursor.getDouble(LoanIssueQuery.COL_AMOUNT),
                     cursor.getString(LoanIssueQuery.COL_PURPOSE),
@@ -134,10 +135,7 @@ public class LoanIssue implements Serializable {
     }
 
     public int nextInstalmentCount(Context context) {
-        if (loanReturnList == null) {
-            return getLoanReturnTxnList(context).size() + 1;
-        }
-        return loanReturnList.size() + 1;
+        return getLoanReturnTxnList(context).size() + 1;
     }
 
     public List<Transaction> getLoanReturnTxnList(Context context) {
@@ -152,6 +150,7 @@ public class LoanIssue implements Serializable {
                 new String[]{String.valueOf(id), receiptVoucher, loanReturnLedger},
                 SurakshaContract.TxnEntry._ID + " DESC");
         loanReturnList = Transaction.getTxnListFromCursor(context, cursor);
+        cursor.close();
         return loanReturnList;
     }
 
@@ -160,7 +159,20 @@ public class LoanIssue implements Serializable {
     }
 
 
-    public Transaction saveLoanReturn(Context context, long returnDate , String narration) {
+    public Transaction updateLoanReturn(Context context, Transaction loanReturnTxn,
+                                        long loanReturnDate, String remarks) {
+        loanReturnTxn.setLoanReturnDate(loanReturnDate);
+        loanReturnTxn.setNarration(remarks);
+        ContentValues values = Transaction.getTxnContentValues(loanReturnTxn);
+        context.getContentResolver().update(SurakshaContract.TxnEntry.CONTENT_URI,
+                values, SurakshaContract.TxnEntry._ID + "=?",
+                new String[]{String.valueOf(loanReturnTxn.getId())});
+
+        this.getLoanReturnTxnList(context);
+        return loanReturnTxn;
+    }
+
+    public Transaction saveLoanReturn(Context context, long returnDate, String narration) {
         int nextInstalmentCount = this.nextInstalmentCount(context);
 
         int maxLoanInstalmentTime = this.getLoanInstalmentTimes();
@@ -176,7 +188,7 @@ public class LoanIssue implements Serializable {
                 SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER,
                 narration, AuthUtils.getAuthenticatedOfficerId(context));
         txnLoanReturn.setLoanPayedId(id);
-        txnLoanReturn.setLoanReturnedDate(returnDate);
+        txnLoanReturn.setLoanReturnDate(returnDate);
 
         ContentValues values = Transaction.getTxnContentValues(txnLoanReturn);
         context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
@@ -188,7 +200,7 @@ public class LoanIssue implements Serializable {
             getMember(context).saveHasLoan(context, false);
         }
 
-        //       if total loan returned amount is half of loan issued, security member lock is freed
+        //if total loan returned amount is half of loan issued, security member lock is freed
         if (nextInstalmentCount == this.bystanderReleaseInstalment()) {
             getSecurityMember(context).saveIsLoanBlocked(context, false);
         }
@@ -207,10 +219,7 @@ public class LoanIssue implements Serializable {
     }
 
     public boolean isClosed() {
-        if (this.closedAt > 0) {
-            return true;
-        }
-        return false;
+        return this.closedAt > 0;
     }
 
     public Transaction getTransaction() {
@@ -338,6 +347,7 @@ public class LoanIssue implements Serializable {
     public void setLoanInstalmentAmount(double loanInstalmentAmount) {
         this.loanInstalmentAmount = loanInstalmentAmount;
     }
+
 
     public interface LoanIssueQuery {
         String[] PROJECTION = new String[]{

@@ -59,14 +59,14 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/spacing_very_tiny"
-        android:background="@drawable/ic_circle"
+        android:layout_width="50dp"
         android:maxLength="3"
         android:textStyle="bold"
         android:textSize="@dimen/font_medium"
         android:fontFamily="sans-serif-black"
         android:gravity="center"
         android:textColor="@color/white"
-        android:layout_width="24dp"
+        android:background="@drawable/ic_rounded_rectangle"
         android:layout_height="24dp" />
 
 </RelativeLayout>

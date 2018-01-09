@@ -40,7 +40,7 @@ public class DepositFragment extends Fragment {
         mContext = getContext();
 
         final View rootView = inflater.inflate(R.layout.deposit_fragment, container, false);
-        RecyclerView depositRecyclerView = (RecyclerView) rootView.findViewById(R.id.deposited_list);
+        RecyclerView depositRecyclerView = rootView.findViewById(R.id.deposited_list);
         depositRecyclerView.setHasFixedSize(true);
         depositRecyclerView.setNestedScrollingEnabled(false);
 
@@ -56,24 +56,24 @@ public class DepositFragment extends Fragment {
         int accountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER);
         mMember = Member.getMemberFromAccountNumber(mContext, accountNumber);
 
-        mNoOfDeposits = (TextView) rootView.findViewById(R.id.tvNoOfDeposits);
+        mNoOfDeposits = rootView.findViewById(R.id.tvNoOfDeposits);
         int depositCount = mMember.getTotalDeposits(mContext);
         mNoOfDeposits.setText(String.valueOf(depositCount));
-        mTotalDepositAmount = (TextView) rootView.findViewById(R.id.tvTotalDepositAmount);
+        mTotalDepositAmount = rootView.findViewById(R.id.tvTotalDepositAmount);
         mTotalDepositAmount.setText(Utility.formatAmountInRupees(mContext,depositCount * Utility.getMonthlyDepositAmount()));
 
-        TextView memberNameTv = (TextView) rootView.findViewById(R.id.tvMemberName);
+        TextView memberNameTv = rootView.findViewById(R.id.tvMemberName);
         memberNameTv.setText(mMember.getName());
-        TextView memberAddressTv = (TextView) rootView.findViewById(R.id.tvMemberAddress);
+        TextView memberAddressTv = rootView.findViewById(R.id.tvMemberAddress);
         memberAddressTv.setText(mMember.getAddress());
-        TextView memberAcNoTv = (TextView) rootView.findViewById(R.id.tvAcNo);
+        TextView memberAcNoTv = rootView.findViewById(R.id.tvAcNo);
         memberAcNoTv.setText(String.valueOf(mMember.getAccountNo()));
 
         // specify an adapter
         final DepositAdapter depositAdapter = new DepositAdapter(getContext(), mMember);
         depositRecyclerView.setAdapter(depositAdapter);
 
-        Button makeDepositBtn = (Button) rootView.findViewById(tvActonButton);
+        Button makeDepositBtn = rootView.findViewById(tvActonButton);
         makeDepositBtn.setText("Make Deposit");
         if (makeDepositBtn != null) {
             makeDepositBtn.setOnClickListener(new View.OnClickListener() {

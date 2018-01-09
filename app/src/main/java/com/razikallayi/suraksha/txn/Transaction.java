@@ -26,7 +26,7 @@ public class Transaction implements Serializable {
     private long officer_id;
     private long depositForDate = -1;
     private long loanPayedId = -1;
-    private long loanReturnedDate = -1;
+    private long loanReturnDate = -1;
     private long createdAt;
     private long updatedAt;
     //private Officer officer;
@@ -187,7 +187,7 @@ public class Transaction implements Serializable {
             txn.id = c.getLong(TxnQuery.COL_ID);
             txn.depositForDate = c.getLong(TxnQuery.COL_DEFINED_DEPOSIT_DATE);
             txn.loanPayedId = c.getInt(TxnQuery.COL_FK_LOAN_PAYED_ID);
-            txn.loanReturnedDate = c.getLong(TxnQuery.COL_LOAN_RETURN_DATE);
+            txn.loanReturnDate = c.getLong(TxnQuery.COL_LOAN_RETURN_DATE);
             txn.createdAt = c.getLong(TxnQuery.COL_CREATED_AT);
             txn.updatedAt = c.getLong(TxnQuery.COL_UPDATED_AT);
         }
@@ -205,7 +205,7 @@ public class Transaction implements Serializable {
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
         values.put(SurakshaContract.TxnEntry.COLUMN_NARRATION, txn.getNarration());
         values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer_id());
-        values.put(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE, txn.getLoanReturnedDate());
+        values.put(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE, txn.getLoanReturnDate());
         if(txn.createdAt == 0) {
             values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
         }else{
@@ -324,12 +324,12 @@ public class Transaction implements Serializable {
                 '}';
     }
 
-    public long getLoanReturnedDate() {
-        return loanReturnedDate;
+    public long getLoanReturnDate() {
+        return loanReturnDate;
     }
 
-    public void setLoanReturnedDate(long loanReturnedDate) {
-        this.loanReturnedDate = loanReturnedDate;
+    public void setLoanReturnDate(long loanReturnDate) {
+        this.loanReturnDate = loanReturnDate;
     }
 
 

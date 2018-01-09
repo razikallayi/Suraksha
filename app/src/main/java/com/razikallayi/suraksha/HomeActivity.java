@@ -6,15 +6,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.member.MemberListActivity;
 import com.razikallayi.suraksha.member.RegisterMemberActivity;
 import com.razikallayi.suraksha.officer.CreateOfficerActivity;
 import com.razikallayi.suraksha.report.TxnReportActivity;
-import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.FontUtils;
 
@@ -49,36 +46,10 @@ public class HomeActivity extends BaseActivity {
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        Button btnTxnReport = (Button) findViewById(R.id.btnTxnReport);
-        btnTxnReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TxnReportActivity.class);
-                startActivity(intent);
-            }
-        });
+        loadIconFonts();
 
-        TextView member_details_fa_icon = (TextView) findViewById(R.id.members_fa_icon);
-        member_details_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
-
-        TextView member_add_fa_icon = (TextView) findViewById(R.id.member_add_fa_icon);
-        member_add_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
-
-        TextView officer_fa_icon = (TextView) findViewById(R.id.officer_fa_icon);
-        officer_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
-
-        TextView reports_fa_icon = (TextView) findViewById(R.id.reports_fa_icon);
-        reports_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
-
-        TextView debug_fa_icon = (TextView) findViewById(R.id.debug_fa_icon);
-        debug_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
-
-        TextView lock_fa_icon = (TextView) findViewById(R.id.lock_fa_icon);
-        lock_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
-
-
-        Button btnMemberList = (Button) findViewById(R.id.btnMemberList);
-        btnMemberList.setOnClickListener(new View.OnClickListener() {
+        View memberListIcon = findViewById(R.id.member_list_icon);
+        memberListIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MemberListActivity.class);
@@ -87,7 +58,16 @@ public class HomeActivity extends BaseActivity {
         });
 
 
-        Button btnLogout = (Button) findViewById(R.id.btnLogout);
+        View btnTxnReport = findViewById(R.id.reports_icon);
+        btnTxnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TxnReportActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        View btnLogout = findViewById(R.id.lock_icon);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,14 +85,14 @@ public class HomeActivity extends BaseActivity {
         boolean isAdmin = AuthUtils.isAdmin(getApplicationContext());
         boolean isDeveloper = AuthUtils.isDeveloper(getApplicationContext());
 
-        Button btnAddMember = (Button) findViewById(R.id.btnRegistration);
+        View btnAddMember = findViewById(R.id.member_add_icon);
         ((View) btnAddMember.getParent()).setVisibility(View.GONE);
 
-        Button btnCreateOfficer = (Button) findViewById(R.id.btnCreateOfficer);
+        View btnCreateOfficer = findViewById(R.id.officer_icon);
         ((View) btnCreateOfficer.getParent()).setVisibility(View.GONE);
 
-        View statusCard=findViewById(R.id.statusCard);
-        statusCard.setVisibility(View.GONE);
+//        View statusCard=findViewById(R.id.statusCard);
+//        statusCard.setVisibility(View.GONE);
         if (isAdmin || isDeveloper) {
             ((View) btnAddMember.getParent()).setVisibility(View.VISIBLE);
             btnAddMember.setOnClickListener(new View.OnClickListener() {
@@ -131,25 +111,25 @@ public class HomeActivity extends BaseActivity {
                 }
             });
 
-            //Set content for content_base layout. This view is first seen when app is opened.
-            TextView tvActiveMembersCount = (TextView) findViewById(R.id.tvActiveMembers);
+  /*          //Set content for content_base layout. This view is first seen when app is opened.
+            TextView tvActiveMembersCount = findViewById(R.id.tvActiveMembers);
             tvActiveMembersCount.setText(String.valueOf(Member.getActiveMembersCount(getApplicationContext())));
 
-            TextView tvWmf = (TextView) findViewById(R.id.tvWmf);
+            TextView tvWmf = findViewById(R.id.tvWmf);
             tvWmf.setText(getString(R.string.format_rupees, Transaction.getWmf(this)));
 
-            TextView tvTotalDeposit = (TextView) findViewById(R.id.tvTotalDeposit);
+            TextView tvTotalDeposit = findViewById(R.id.tvTotalDeposit);
             tvTotalDeposit.setText(getString(R.string.format_rupees, Transaction.getTotalDeposit(this)));
 
-            TextView tvTotalLoanPayed = (TextView) findViewById(R.id.tvTotalLoanPayed);
+            TextView tvTotalLoanPayed = findViewById(R.id.tvTotalLoanPayed);
             tvTotalLoanPayed.setText(getString(R.string.format_rupees, Transaction.getTotalLoanPayed(this)));
 
-            TextView tvTotalLoanReturn = (TextView) findViewById(R.id.tvTotalLoanReturn);
+            TextView tvTotalLoanReturn = findViewById(R.id.tvTotalLoanReturn);
             tvTotalLoanReturn.setText(getString(R.string.format_rupees, Transaction.getTotalLoanReturn(this)));
-            statusCard.setVisibility(View.VISIBLE);
+            statusCard.setVisibility(View.VISIBLE);*/
         }
 
-        Button btnDebug = (Button) findViewById(R.id.btnDebug);
+        View btnDebug = findViewById(R.id.debug_icon);
         ((View) btnDebug.getParent()).setVisibility(View.GONE);
         if (isDeveloper) {
             ((View) btnDebug.getParent()).setVisibility(View.VISIBLE);
@@ -165,11 +145,33 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+    }
+
+
+    private void loadIconFonts() {
+        TextView member_details_fa_icon = findViewById(R.id.members_fa_icon);
+        member_details_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.MATERIAL));
+
+        TextView member_add_fa_icon = findViewById(R.id.member_add_fa_icon);
+        member_add_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.MATERIAL));
+
+        TextView officer_fa_icon = findViewById(R.id.officer_fa_icon);
+        officer_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.MATERIAL));
+
+        TextView reports_fa_icon = findViewById(R.id.reports_fa_icon);
+        reports_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.MATERIAL));
+
+        TextView debug_fa_icon = findViewById(R.id.debug_fa_icon);
+        debug_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.MATERIAL));
+
+        TextView lock_fa_icon = findViewById(R.id.lock_fa_icon);
+        lock_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.MATERIAL));
+
     }
 }

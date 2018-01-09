@@ -76,7 +76,7 @@ public class RegisterMemberActivity extends BaseActivity {
         setContentView(R.layout.register_member);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
@@ -93,19 +93,19 @@ public class RegisterMemberActivity extends BaseActivity {
 //                          |WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
-        txtName = (EditText) sv.findViewById(R.id.txtName);
-        txtAlias = (EditText) sv.findViewById(R.id.txtAlias);
-        txtFather = (EditText) sv.findViewById(R.id.txtFather);
-        txtSpouse = (EditText) sv.findViewById(R.id.txtSpouse);
-        txtOccupation = (EditText) sv.findViewById(R.id.txtOccupation);
-        txtAge = (EditText) sv.findViewById(R.id.txtAge);
-        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
-        txtNominee = (EditText) sv.findViewById(R.id.txtNominee);
-        txtAddressOfNominee = (EditText) sv.findViewById(R.id.txtAddressOfNominee);
-        txtRemarks = (EditText) sv.findViewById(R.id.txtRemarks);
-        isAcceptedTerms = (CheckBox) sv.findViewById(R.id.accept_terms);
+        NestedScrollView sv = findViewById(R.id.register_member_form);
+        txtName = sv.findViewById(R.id.txtName);
+        txtAlias = sv.findViewById(R.id.txtAlias);
+        txtFather = sv.findViewById(R.id.txtFather);
+        txtSpouse = sv.findViewById(R.id.txtSpouse);
+        txtOccupation = sv.findViewById(R.id.txtOccupation);
+        txtAge = sv.findViewById(R.id.txtAge);
+        txtMobile = sv.findViewById(R.id.txtMobile);
+        txtAddress = sv.findViewById(R.id.txtAddress);
+        txtNominee = sv.findViewById(R.id.txtNominee);
+        txtAddressOfNominee = sv.findViewById(R.id.txtAddressOfNominee);
+        txtRemarks = sv.findViewById(R.id.txtRemarks);
+        isAcceptedTerms = sv.findViewById(R.id.accept_terms);
 
         //Spinner
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -114,7 +114,7 @@ public class RegisterMemberActivity extends BaseActivity {
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        mRelationWithNomineeSpinner = (Spinner) sv.findViewById(R.id.spnRelationWithNominee);
+        mRelationWithNomineeSpinner = sv.findViewById(R.id.spnRelationWithNominee);
         mRelationWithNomineeSpinner.setAdapter(adapter);
 
         txtNominee.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -132,14 +132,14 @@ public class RegisterMemberActivity extends BaseActivity {
         });
 
 
-        TextView tvAccountNumber = (TextView) sv.findViewById(R.id.tvAccountNumber);
-        TextView tvRegistrationFee = (TextView) sv.findViewById(R.id.tvRegistrationFee);
+        TextView tvAccountNumber = sv.findViewById(R.id.tvAccountNumber);
+        TextView tvRegistrationFee = sv.findViewById(R.id.tvRegistrationFee);
 
 
         tvAccountNumber.setText(String.valueOf(Member.generateAccountNumber(getApplicationContext())));
         tvRegistrationFee.setText(getString(R.string.format_rupees, Utility.getRegistrationFeeAmount()));
 
-        imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
+        imageViewAvatar = findViewById(R.id.imageviewAvatar);
         imageViewAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,7 +176,7 @@ public class RegisterMemberActivity extends BaseActivity {
         });
 
         //Button Add Member
-        final Button mAddMemberButton = (Button) sv.findViewById(R.id.btnAddMember);
+        final Button mAddMemberButton = sv.findViewById(R.id.btnAddMember);
         mAddMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,9 +264,9 @@ public class RegisterMemberActivity extends BaseActivity {
     private Member getMemberDetailsFromInput() {
         //Radio Button
         // get selected radio button from radioGroup
-        RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
+        RadioGroup mGenderRadioGroup = findViewById(R.id.rgpGender);
         // find the radio button by returned id
-        RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
+        RadioButton mSelectedGenderRadioButton = findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
 
         //EditText Fields
         String name = txtName.getText().toString().trim();

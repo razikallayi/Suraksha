@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.util.Calendar;
 
@@ -80,7 +80,7 @@ public class DailyTransactionFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_daily_transaction, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.txnDate);
+        TextView textView = rootView.findViewById(R.id.loanReturnDate);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mDate);
         Log.d("FISH", "onCreateView Date:  "+mDate);

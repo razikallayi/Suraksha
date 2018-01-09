@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.R;
+import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.util.List;
 
@@ -78,11 +78,11 @@ public class TxnRecyclerViewAdapter extends RecyclerView.Adapter<TxnRecyclerView
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mLedger = (TextView) view.findViewById(R.id.txnLedger);
-            mMonthView = (TextView) view.findViewById(R.id.txnMonth);
-            mCreatedAt = (TextView) view.findViewById(R.id.txnCreatedAt);
-            mAmountView = (TextView) view.findViewById(R.id.txnAmount);
-            mVoucherName = (TextView) view.findViewById(R.id.txnVoucherName);
+            mLedger = view.findViewById(R.id.txnLedger);
+            mMonthView = view.findViewById(R.id.txnMonth);
+            mCreatedAt = view.findViewById(R.id.txnCreatedAt);
+            mAmountView = view.findViewById(R.id.txnAmount);
+            mVoucherName = view.findViewById(R.id.txnVoucherName);
         }
 
         @Override

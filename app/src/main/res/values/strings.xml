@@ -115,6 +115,15 @@
     <string name="fa_ic_lock">&#xf023;</string>
     <string name="fa_ic_debug">&#xf188;</string>
 
+    <!--Material Icons-->
+    <string name="md_ic_calendar">&#xf332;</string>
+    <string name="md_ic_member_details">&#xf20e;</string>
+    <string name="md_ic_member_add">&#xf1ff;</string>
+    <string name="md_ic_reports">&#xf131;</string>
+    <string name="md_ic_officer">&#xf18d;</string>
+    <string name="md_ic_lock">&#xf190;</string>
+    <string name="md_ic_debug">&#xf120;</string>
+
     <!-- Date format [CHAR LIMIT=NONE] -->
     <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
 
@@ -133,6 +142,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_activity_txn_report">Transactions</string>
 
+    <string name="amount_cannot_be_that_small">Amount cannot be that small</string>
     <string name="enter_a_valid_amount">Please enter a valid amount</string>
     <string name="enter_a_valid_number">Please enter a valid number</string>
     <string name="security_member_cannot_be_empty">Please select a security member</string>
@@ -192,12 +202,14 @@
     <string name="issue_loan">Issue Loan</string>
     <string name="loan_issued">Loan Issued</string>
     <string name="loan_return">Loan Return</string>
+    <string name="pending_loan_return">Pending Loan Return</string>
     <string name="instalment">Instalment</string>
     <string name="deposit">Deposit</string>
+    <string name="pending_deposit">Pending Deposit</string>
     <string name="deposits">Deposits</string>
-    <string name="summery">Summery</string>
+    <string name="pending_summery">Pending Summery</string>
     <string name="make_deposit">Make Deposit</string>
-    <string name="loan">Loan</string>
+    <string name="loans">Loans</string>
     <string name="date">Date</string>
     <string name="title_loan_return">Loan Return</string>
     <string name="title_loan_returned">Loan Returned</string>
@@ -208,6 +220,8 @@
     <string name="title_home">Account Summery</string>
     <string name="title_dashboard">Account Summery</string>
     <string name="title_notifications">Account Summery</string>
+    <string name="update_loan_return">Update Loan Return</string>
+    <string name="loan_issue_edit_note"><b>Note: </b>This Loan has loan returns. You may delete loan returns first to edit <b>issued date</b>, <b>loan amount</b> or <b>instalment times</b>. </string>
 
 
 </resources>

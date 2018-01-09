@@ -63,7 +63,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
         rootView = inflater.inflate(R.layout.txn_list, container, false);
 
         Context context = rootView.getContext();
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.list);
+        RecyclerView recyclerView = rootView.findViewById(R.id.list);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         int accountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER);
@@ -114,7 +114,7 @@ public class TxnListFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         List<Transaction> depositedDates = Transaction.getTxnListFromCursor(getContext(),cursor);
         cursor.close();
-        RecyclerView recyclerViewDue = (RecyclerView) rootView.findViewById(R.id.due_list);
+        RecyclerView recyclerViewDue = rootView.findViewById(R.id.due_list);
         LinearLayoutManager llm = new LinearLayoutManager(rootView.getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewDue.setLayoutManager(llm);

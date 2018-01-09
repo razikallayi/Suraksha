@@ -26,7 +26,7 @@ public class LoanIssuedActivity extends BaseActivity implements LoaderManager.Lo
 
         setContentView(R.layout.loan_issued_activity);
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -35,7 +35,7 @@ public class LoanIssuedActivity extends BaseActivity implements LoaderManager.Lo
         }
 
         accountNumber = getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1);
-        RecyclerView loanIssuedRecyclerView = (RecyclerView) findViewById(R.id.loan_issued_list);
+        RecyclerView loanIssuedRecyclerView = findViewById(R.id.loan_issued_list);
         mLoanIssueAdapter = new LoanIssuedAdapter();
 //        mLoanIssueAdapter.setFragmentManager(getSupportFragmentManager());
         loanIssuedRecyclerView.setAdapter(mLoanIssueAdapter);

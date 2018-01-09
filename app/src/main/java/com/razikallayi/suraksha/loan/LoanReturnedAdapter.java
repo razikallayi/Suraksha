@@ -1,6 +1,7 @@
 package com.razikallayi.suraksha.loan;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class LoanReturnedAdapter
         final Transaction loanReturnTxn = loanReturnList.get(position);
 
         holder.instalment_count_loan_return_item.setText(String.valueOf(loanReturnList.size() - position));
-        holder.date_loan_return_item.setText(CalendarUtils.formatDate(loanReturnTxn.getLoanReturnedDate()));
+        holder.date_loan_return_item.setText(CalendarUtils.formatDate(loanReturnTxn.getLoanReturnDate()));
         holder.amount_loan_return_item.setText(Utility.formatAmountInRupees(mContext, loanReturnTxn.getAmount()));
         holder.remarks_loan_return_item.setText(loanReturnTxn.getNarration());
         holder.officer_loan_return_item.setText(Officer.getOfficerNameFromId(mContext, loanReturnTxn.getOfficer_id()));
@@ -54,6 +55,16 @@ public class LoanReturnedAdapter
 //                    Intent intent = new Intent(context, AccountDetailActivity.class);
 //                    intent.putExtra("account_number", accountNumber);
 //                    context.startActivity(intent);
+            }
+        });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(mContext, LoanReturnActivity.class);
+                intent.putExtra(LoanReturnActivity.ARG_LOAN_RETURN_TXT_ID, loanReturnTxn.getId());
+                mContext.startActivity(intent);
+                return true;
             }
         });
     }
@@ -142,11 +153,11 @@ public class LoanReturnedAdapter
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            instalment_count_loan_return_item = (TextView) view.findViewById(R.id.instalment_count_loan_return_item);
-            date_loan_return_item = (TextView) view.findViewById(R.id.date_loan_return_item);
-            amount_loan_return_item = (TextView) view.findViewById(R.id.amount_loan_return_item);
-            remarks_loan_return_item = (TextView) view.findViewById(R.id.remarks_loan_return_item);
-            officer_loan_return_item = (TextView) view.findViewById(R.id.officer_loan_return_item);
+            instalment_count_loan_return_item = view.findViewById(R.id.instalment_count_loan_return_item);
+            date_loan_return_item = view.findViewById(R.id.date_loan_return_item);
+            amount_loan_return_item = view.findViewById(R.id.amount_loan_return_item);
+            remarks_loan_return_item = view.findViewById(R.id.remarks_loan_return_item);
+            officer_loan_return_item = view.findViewById(R.id.officer_loan_return_item);
         }
     }
 }

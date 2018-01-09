@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
-import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +44,28 @@ public class SmsUtils {
         return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_return", false);
     }
 
+    public static boolean editSummery(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getBoolean("edit_summery_message", false);
+    }
+
+
+//    public static boolean sendSms(Context c, String message, String mobileNumber) {
+//        if (mobileNumber.isEmpty()) {
+//            return false;
+//        }
+//        if (isValidMobileNumber(mobileNumber)) {
+//            SmsManager sms = SmsManager.getDefault();
+//            Log.d("FISH SmsUtils", "sendSms: sending message" + mobileNumber + " : " + message);
+////            sms.sendTextMessage(mobileNumber, null, message, null, null);
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + mobileNumber));
+//            intent.putExtra("sms_body", message);
+//            c.startActivity(intent);
+//
+//            return true;
+//        }
+//        return false;
+//    }
 
     public static boolean sendSms(String message, String mobileNumber) {
         if (mobileNumber.isEmpty()) {
@@ -52,12 +73,13 @@ public class SmsUtils {
         }
         if (isValidMobileNumber(mobileNumber)) {
             SmsManager sms = SmsManager.getDefault();
-            Log.d("FISH SmsUtils", "sendSms: sending message" + mobileNumber + " : " + message);
+            mobileNumber = "9746730324";
             sms.sendTextMessage(mobileNumber, null, message, null, null);
             return true;
         }
         return false;
     }
+
 
     public static boolean isValidMobileNumber(String mobileNumber) {
         //      ^     #Match the beginning of the string

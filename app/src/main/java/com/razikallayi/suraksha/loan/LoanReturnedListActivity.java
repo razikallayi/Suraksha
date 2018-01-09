@@ -36,7 +36,7 @@ public class LoanReturnedListActivity extends BaseActivity {
         setContentView(R.layout.loan_return_list_activity);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -53,7 +53,7 @@ public class LoanReturnedListActivity extends BaseActivity {
 
     public void loadLoanReturnList() {
 
-        loanReturnedRecyclerView = (RecyclerView) findViewById(R.id.loan_return_list);
+        loanReturnedRecyclerView = findViewById(R.id.loan_return_list);
         loanReturnedAdapter = new LoanReturnedAdapter(sLoanIssue.getLoanReturnTxnList(mContext));
         if (null != loanReturnedRecyclerView) {
             // specify an adapter
@@ -74,21 +74,21 @@ public class LoanReturnedListActivity extends BaseActivity {
         int accountNumber = sLoanIssue.getAccountNumber();
         mMember = Member.getMemberFromAccountNumber(mContext, accountNumber);
 
-        TextView memberNameTv = (TextView) findViewById(R.id.tvMemberName);
+        TextView memberNameTv = findViewById(R.id.tvMemberName);
         memberNameTv.setText(mMember.getName());
-        TextView memberAddressTv = (TextView) findViewById(R.id.tvMemberAddress);
+        TextView memberAddressTv = findViewById(R.id.tvMemberAddress);
         memberAddressTv.setText(mMember.getAddress());
-        TextView memberAcNoTv = (TextView) findViewById(R.id.tvAcNo);
+        TextView memberAcNoTv = findViewById(R.id.tvAcNo);
         memberAcNoTv.setText(String.valueOf(mMember.getAccountNo()));
 
-        loanReturnButton = (Button) findViewById(R.id.tvActonButton);
+        loanReturnButton = findViewById(R.id.tvActonButton);
         removeButtonIfLoanClosed(loanReturnButton, sLoanIssue);
         loanReturnButton.setText("Loan Return");
         loanReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, LoanReturnActivity.class);
-                LoanReturnActivity.setLoanIssue(sLoanIssue);
+                intent.putExtra(LoanReturnActivity.ARG_LOAN_ISSUE_ID, sLoanIssue.getId());
                 startActivity(intent);
             }
         });

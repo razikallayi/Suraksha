@@ -1,24 +1,14 @@
 package com.razikallayi.suraksha.member;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ImageView;
 
-import com.razikallayi.suraksha.AvatarActivity;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.account.AccountManipulationsFragment;
-
-import java.util.Random;
 
 /**
  * An activity representing a single Member detail screen. This
@@ -55,29 +45,31 @@ public class MemberDetailActivity extends BaseActivity {
             mMemberName = getIntent().getStringExtra(ARG_MEMBER_NAME);
         }
 
+        setupEnvironment();
+
         //Load Avatar
-        LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
-        loadAvatarTask.execute(mMemberId);
+//        LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
+//        loadAvatarTask.execute(mMemberId);
+//
+//        //Set Toolbar and load Member Name
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        toolbar.setTitle(mMemberName);
+//        setSupportActionBar(toolbar);
 
-        //Set Toolbar and load Member Name
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(mMemberName);
-        setSupportActionBar(toolbar);
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.member_detail_container);
+        ViewPager viewPager = findViewById(R.id.member_detail_container);
         if (viewPager != null) {
             setupViewPager(viewPager, mMemberId);
         }
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        if (viewPager != null) {
-            tabLayout.setupWithViewPager(viewPager);
-        }
+//        TabLayout tabLayout = findViewById(R.id.tabs);
+//        if (viewPager != null) {
+//            tabLayout.setupWithViewPager(viewPager);
+//        }
 
         // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
     }
 
     protected void onSaveInstanceState(Bundle outState) {
@@ -134,38 +126,51 @@ public class MemberDetailActivity extends BaseActivity {
     }
 
 
-    private class LoadAvatarTask extends AsyncTask<Long, Void, Member> {
-        @Override
-        protected Member doInBackground(Long[] memberId) {
-            return Member.getMemberFromId(getApplicationContext(), memberId[0]);
+    //    private class LoadAvatarTask extends AsyncTask<Long, Void, Member> {
+//        @Override
+//        protected Member doInBackground(Long[] memberId) {
+//            return Member.getMemberFromId(getApplicationContext(), memberId[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(final Member member) {
+//            super.onPostExecute(member);
+//            ImageView ivAvatar = findViewById(R.id.ivAvatarMemberDetailActivity);
+//            if (member.getAvatarDrawable() != null) {
+//                ivAvatar.setImageDrawable(member.getAvatarDrawable());
+//                ivAvatar.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(getApplicationContext(), AvatarActivity.class);
+//                        intent.putExtra("avatar", member.getAvatar());
+//                        startActivity(intent);
+//                    }
+//                });
+//            } else {
+//                Random rnd = new Random();
+//                int Low = 50;
+//                int High = 200;
+//                int color = Color.rgb(rnd.nextInt(High - Low) + Low,
+//                        rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
+//                ivAvatar.setImageDrawable(new ColorDrawable(color));
+//
+////                ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
+////                        R.color.blue, member.getName().substring(0, 1).toUpperCase(), 24));
+//            }
+//        }
+//    }
+    private void setupEnvironment() {
+        //Setup the toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(mMemberName);
+        setSupportActionBar(toolbar);
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        @Override
-        protected void onPostExecute(final Member member) {
-            super.onPostExecute(member);
-            ImageView ivAvatar = (ImageView) findViewById(R.id.ivAvatarMemberDetailActivity);
-            if (member.getAvatarDrawable() != null) {
-                ivAvatar.setImageDrawable(member.getAvatarDrawable());
-                ivAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), AvatarActivity.class);
-                        intent.putExtra("avatar", member.getAvatar());
-                        startActivity(intent);
-                    }
-                });
-            } else {
-                Random rnd = new Random();
-                int Low = 50;
-                int High = 200;
-                int color = Color.rgb(rnd.nextInt(High - Low) + Low,
-                        rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
-                ivAvatar.setImageDrawable(new ColorDrawable(color));
-
-//                ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
-//                        R.color.blue, member.getName().substring(0, 1).toUpperCase(), 24));
-            }
-        }
     }
 
 

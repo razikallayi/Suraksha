@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardUseCompatPadding="true"
-    app:cardCornerRadius="2dp"
-    android:id="@+id/cardVIewLoanIssuedItem"
-    android:layout_marginBottom="10dp">
 
-<GridLayout
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardVIewLoanIssuedItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_tiny"
-    android:columnCount="2">
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/touch_selector"
+    android:columnCount="2"
+    android:padding="@dimen/spacing_tiny">
 
     <TextView android:text="Loan Amount" />
 
@@ -80,8 +75,7 @@
         android:layout_gravity="start"
         android:layout_marginStart="@dimen/spacing_medium"
         android:text="To buy a new samsung galaxy s4 mini."
-        android:textSize="@dimen/font_medium"
-        />
+        android:textSize="@dimen/font_medium" />
 
 
     <TextView android:text="Office Statement" />
@@ -94,7 +88,5 @@
         android:layout_gravity="start"
         android:layout_marginStart="@dimen/spacing_medium"
         android:text="MashaAllah, Let him buy his new phone."
-        android:textSize="@dimen/font_medium"
-        />
+        android:textSize="@dimen/font_medium" />
 </GridLayout>
-</android.support.v7.widget.CardView>

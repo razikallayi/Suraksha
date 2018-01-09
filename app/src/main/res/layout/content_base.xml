@@ -93,7 +93,6 @@
                             android:fontFamily="sans-serif-condensed"
                             android:gravity="center|end"
                             android:padding="10dp"
-                            android:text="test32"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
 
@@ -124,7 +123,6 @@
                             android:fontFamily="sans-serif-condensed"
                             android:gravity="center|end"
                             android:padding="10dp"
-                            android:text="213132.0"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
 
@@ -156,7 +154,6 @@
                             android:fontFamily="sans-serif-condensed"
                             android:gravity="center|end"
                             android:padding="10dp"
-                            android:text="213132.0"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
 
@@ -188,100 +185,117 @@
                             android:fontFamily="sans-serif-condensed"
                             android:gravity="center|end"
                             android:padding="10dp"
-                            android:text="213132.0"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView style="@style/HomeCards">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/members_fa_icon"
-                    style="@style/HomeFAIcons"
-                    android:text="@string/fa_ic_member_details"
-                    android:textColor="@color/colorAccent" />
+                <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:columnCount="3"
 
-                <Button
-                    android:id="@+id/btnMemberList"
-                    style="@style/HomeButtons"
-                    android:text="Members" />
-            </android.support.v7.widget.CardView>
+                    tools:context="com.razikallayi.gecf.newsBeanLists.CategoryIconListFragment">
 
-            <android.support.v7.widget.CardView style="@style/HomeCards">
+                    <LinearLayout
+                        android:id="@+id/member_list_icon"
+                        android:orientation="vertical"
+                        android:padding="25dp">
 
-                <TextView
-                    android:id="@+id/member_add_fa_icon"
-                    style="@style/HomeFAIcons"
-                    android:text="@string/fa_ic_member_add"
-                    android:textColor="@color/colorAccent" />
+                        <TextView
+                            android:id="@+id/members_fa_icon"
+                            style="@style/HomeIcons"
+                            android:text="@string/md_ic_member_details" />
 
-                <Button
-                    android:id="@+id/btnRegistration"
-                    style="@style/HomeButtons"
-                    android:text="Member Registration" />
-            </android.support.v7.widget.CardView>
+                        <TextView
+                            style="@style/HomeIconText"
+                            android:text="Members" />
+                    </LinearLayout>
 
-            <android.support.v7.widget.CardView style="@style/HomeCards">
+                    <LinearLayout
+                        android:id="@+id/member_add_icon"
+                        android:orientation="vertical"
+                        android:padding="25dp">
 
-                <TextView
-                    android:id="@+id/officer_fa_icon"
-                    style="@style/HomeFAIcons"
-                    android:text="@string/fa_ic_officer"
-                    android:textColor="@color/colorAccent" />
+                        <TextView
+                            android:id="@+id/member_add_fa_icon"
+                            style="@style/HomeIcons"
+                            android:text="@string/md_ic_member_add" />
 
-                <Button
-                    android:id="@+id/btnCreateOfficer"
-                    style="@style/HomeButtons"
-                    android:text="Create Officer" />
-            </android.support.v7.widget.CardView>
+                        <TextView
+                            style="@style/HomeIconText"
+                            android:text="Registration" />
+                    </LinearLayout>
 
-            <android.support.v7.widget.CardView style="@style/HomeCards">
+                    <LinearLayout
+                        android:id="@+id/officer_icon"
+                        android:orientation="vertical"
+                        android:padding="25dp">
 
-                <TextView
-                    android:id="@+id/reports_fa_icon"
-                    style="@style/HomeFAIcons"
-                    android:text="@string/fa_ic_reports"
-                    android:textColor="@color/colorAccent" />
+                        <TextView
+                            android:id="@+id/officer_fa_icon"
+                            style="@style/HomeIcons"
+                            android:text="@string/md_ic_officer" />
 
-                <Button
-                    android:id="@+id/btnTxnReport"
-                    style="@style/HomeButtons"
-                    android:text="Reports" />
-            </android.support.v7.widget.CardView>
+                        <TextView
+                            style="@style/HomeIconText"
+                            android:text="@string/title_officer_list" />
+                    </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                style="@style/HomeCards"
-                android:visibility="gone">
+                    <LinearLayout
+                        android:id="@+id/reports_icon"
+                        android:orientation="vertical"
+                        android:padding="25dp">
 
-                <TextView
-                    android:id="@+id/debug_fa_icon"
-                    style="@style/HomeFAIcons"
-                    android:text="@string/fa_ic_debug"
-                    android:textColor="@color/colorAccent" />
+                        <TextView
+                            android:id="@+id/reports_fa_icon"
+                            style="@style/HomeIcons"
+                            android:text="@string/md_ic_reports" />
 
-                <Button
-                    android:id="@+id/btnDebug"
-                    style="@style/HomeButtons"
-                    android:text="Debug" />
-            </android.support.v7.widget.CardView>
+                        <TextView
+                            style="@style/HomeIconText"
+                            android:text="Reports" />
+                    </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                style="@style/HomeCards"
-                android:layout_marginBottom="10dp">
+                    <LinearLayout
+                        android:id="@+id/debug_icon"
+                        android:orientation="vertical"
+                        android:padding="25dp">
 
-                <TextView
-                    android:id="@+id/lock_fa_icon"
-                    style="@style/HomeFAIcons"
-                    android:text="@string/fa_ic_lock"
-                    android:textColor="@color/colorAccent" />
+                        <TextView
+                            android:id="@+id/debug_fa_icon"
+                            style="@style/HomeIcons"
+                            android:text="@string/md_ic_debug" />
 
-                <Button
-                    android:id="@+id/btnLogout"
-                    style="@style/HomeButtons"
-                    android:text="Logout" />
-            </android.support.v7.widget.CardView>
+                        <TextView
+                            style="@style/HomeIconText"
+                            android:text="Debug" />
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/lock_icon"
+                        android:orientation="vertical"
+                        android:padding="25dp">
+
+                        <TextView
+                            android:id="@+id/lock_fa_icon"
+                            style="@style/HomeIcons"
+                            android:text="@string/md_ic_lock" />
+
+                        <TextView
+                            style="@style/HomeIconText"
+                            android:text="Logout" />
+                    </LinearLayout>
+
+
+                </GridLayout>
+            </HorizontalScrollView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

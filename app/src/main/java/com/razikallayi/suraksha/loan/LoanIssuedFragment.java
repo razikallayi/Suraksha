@@ -37,7 +37,7 @@ public class LoanIssuedFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.loan_issued_fragment, container, false);
         accountNumber = getArguments().getInt(ARG_ACCOUNT_NUMBER, -1);
-        RecyclerView loanIssuedRecyclerView = (RecyclerView) rootView.findViewById(R.id.loan_issued_list);
+        RecyclerView loanIssuedRecyclerView = rootView.findViewById(R.id.loan_issued_list);
 //        loanIssuedRecyclerView.setHasFixedSize(true);
 
 //        // use a linear layout manager

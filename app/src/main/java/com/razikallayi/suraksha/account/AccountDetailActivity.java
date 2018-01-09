@@ -34,7 +34,7 @@ public class AccountDetailActivity extends BaseActivity {
         setContentView(R.layout.account_details);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -44,12 +44,12 @@ public class AccountDetailActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.account_detail_container);
+        ViewPager viewPager = findViewById(R.id.account_detail_container);
         if (viewPager != null) {
             mAccountNumber = getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1);
             setupViewPager(viewPager, mAccountNumber);
         }
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         if (viewPager != null && tabLayout != null) {
             tabLayout.setupWithViewPager(viewPager);
         }

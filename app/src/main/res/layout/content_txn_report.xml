@@ -13,7 +13,7 @@
         android:padding="@dimen/text_margin">
 
         <TextView
-            android:id="@+id/txnDate"
+            android:id="@+id/loanReturnDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Transactions"
@@ -30,7 +30,7 @@
             android:text="Deposit"
             android:id="@+id/lblDeposit"
             android:fontFamily="sans-serif-condensed"
-            android:layout_below="@+id/txnDate"
+            android:layout_below="@+id/loanReturnDate"
             />
 
         <TextView
@@ -39,7 +39,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/deposit_count"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/txnDate"
+            android:layout_below="@+id/loanReturnDate"
             android:text="5" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/tv_deposit_amount"
-            android:layout_below="@+id/txnDate"
+            android:layout_below="@+id/loanReturnDate"
             android:layout_alignParentEnd="true"
             android:text="5000" />
 

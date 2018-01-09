@@ -35,6 +35,10 @@
         android:dependency="enable_sms"
         android:key="sms_after_loan_return"
         android:title="Loan Return" />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="edit_summery_message"
+        android:title="Edit Summery Message" />
 
 
 </PreferenceScreen>

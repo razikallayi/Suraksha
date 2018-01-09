@@ -1,5 +1,9 @@
 package com.razikallayi.suraksha;
 
+import android.animation.AnimatorSet;
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,11 +12,13 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.utils.AuthUtils;
@@ -40,20 +46,43 @@ public class LoginActivity extends AppCompatActivity {
         // Set up the login form.
         setContentView(R.layout.activity_login);
 
-        mUsernameView = (EditText) findViewById(R.id.username);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mUsernameView = findViewById(R.id.username);
+        mPasswordView = findViewById(R.id.password);
+        final ImageView logo = findViewById(R.id.logo);
 
-        mockLogin("RAZI", "4976");
+
+        final ValueAnimator animator = ValueAnimator.ofFloat(-200, 50);
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float translateValue = (float) animation.getAnimatedValue();
+                logo.setTranslationY(translateValue);
+            }
+        });
+
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(600);
+        animator.start();
+
+
+        LayoutTransition l = new LayoutTransition();
+        l.enableTransitionType(LayoutTransition.CHANGING);
+        ViewGroup viewGroup = (ViewGroup) mUsernameView.getParent().getParent();
+        viewGroup.setLayoutTransition(l);
+
+
+        mockLogin("RAZI", "4976", 4000);
 
         mRecentOfficer = SettingsUtils.getOfficerUsername(getApplicationContext());
         if (null != mRecentOfficer) {
             mUsernameView.setVisibility(View.GONE);
-            TextView mUsernameTv = (TextView) findViewById(R.id.tvUsername);
+            TextView mUsernameTv = findViewById(R.id.tvUsername);
             mUsernameTv.setText(mRecentOfficer);
             mUsernameTv.setContentDescription(mRecentOfficer);
             //((View)(mUsernameTv.getParent())).setContentDescription(mRecentOfficer);
             mUsernameTv.setVisibility(View.VISIBLE);
-            Button mSignOutButton = (Button) findViewById(R.id.sign_out_button);
+            Button mSignOutButton = findViewById(R.id.sign_out_button);
             mSignOutButton.setVisibility(View.VISIBLE);
 
             mSignOutButton.setOnClickListener(new OnClickListener() {
@@ -91,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button signInButton = (Button) findViewById(R.id.sign_in_button);
+        Button signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,35 +129,94 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void mockLogin(String username, String password) {
+
+    public void startAnimation(View view) {
+        float dest = 0;
+        ImageView aniView = findViewById(R.id.logo);
+        switch (view.getId()) {
+
+            case R.id.username:
+                dest = 360;
+                if (aniView.getRotation() == 360) {
+                    System.out.println(aniView.getAlpha());
+                    dest = 0;
+                }
+                ObjectAnimator animation1 = ObjectAnimator.ofFloat(aniView,
+                        "rotation", dest);
+                animation1.setDuration(2000);
+                animation1.start();
+                // Show how to load an animation from XML
+                // Animation animation1 = AnimationUtils.loadAnimation(this,
+                // R.anim.myanimation);
+                // animation1.setAnimationListener(this);
+                // animatedView1.startAnimation(animation1);
+                break;
+
+
+        /*    case R.id.password:
+                // shows how to define a animation via code
+                // also use an Interpolator (BounceInterpolator)
+                Paint paint = new Paint();
+                TextView aniTextView = mUsernameView;
+                float measureTextCenter = paint.measureText(aniTextView.getText()
+                        .toString());
+                dest = 0 - measureTextCenter;
+                if (aniTextView.getX() < 0) {
+                    dest = 0;
+                }
+                ObjectAnimator animation2 = ObjectAnimator.ofFloat(aniTextView,
+                        "y", dest);
+                animation2.setDuration(2000);
+                animation2.start();
+                break;*/
+
+           /* case R.id.password:
+                // demonstrate fading and adding an AnimationListener
+
+                dest = 1;
+                if (aniView.getAlpha() > 0) {
+                    dest = 0;
+                }
+                ObjectAnimator animation3 = ObjectAnimator.ofFloat(aniView,
+                        "alpha", dest);
+                animation3.setDuration(2000);
+                animation3.start();
+                break;*/
+
+            case R.id.password:
+
+                ObjectAnimator fadeOut = ObjectAnimator.ofFloat(aniView, "alpha",
+                        0f);
+                fadeOut.setDuration(2000);
+                ObjectAnimator mover = ObjectAnimator.ofFloat(aniView,
+                        "translationX", -500f, 0f);
+                mover.setDuration(2000);
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(aniView, "alpha",
+                        0f, 1f);
+                fadeIn.setDuration(2000);
+                AnimatorSet animatorSet = new AnimatorSet();
+
+                animatorSet.play(mover).with(fadeIn).after(fadeOut);
+                animatorSet.start();
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    private void mockLogin(String username, String password, int delayInMillisecond) {
         mUsernameView.setText(username);
         mPasswordView.setText(password);
-        Handler handler  =new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 attemptLogin();
             }
-        },1);
+        }, delayInMillisecond);
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isBackPressed) {
-            setResult(RESULT_FIRST_USER);
-            super.onBackPressed();
-            return;
-        }
-        Toast.makeText(getApplicationContext(), "Double tap to exit.", Toast.LENGTH_SHORT).show();
-        isBackPressed = true;
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isBackPressed = false;
-            }
-        }, 400);
     }
 
 

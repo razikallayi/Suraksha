@@ -3,7 +3,6 @@ package com.razikallayi.suraksha.loan;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.RecyclerViewCursorAdapter;
 import com.razikallayi.suraksha.member.Member;
 import com.razikallayi.suraksha.officer.Officer;
+import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
@@ -42,7 +42,7 @@ public class LoanIssuedAdapter
     }
 
 
-    void onItemClick(View view, LoanIssue loanIssue) {
+    private void onItemClick(View view, LoanIssue loanIssue) {
         Intent intent = new Intent(view.getContext(), LoanReturnedListActivity.class);
         LoanReturnedListActivity.setLoanIssue(loanIssue);
         view.getContext().startActivity(intent);
@@ -64,7 +64,7 @@ public class LoanIssuedAdapter
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
-        final CardView cardVIewLoanIssuedItem;
+        final View LoanIssuedItemView;
         final TextView amountLoanIssueItem;
         final TextView guarantorNameLoanIssueItem;
         final TextView issued_date_loan_issue_item;
@@ -76,14 +76,14 @@ public class LoanIssuedAdapter
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            cardVIewLoanIssuedItem = (CardView) view.findViewById(R.id.cardVIewLoanIssuedItem);
-            amountLoanIssueItem = (TextView) view.findViewById(R.id.amountLoanIssueItem);
-            guarantorNameLoanIssueItem = (TextView) view.findViewById(R.id.guarantorNameLoanIssueItem);
-            issued_date_loan_issue_item = (TextView) view.findViewById(R.id.issued_date_loan_issue_item);
-            created_date_loan_issue_item = (TextView) view.findViewById(R.id.created_date_loan_issue_item);
-            purpose_loan_issue_item = (TextView) view.findViewById(R.id.purpose_loan_issue_item);
-            office_statement_loan_issue_item = (TextView) view.findViewById(R.id.office_statement_loan_issue_item);
-            officer_loan_issue_item = (TextView) view.findViewById(R.id.officer_loan_issue_item);
+            LoanIssuedItemView = view.findViewById(R.id.cardVIewLoanIssuedItem);
+            amountLoanIssueItem = view.findViewById(R.id.amountLoanIssueItem);
+            guarantorNameLoanIssueItem = view.findViewById(R.id.guarantorNameLoanIssueItem);
+            issued_date_loan_issue_item = view.findViewById(R.id.issued_date_loan_issue_item);
+            created_date_loan_issue_item = view.findViewById(R.id.created_date_loan_issue_item);
+            purpose_loan_issue_item = view.findViewById(R.id.purpose_loan_issue_item);
+            office_statement_loan_issue_item = view.findViewById(R.id.office_statement_loan_issue_item);
+            officer_loan_issue_item = view.findViewById(R.id.officer_loan_issue_item);
         }
 
         void bindData(final Cursor cursor) {
@@ -108,6 +108,20 @@ public class LoanIssuedAdapter
 //                    context.startActivity(intent);
                 }
             });
+            mView.setLongClickable(true);
+            if (AuthUtils.isAdmin(mView.getContext())) {
+                mView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Context context = v.getContext();
+                        Intent intent = new Intent(context, IssueLoanActivity.class);
+                        intent.putExtra(IssueLoanActivity.ARG_MEMBER_ID, loanIssue.getMember(context).getId());
+                        intent.putExtra(IssueLoanActivity.ARG_LOAN_ISSUE_ID, loanIssue.getId());
+                        context.startActivity(intent);
+                        return true;
+                    }
+                });
+            }
         }
     }
 }

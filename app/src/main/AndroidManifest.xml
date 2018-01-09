@@ -123,7 +123,8 @@
             android:parentActivityName=".HomeActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:launchMode="singleTop" />
         <activity
             android:name=".officer.OfficerListActivity"
             android:label="@string/title_officer_list"
@@ -143,12 +144,16 @@
         <activity
             android:name=".loan.LoanActivity"
             android:label="@string/title_loan_return" />
-        <activity android:name=".loan.LoanReturnActivity"
-            android:label="@string/title_loan_return"/>
-        <activity android:name=".loan.LoanIssuedActivity"
-            android:label="@string/title_loan_issue"/>
-        <activity android:name=".loan.LoanReturnedListActivity"
-            android:label="@string/title_loan_returned"></activity>
+        <activity
+            android:name=".loan.LoanReturnActivity"
+            android:label="@string/title_loan_return" />
+        <activity
+            android:name=".loan.LoanIssuedActivity"
+            android:label="@string/title_loan_issue" />
+        <activity
+            android:name=".loan.LoanReturnedListActivity"
+            android:label="@string/title_loan_returned" />
+        <activity android:name=".TestKotlinActivity"></activity>
     </application>
 
 </manifest>

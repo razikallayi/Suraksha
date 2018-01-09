@@ -46,7 +46,7 @@ public class TxnReportActivity extends BaseActivity implements
         setContentView(R.layout.activity_txn_report);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
@@ -55,7 +55,7 @@ public class TxnReportActivity extends BaseActivity implements
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,7 +142,7 @@ public class TxnReportActivity extends BaseActivity implements
             }
         }
 
-        RecyclerView transactionRecyclerView = (RecyclerView) findViewById(R.id.txnRecyclerView);
+        RecyclerView transactionRecyclerView = findViewById(R.id.txnRecyclerView);
         mTxnAdapter = new TxnAdapter(getLayoutInflater(), mItems);
         transactionRecyclerView.setAdapter(mTxnAdapter);
     }
@@ -261,7 +261,7 @@ public class TxnReportActivity extends BaseActivity implements
 
             public HeaderViewHolder(View itemView) {
                 super(itemView);
-                dateTextView = (TextView) itemView.findViewById(R.id.dateHeader);
+                dateTextView = itemView.findViewById(R.id.dateHeader);
             }
         }
 
@@ -279,14 +279,14 @@ public class TxnReportActivity extends BaseActivity implements
             public TxnViewHolder(View itemView) {
                 super(itemView);
                 mView = itemView;
-                mAccountNo = (TextView) itemView.findViewById(R.id.txnAccountNo);
-                mMemberName = (TextView) itemView.findViewById(R.id.txnMemberName);
-                mLedger = (TextView) itemView.findViewById(R.id.txnLedger);
-                mMonthView = (TextView) itemView.findViewById(R.id.txnMonth);
-                mCreatedAt = (TextView) itemView.findViewById(R.id.txnCreatedAt);
-                mCreatedBy = (TextView) itemView.findViewById(R.id.txnCreatedBy);
-                mAmountView = (TextView) itemView.findViewById(R.id.txnAmount);
-                mVoucherName = (TextView) itemView.findViewById(R.id.txnVoucherName);
+                mAccountNo = itemView.findViewById(R.id.txnAccountNo);
+                mMemberName = itemView.findViewById(R.id.txnMemberName);
+                mLedger = itemView.findViewById(R.id.txnLedger);
+                mMonthView = itemView.findViewById(R.id.txnMonth);
+                mCreatedAt = itemView.findViewById(R.id.txnCreatedAt);
+                mCreatedBy = itemView.findViewById(R.id.txnCreatedBy);
+                mAmountView = itemView.findViewById(R.id.txnAmount);
+                mVoucherName = itemView.findViewById(R.id.txnVoucherName);
             }
         }
     }

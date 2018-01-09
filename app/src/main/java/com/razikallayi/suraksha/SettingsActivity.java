@@ -18,7 +18,6 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +27,6 @@ import com.razikallayi.suraksha.utils.CalendarUtils;
 import com.razikallayi.suraksha.utils.Utility;
 
 import java.util.List;
-
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -124,7 +121,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-        Log.d(TAG, "bindPreferenceSummaryToValue: "+preference.getSummary());
         // Trigger the listener immediately with the preference's
         // current value.
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
@@ -143,9 +139,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     private void setupActionBar() {
-        ViewGroup vg = (ViewGroup) findViewById(android.R.id.content);
+        ViewGroup vg = findViewById(android.R.id.content);
         getLayoutInflater().inflate(R.layout.toolbar, vg);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getListView().setPadding(0, Utility.getActionBarHeight(getApplicationContext()), 0, 0);

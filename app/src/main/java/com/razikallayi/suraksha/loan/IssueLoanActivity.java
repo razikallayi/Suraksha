@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -53,6 +54,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         View.OnClickListener {
 
     public static final String ARG_MEMBER_ID = "member_id";
+    public static final String ARG_LOAN_ISSUE_ID = "loan_issue_id";
     public static final String ARG_ACCOUNT_NUMBER = "account_number";
     private static final int SECURITY_MEMBER_NAME_LOADER = 0X43;
 
@@ -60,7 +62,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
     private LoanIssue mLoanIssue;
     private int mSecurityAccountNo = -1;
 
-    private int mMaxLoanAmount = 10000;
+    private long mMaxLoanAmount = 10000;
     private int mDefaultInstalmentTimes = 10;
 
     private EditText txtDateIssueLoan;
@@ -72,6 +74,10 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
     private EditText txtLoanInstalmentAmount;
     private EditText txtLoanInstalmentTimes;
     private long loanIssueDate = 0;
+    private boolean editMode = false;
+    private ImageView clearAutoComplete;
+    private TextView editNoteIssueLoan;
+    private TextView calendar_fa_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +87,26 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         setupEnvironment();
 
         //Get Active Member Details from Intent
-        long mMemberId = getIntent().getLongExtra(ARG_MEMBER_ID, -1);
-        mMember = Member.getMemberFromId(getApplicationContext(), mMemberId);
+        long memberId = getIntent().getLongExtra(ARG_MEMBER_ID, -1);
+        mMember = Member.getMemberFromId(getApplicationContext(), memberId);
+        long loanIssueId = getIntent().getLongExtra(ARG_LOAN_ISSUE_ID, -1);
+        if (loanIssueId != -1) {
+            editMode = true;
+            mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
+        }
 //        mAccountNo = getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1);
 
+        if (editMode) {
+            getSupportActionBar().setTitle("Update Issued Loan");
+        }
         getSupportLoaderManager().initLoader(SECURITY_MEMBER_NAME_LOADER, null, this);
 
         //Initialise Fields
-        NestedScrollView sv = (NestedScrollView) findViewById(R.id.LoanIssueForm);
-        TextView lblMemberNameLoanIssue = (TextView) sv.findViewById(R.id.lblMemberNameLoanIssue);
-        TextView lblAddressLoanIssue = (TextView) sv.findViewById(R.id.lblAddressLoanIssue);
-        TextView lblAccountNumberInLoanIssueTitle = (TextView) sv.findViewById(R.id.lblAccountNumberInLoanIssueTitle);
-        ImageView imgAvatarMemberLoanIssue = (ImageView) sv.findViewById(R.id.imgAvatarMemberLoanIssue);
+        NestedScrollView sv = findViewById(R.id.LoanIssueForm);
+        TextView lblMemberNameLoanIssue = sv.findViewById(R.id.lblMemberNameLoanIssue);
+        TextView lblAddressLoanIssue = sv.findViewById(R.id.lblAddressLoanIssue);
+        TextView lblAccountNumberInLoanIssueTitle = sv.findViewById(R.id.lblAccountNumberInLoanIssueTitle);
+        ImageView imgAvatarMemberLoanIssue = sv.findViewById(R.id.imgAvatarMemberLoanIssue);
 
         //Set values of member name, address, avatar and account number
         lblMemberNameLoanIssue.setText(WordUtils.toTitleCase(mMember.getName()));
@@ -115,26 +129,91 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         }
 
         //Declaring editTexts of loan Amount and instalment
-        txtDateIssueLoan = (EditText) sv.findViewById(R.id.txtDateIssueLoan);
-        txtAmountIssueLoan = (EditText) sv.findViewById(R.id.txtAmountIssueLoan);
-        txtLoanInstalmentTimes = (EditText) sv.findViewById(R.id.txtLoanInstalmentTimes);
-        txtLoanInstalmentAmount = (EditText) sv.findViewById(R.id.txtLoanInstalmentAmount);
-        txtLoanInstalmentAmount = (EditText) sv.findViewById(R.id.txtLoanInstalmentAmount);
-        txtPurposeIssueLoan = (EditText) sv.findViewById(R.id.txtPurposeIssueLoan);
-        txtOfficeStatement = (EditText) sv.findViewById(R.id.txtOfficeStatement);
-        txtSecurityMemberName = (AutoCompleteTextView) sv.findViewById(R.id.txtSecurityMemberName);
-        final TextView lblAmountInWordsLoanIssue = (TextView) sv.findViewById(R.id.lblAmountInWordsLoanIssue);
+        txtDateIssueLoan = sv.findViewById(R.id.txtDateIssueLoan);
+        calendar_fa_icon = findViewById(R.id.calendar_fa_icon);
+        txtAmountIssueLoan = sv.findViewById(R.id.txtAmountIssueLoan);
+        txtLoanInstalmentTimes = sv.findViewById(R.id.txtLoanInstalmentTimes);
+        txtLoanInstalmentAmount = sv.findViewById(R.id.txtLoanInstalmentAmount);
+        txtPurposeIssueLoan = sv.findViewById(R.id.txtPurposeIssueLoan);
+        txtOfficeStatement = sv.findViewById(R.id.txtOfficeStatement);
+        txtSecurityMemberName = sv.findViewById(R.id.txtSecurityMemberName);
+        clearAutoComplete = sv.findViewById(R.id.clearAutoComplete);
+        editNoteIssueLoan = sv.findViewById(R.id.editNoteIssueLoan);
+        editNoteIssueLoan.setVisibility(View.GONE);
+        Button btnCloseLoanIssue = findViewById(R.id.btnCloseLoanIssue);
+        btnCloseLoanIssue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        final TextView lblAmountInWordsLoanIssue = sv.findViewById(R.id.lblAmountInWordsLoanIssue);
 
+        if (clearAutoComplete != null) {
+            clearAutoComplete.setVisibility(View.VISIBLE);
+            clearAutoComplete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    txtSecurityMemberName.setText("");
+                    mSecurityAccountNo = -1;
+                    clearAutoComplete.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        //AttachCalendar
+        attachCalendar();
 
         //Setting default values in editTexts
-        mDefaultInstalmentTimes = Integer.parseInt(LoanUtils.getDefaultLoanInstalmentTimes(getApplicationContext()));
-        txtLoanInstalmentTimes.setText(String.valueOf(mDefaultInstalmentTimes));
-        mMaxLoanAmount = Integer.parseInt(LoanUtils.getMaximumLoanAmount(getApplicationContext()));
-        txtAmountIssueLoan.setText(String.valueOf(mMaxLoanAmount));
-        String inWords = NumberToWords.convert(Long.valueOf(String.valueOf(mMaxLoanAmount)));
-        lblAmountInWordsLoanIssue.setText(WordUtils.toTitleCase(inWords));
-        int instalmentAmount = (mMaxLoanAmount / mDefaultInstalmentTimes);
-        txtLoanInstalmentAmount.setText(String.valueOf(instalmentAmount));
+        if (editMode && mLoanIssue != null) {
+            List<Transaction> loanReturnList = mLoanIssue.getLoanReturnTxnList(this);
+            if (loanReturnList != null && !loanReturnList.isEmpty()) {
+                editNoteIssueLoan.setVisibility(View.VISIBLE);
+                txtLoanInstalmentTimes.setKeyListener(null);
+                txtAmountIssueLoan.setKeyListener(null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    txtAmountIssueLoan.setTextColor(getResources().getColor(R.color.gray, null));
+                    txtDateIssueLoan.setTextColor(getResources().getColor(R.color.gray, null));
+                    txtLoanInstalmentTimes.setTextColor(getResources().getColor(R.color.gray, null));
+                } else {
+                    txtAmountIssueLoan.setTextColor(getResources().getColor(R.color.gray));
+                    txtDateIssueLoan.setTextColor(getResources().getColor(R.color.gray));
+                    txtLoanInstalmentTimes.setTextColor(getResources().getColor(R.color.gray));
+                }
+                disableCalendar();
+            }
+
+            txtLoanInstalmentTimes.setText(String.valueOf(mLoanIssue.getLoanInstalmentTimes()));
+            txtAmountIssueLoan.setText(String.valueOf(mLoanIssue.getAmount()));
+            String inWords = NumberToWords.convert((long) mLoanIssue.getAmount());
+            lblAmountInWordsLoanIssue.setText(WordUtils.toTitleCase(inWords));
+            txtLoanInstalmentAmount.setText(String.valueOf(mLoanIssue.getLoanInstalmentAmount()).trim());
+
+
+            String memberDetails = formatSecurityMemberDropdownText(mLoanIssue.getSecurityAccountNo()
+                    , mLoanIssue.getSecurityMember(this).getName()
+                    , mLoanIssue.getSecurityMember(this).getAddress());
+            txtSecurityMemberName.setText(memberDetails);
+            txtSecurityMemberName.setKeyListener(null);
+            clearAutoComplete.setVisibility(View.GONE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                txtSecurityMemberName.setTextColor(getResources().getColor(R.color.gray, null));
+            } else {
+                txtSecurityMemberName.setTextColor(getResources().getColor(R.color.gray));
+            }
+            mSecurityAccountNo = mLoanIssue.getSecurityAccountNo();
+            txtOfficeStatement.setText(mLoanIssue.getOfficeStatement());
+            txtPurposeIssueLoan.setText(mLoanIssue.getPurpose());
+        } else {
+            mDefaultInstalmentTimes = Integer.parseInt(LoanUtils.getDefaultLoanInstalmentTimes(getApplicationContext()));
+            txtLoanInstalmentTimes.setText(String.valueOf(mDefaultInstalmentTimes));
+            mMaxLoanAmount = Long.parseLong(LoanUtils.getMaximumLoanAmount(getApplicationContext()));
+            txtAmountIssueLoan.setText(String.valueOf(mMaxLoanAmount));
+            String inWords = NumberToWords.convert((long) Double.parseDouble(String.valueOf(mMaxLoanAmount)));
+            lblAmountInWordsLoanIssue.setText(WordUtils.toTitleCase(inWords));
+            Double instalmentAmount = (double) (mMaxLoanAmount / mDefaultInstalmentTimes);
+            txtLoanInstalmentAmount.setText(String.valueOf(instalmentAmount));
+        }
 
         txtAmountIssueLoan.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -147,7 +226,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                         txtLoanInstalmentAmount.setEnabled(false);
                         lblAmountInWordsLoanIssue.setText("");
                     } else {
-                        String inWords = NumberToWords.convert(Long.valueOf(String.valueOf(txtAmountIssueLoan.getText())));
+                        String inWords = NumberToWords.convert((long) Double.parseDouble(String.valueOf(txtAmountIssueLoan.getText())));
                         lblAmountInWordsLoanIssue.setText(WordUtils.toTitleCase(inWords));
                         txtLoanInstalmentTimes.setEnabled(true);
                         txtLoanInstalmentAmount.setEnabled(true);
@@ -184,12 +263,35 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             }
         });
 
-        //AttachCalendar
-        attachCalendar();
-
         //IssueLoanButton Click Listener
-        btnIssueLoan = (Button) sv.findViewById(R.id.btnIssueLoan);
+        btnIssueLoan = sv.findViewById(R.id.btnIssueLoan);
+        if (editMode) {
+            btnIssueLoan.setText("Update Issued Loan");
+        } else {
+            btnIssueLoan.setText("Issue Loan");
+        }
         btnIssueLoan.setOnClickListener(this);
+    }
+
+    private LoanIssue getLoanDetailsFromInput(LoanIssue mLoanIssue) {
+        double amount = Double.parseDouble(String.valueOf(txtAmountIssueLoan.getText()));
+        int times = Integer.parseInt(String.valueOf(txtLoanInstalmentTimes.getText()));
+        String officeStatement = String.valueOf(txtOfficeStatement.getText());
+
+        String purpose = txtPurposeIssueLoan.getText().toString();
+        int securityAccountNo = mSecurityAccountNo;
+        if (mLoanIssue == null) {
+            mLoanIssue = new LoanIssue(mMember.getAccountNo(), amount, purpose,
+                    securityAccountNo, times, officeStatement, loanIssueDate);
+            mLoanIssue.setMember(mMember);
+        } else {
+            mLoanIssue.setAmount(amount);
+            mLoanIssue.setPurpose(purpose);
+            mLoanIssue.setLoanInstalmentTimes(times);
+            mLoanIssue.setOfficeStatement(officeStatement);
+            mLoanIssue.setIssuedAt(loanIssueDate);
+        }
+        return mLoanIssue;
     }
 
     private void setupEnvironment() {
@@ -200,7 +302,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
 //        getWindow().setLayout(screenWidth, ViewGroup.LayoutParams.MATCH_PARENT);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.
@@ -217,7 +319,17 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
 
     }
 
+    private void disableCalendar() {
+        txtDateIssueLoan.setOnClickListener(null);
+        calendar_fa_icon.setOnClickListener(null);
+        txtDateIssueLoan.setClickable(false);
+        calendar_fa_icon.setClickable(false);
+    }
+
     private void attachCalendar() {
+        if (editMode) {
+            loanIssueDate = mLoanIssue.getIssuedAt();
+        }
         if (loanIssueDate == 0) {
             String defaultLoanIssueDate = LoanUtils.getDefaultLoanIssueDate(getApplicationContext());
             loanIssueDate = Long.parseLong(defaultLoanIssueDate);
@@ -231,7 +343,6 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             }
         });
 
-        TextView calendar_fa_icon = (TextView) findViewById(R.id.calendar_fa_icon);
         calendar_fa_icon.setTypeface(FontUtils.getTypeface(getApplicationContext(), FontUtils.FONTAWSOME));
         calendar_fa_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +371,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
-        int maxLoanAmount = Integer.parseInt(LoanUtils.getMaximumLoanAmount(getApplicationContext()));
+        Long maxLoanAmount = Long.parseLong(LoanUtils.getMaximumLoanAmount(getApplicationContext()));
         // update the maxLoanAmount in our second pane using the fragment manager
         mMaxLoanAmount = maxLoanAmount;
     }
@@ -271,7 +382,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         if (!strTimes.isEmpty()) {
             int times = Integer.parseInt(strTimes);
             if (amount > 0 && times > 0) {
-                txtLoanInstalmentAmount.setText(String.valueOf((int) (amount / times)));
+                txtLoanInstalmentAmount.setText(String.valueOf(amount / times));
             }
         } else {
             txtLoanInstalmentAmount.setText("");
@@ -292,19 +403,6 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         }
     }
 
-    private LoanIssue getLoanDetailsFromInput() {
-        double amount = Double.parseDouble(String.valueOf(txtAmountIssueLoan.getText()));
-        int times = Integer.parseInt(String.valueOf(txtLoanInstalmentTimes.getText()));
-        String officeStatement = String.valueOf(txtOfficeStatement.getText());
-
-        String purpose = txtPurposeIssueLoan.getText().toString();
-        int securityAccountNo = mSecurityAccountNo;
-
-        LoanIssue loanIssue = new LoanIssue(mMember.getAccountNo(), amount, purpose,
-                securityAccountNo, times, officeStatement, loanIssueDate);
-        loanIssue.setMember(mMember);
-        return loanIssue;
-    }
 
     @Override
     public void onBackPressed() {
@@ -329,13 +427,24 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         List<String> memberAccNoNameAddress = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            memberAccNoNameAddress.add(cursor.getString(MemberColumns.COL_MEMBER_ACCOUNT_NO) + ": "
-                    + WordUtils.toTitleCase(cursor.getString(MemberColumns.COL_MEMBER_NAME)) + " " +
-                    WordUtils.toTitleCase(cursor.getString(MemberColumns.COL_MEMBER_ADDRESS)));
+            String formatedMember = formatSecurityMemberDropdownText(cursor.getInt(MemberColumns.COL_MEMBER_ACCOUNT_NO)
+                    , cursor.getString(MemberColumns.COL_MEMBER_NAME)
+                    , cursor.getString(MemberColumns.COL_MEMBER_ADDRESS));
+            memberAccNoNameAddress.add(formatedMember);
+
+//            memberAccNoNameAddress.add(cursor.getString(MemberColumns.COL_MEMBER_ACCOUNT_NO) + ": "
+//                    + WordUtils.toTitleCase(cursor.getString(MemberColumns.COL_MEMBER_NAME)) + " " +
+//                    WordUtils.toTitleCase(cursor.getString(MemberColumns.COL_MEMBER_ADDRESS)));
             cursor.moveToNext();
         }
 
         addMemberNamesToAutoComplete(memberAccNoNameAddress);
+    }
+
+    String formatSecurityMemberDropdownText(int account_number, String name, String address) {
+        return String.valueOf(account_number) + ": "
+                + WordUtils.toTitleCase(name) + " " +
+                WordUtils.toTitleCase(address);
     }
 
     @Override
@@ -373,19 +482,6 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String memberNameAndAddress = adapter.getItem(position);
                 mSecurityAccountNo = Integer.parseInt(memberNameAndAddress.split(":")[0]);
-
-                final ImageView clearAutoComplete = (ImageView) findViewById(R.id.clearAutoComplete);
-                if (clearAutoComplete != null) {
-                    clearAutoComplete.setVisibility(View.VISIBLE);
-                    clearAutoComplete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            txtSecurityMemberName.setText("");
-                            mSecurityAccountNo = -1;
-                            clearAutoComplete.setVisibility(View.GONE);
-                        }
-                    });
-                }
             }
         });
     }
@@ -415,10 +511,10 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                 if (TextUtils.isEmpty(loanAmount)) {
                     txtAmountIssueLoan.setError(getString(R.string.enter_a_valid_amount));
                     txtAmountIssueLoan.requestFocus();
-                } else if (!TextUtils.isEmpty(loanAmount) && Integer.parseInt(loanAmount) == 0) {
-                    txtAmountIssueLoan.setError(getString(R.string.enter_a_valid_amount));
+                } else if (!TextUtils.isEmpty(loanAmount) && Double.parseDouble(loanAmount) < 1000) {
+                    txtAmountIssueLoan.setError(getString(R.string.amount_cannot_be_that_small));
                     txtAmountIssueLoan.requestFocus();
-                } else if (!TextUtils.isEmpty(loanAmount) && Integer.parseInt(loanAmount) > mMaxLoanAmount) {
+                } else if (!TextUtils.isEmpty(loanAmount) && Double.parseDouble(loanAmount) > mMaxLoanAmount) {
                     txtAmountIssueLoan.setError("Loan amount cannot be more than " + mMaxLoanAmount + ". Change maximum loanable amount in settings.");
                     txtAmountIssueLoan.requestFocus();
                 } else if (TextUtils.isEmpty(times)) {
@@ -428,7 +524,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                     txtLoanInstalmentTimes.setError(getString(R.string.enter_a_valid_number));
                     txtLoanInstalmentTimes.requestFocus();
                 } else if (!TextUtils.isEmpty(txtLoanInstalmentAmount.getText())
-                        && Integer.parseInt(String.valueOf(txtLoanInstalmentAmount.getText())) == 0) {
+                        && Double.parseDouble(String.valueOf(txtLoanInstalmentAmount.getText())) == 0) {
                     txtLoanInstalmentAmount.setError(getString(R.string.enter_a_valid_number));
                     txtLoanInstalmentAmount.requestFocus();
                 } else if (mSecurityAccountNo == -1) {
@@ -436,8 +532,11 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                     txtSecurityMemberName.requestFocus();
                 } else {   //no errors in input
                     btnIssueLoan.setEnabled(false);
-                    mLoanIssue = getLoanDetailsFromInput();
-
+                    if (editMode) {
+                        mLoanIssue = getLoanDetailsFromInput(mLoanIssue);
+                    } else {
+                        mLoanIssue = getLoanDetailsFromInput(null);
+                    }
                     //Add the member to database
                     new IssueLoanTask(mLoanIssue).execute();
                 }
@@ -481,11 +580,19 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
                     mLoanIssue.getSecurityAccountNo());
             mLoanIssue.setSecurityMember(securityMember);
 
-            //Save Loan Issue
             ContentValues values = LoanIssue.getLoanIssuedContentValues(mLoanIssue);
-            Uri loanIssueUri = context.getContentResolver().insert(
-                    SurakshaContract.LoanIssueEntry.CONTENT_URI, values);
-            long loanIssueId = SurakshaContract.LoanIssueEntry.getLoanIssueIdFromUri(loanIssueUri);
+            long loanIssueId;
+            if (editMode) {
+                loanIssueId = mLoanIssue.getId();
+                getContentResolver().update(
+                        SurakshaContract.LoanIssueEntry.CONTENT_URI, values,
+                        SurakshaContract.LoanIssueEntry._ID + "=?",
+                        new String[]{String.valueOf(loanIssueId)});
+            } else {
+                Uri loanIssueUri = context.getContentResolver().insert(
+                        SurakshaContract.LoanIssueEntry.CONTENT_URI, values);
+                loanIssueId = SurakshaContract.LoanIssueEntry.getLoanIssueIdFromUri(loanIssueUri);
+            }
 
             //Save Loan Transaction
             Transaction txnIssueLoan = new Transaction(context,
@@ -498,14 +605,22 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             txnIssueLoan.setLoanPayedId(loanIssueId);
 //            txnIssueLoan.setCreatedAt(System.currentTimeMillis());
             values = Transaction.getTxnContentValues(txnIssueLoan);
-            context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
+
+            if (editMode) {
+                context.getContentResolver().update(
+                        SurakshaContract.TxnEntry.CONTENT_URI, values,
+                        SurakshaContract.TxnEntry._ID + "=?",
+                        new String[]{String.valueOf(mLoanIssue.getTransaction().getId())});
+            } else {
+                context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
+            }
 
             //Set Member HasLoan Flag On
             mMember.saveHasLoan(context, true);
             mMember.saveIsLoanBlocked(context, true);
             //Set Security Member loan Blocked
             securityMember.saveIsLoanBlocked(context, true);
-            if (SmsUtils.smsEnabledAfterLoanIssued(context)) {
+            if (!editMode && SmsUtils.smsEnabledAfterLoanIssued(context)) {
                 String mobileNumber = mMember.getMobile();
                 String message = mMember.getName() + ", Rs"
                         + (int) mLoanIssue.getAmount() + " loan sanctioned in your "
@@ -524,7 +639,11 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
             super.onPostExecute(success);
             Context context = getApplicationContext();
             if (success) {
-                Toast.makeText(context, getString(R.string.loan_issued_successfully), Toast.LENGTH_SHORT).show();
+                String status = getString(R.string.loan_issued_successfully);
+                if (editMode) {
+                    status = "Updated successfully";
+                }
+                Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
                 if (isSmsSent)
                     Toast.makeText(context, "SMS sent to " + mMember.getName(), Toast.LENGTH_SHORT).show();
                 Intent returnIntent = new Intent();

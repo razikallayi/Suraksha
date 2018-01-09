@@ -39,7 +39,7 @@ public class LoanReturnedFragment extends Fragment {
         loanIssueId = getArguments().getLong(ARG_LOAN_ISSUE_ID, -1);
         final LoanIssue loanIssue = LoanIssue.getLoanIssue(mContext, loanIssueId);
 
-        RecyclerView loanReturnedRecyclerView = (RecyclerView) rootView.findViewById(R.id.loan_return_list);
+        RecyclerView loanReturnedRecyclerView = rootView.findViewById(R.id.loan_return_list);
         final LoanReturnedAdapter loanReturnedAdapter = new LoanReturnedAdapter(loanIssue.getLoanReturnTxnList(mContext));
         if (null != loanReturnedRecyclerView) {
             // specify an adapter
@@ -60,14 +60,14 @@ public class LoanReturnedFragment extends Fragment {
         int accountNumber = loanIssue.getAccountNumber();
         mMember = Member.getMemberFromAccountNumber(mContext, accountNumber);
 
-        TextView memberNameTv = (TextView) rootView.findViewById(R.id.tvMemberName);
+        TextView memberNameTv = rootView.findViewById(R.id.tvMemberName);
         memberNameTv.setText(mMember.getName());
-        TextView memberAddressTv = (TextView) rootView.findViewById(R.id.tvMemberAddress);
+        TextView memberAddressTv = rootView.findViewById(R.id.tvMemberAddress);
         memberAddressTv.setText(mMember.getAddress());
-        TextView memberAcNoTv = (TextView) rootView.findViewById(R.id.tvAcNo);
+        TextView memberAcNoTv = rootView.findViewById(R.id.tvAcNo);
         memberAcNoTv.setText(String.valueOf(mMember.getAccountNo()));
 
-        final Button loanReturnButton = (Button) rootView.findViewById(R.id.tvActonButton);
+        final Button loanReturnButton = rootView.findViewById(R.id.tvActonButton);
         removeButtonIfLoanClosed(loanReturnButton,loanIssue);
         loanReturnButton.setText("Loan Return");
 //        loanReturnButton.setOnClickListener(new View.OnClickListener() {

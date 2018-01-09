@@ -131,12 +131,12 @@ public class OfficerDetailFragment extends Fragment implements LoaderManager.Loa
         View rootView = inflater.inflate(R.layout.officer_detail_fragment, container, false);
 
 
-        mOfficerIsAdmin      = (TextView) rootView.findViewById(R.id.tvIsAdmin);
-        mOfficerName      = (TextView) rootView.findViewById(R.id.tvOfficerName);
-        mOfficerMobile    = (TextView) rootView.findViewById(R.id.tvOfficerMobile  );
-        mOfficerAddress   = (TextView) rootView.findViewById(R.id.tvOfficerAddress );
-        mOfficerCreatedAt = (TextView) rootView.findViewById(R.id.tvOfficerCreatedAt );
-        mOfficerUpdatedAt = (TextView) rootView.findViewById(R.id.tvOfficerUpdatedAt );
+        mOfficerIsAdmin = rootView.findViewById(R.id.tvIsAdmin);
+        mOfficerName = rootView.findViewById(R.id.tvOfficerName);
+        mOfficerMobile = rootView.findViewById(R.id.tvOfficerMobile);
+        mOfficerAddress = rootView.findViewById(R.id.tvOfficerAddress);
+        mOfficerCreatedAt = rootView.findViewById(R.id.tvOfficerCreatedAt);
+        mOfficerUpdatedAt = rootView.findViewById(R.id.tvOfficerUpdatedAt);
 
         return rootView;
     }

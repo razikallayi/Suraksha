@@ -37,7 +37,7 @@ public class CreateAccountActivity extends BaseActivity {
         setContentView(R.layout.account_create_activity);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("New Account");
         setSupportActionBar(toolbar);
 
@@ -47,11 +47,11 @@ public class CreateAccountActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         View layoutCreateAccount = findViewById(R.id.layoutCreateAccount);
-        TextView tvMemberName = (TextView) layoutCreateAccount.findViewById(R.id.tvMemberName);
-        TextView tvMemberAddress = (TextView) layoutCreateAccount.findViewById(R.id.tvMemberAddress);
-        TextView tvAccountNumber = (TextView) layoutCreateAccount.findViewById(R.id.tvAccountNumber);
-        TextView tvRegistrationFee = (TextView) layoutCreateAccount.findViewById(R.id.tvRegistrationFee);
-        isAcceptedTerms = (CheckBox) layoutCreateAccount.findViewById(R.id.accept_terms);
+        TextView tvMemberName = layoutCreateAccount.findViewById(R.id.tvMemberName);
+        TextView tvMemberAddress = layoutCreateAccount.findViewById(R.id.tvMemberAddress);
+        TextView tvAccountNumber = layoutCreateAccount.findViewById(R.id.tvAccountNumber);
+        TextView tvRegistrationFee = layoutCreateAccount.findViewById(R.id.tvRegistrationFee);
+        isAcceptedTerms = layoutCreateAccount.findViewById(R.id.accept_terms);
 
         long memberId = getIntent().getLongExtra(AccountListFragment.ARG_MEMBER_ID, 0);
         mMember = Member.getMemberFromId(getApplicationContext(), memberId);

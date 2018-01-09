@@ -6,11 +6,11 @@
     <!--<color name="colorPrimaryDark">#77063b</color>-->
     <!--<color name="colorAccent">#ffffff</color>-->
 
-    <color name="colorPrimary">#795548</color>
-    <color name="colorPrimaryDark">#3e2723</color>
-    <color name="colorAccent">#b9365b</color>
+    <color name="colorPrimary">#e40046</color>
+    <color name="colorPrimaryDark">#c2003c</color>
+    <color name="colorAccent">#ffb916</color>
 
-    <color name="colorPrimaryLight">#2d929f</color>
+    <color name="colorPrimaryLight">#b05155</color>
     <color name="colorSecondary">#6a03bf</color>
     <color name="colorSecondaryLight">#9a76ff</color>
     <color name="colorSecondaryDark">#3a067a</color>
@@ -36,7 +36,7 @@
     <color name="gray_dark">#5F5F5F</color>
     <color name="semi_black">#ae000000</color>
     <color name="black">#323232</color>
-    <color name="full_black">#323232</color>
+    <color name="full_black">#000000</color>
 
     <!-- colors indicators-->
     <color name="danger">#b1271d</color>
@@ -46,11 +46,14 @@
 
     <!-- basic colors -->
     <color name="red">#FF432F</color>
+    <color name="pink">#e40046</color>
     <color name="orange">#f57f17</color>
     <color name="yellow">#ffCC00</color>
     <color name="purple">#ab47bc</color>
     <color name="green">#43a047</color>
+    <color name="silver">#A0A0A0</color>
     <color name="maroon">#880e4f</color>
+    <color name="maroon1">#930c2d</color>
     <color name="brown">#4e342e</color>
 
 

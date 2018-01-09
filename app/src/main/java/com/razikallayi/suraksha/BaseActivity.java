@@ -98,7 +98,9 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     protected void launchLockScreen() {
-        startActivityForResult(new Intent(mContext, LoginActivity.class), LOCK_SCREEN_REQUEST);
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(intent, LOCK_SCREEN_REQUEST);
     }
 
     @Override
@@ -153,11 +155,11 @@ public abstract class BaseActivity extends AppCompatActivity
 
     public void setupNavDrawer() {
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = findViewById(R.id.drawer_layout);
             if (drawer != null) {
                 ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                         this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -165,7 +167,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 toggle.syncState();
             }
         }
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
@@ -194,7 +196,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -202,10 +204,10 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     private void setOfficer() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         if (navigationView != null) {
             View navHeader = navigationView.getHeaderView(0);
-            TextView lblOfficer = (TextView) navHeader.findViewById(R.id.officer_nav_header);
+            TextView lblOfficer = navHeader.findViewById(R.id.officer_nav_header);
             if (lblOfficer != null && AuthUtils.isLoggedIn(navigationView.getContext())) {
                 lblOfficer.setText(AuthUtils.getAuthenticatedOfficer(navigationView.getContext()).getName());
             }
@@ -218,7 +220,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

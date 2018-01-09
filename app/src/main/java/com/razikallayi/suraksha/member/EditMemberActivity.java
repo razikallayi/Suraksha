@@ -75,7 +75,7 @@ public class EditMemberActivity extends BaseActivity {
         setContentView(R.layout.register_member);
 
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Edit Member");
         setSupportActionBar(toolbar);
 
@@ -91,19 +91,19 @@ public class EditMemberActivity extends BaseActivity {
         //Enable full view scroll while soft keyboard is shown
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        NestedScrollView sv = (NestedScrollView) findViewById(R.id.register_member_form);
-        txtName = (EditText) sv.findViewById(R.id.txtName);
-        txtAlias = (EditText) sv.findViewById(R.id.txtAlias);
-        txtFather = (EditText) sv.findViewById(R.id.txtFather);
-        txtSpouse = (EditText) sv.findViewById(R.id.txtSpouse);
-        txtOccupation = (EditText) sv.findViewById(R.id.txtOccupation);
-        txtAge = (EditText) sv.findViewById(R.id.txtAge);
-        txtMobile = (EditText) sv.findViewById(R.id.txtMobile);
-        txtAddress = (EditText) sv.findViewById(R.id.txtAddress);
-        txtNominee = (EditText) sv.findViewById(R.id.txtNominee);
-        txtAddressOfNominee = (EditText) sv.findViewById(R.id.txtAddressOfNominee);
-        txtRemarks = (EditText) sv.findViewById(R.id.txtRemarks);
-        CheckBox isAcceptedTerms = (CheckBox) sv.findViewById(R.id.accept_terms);
+        NestedScrollView sv = findViewById(R.id.register_member_form);
+        txtName = sv.findViewById(R.id.txtName);
+        txtAlias = sv.findViewById(R.id.txtAlias);
+        txtFather = sv.findViewById(R.id.txtFather);
+        txtSpouse = sv.findViewById(R.id.txtSpouse);
+        txtOccupation = sv.findViewById(R.id.txtOccupation);
+        txtAge = sv.findViewById(R.id.txtAge);
+        txtMobile = sv.findViewById(R.id.txtMobile);
+        txtAddress = sv.findViewById(R.id.txtAddress);
+        txtNominee = sv.findViewById(R.id.txtNominee);
+        txtAddressOfNominee = sv.findViewById(R.id.txtAddressOfNominee);
+        txtRemarks = sv.findViewById(R.id.txtRemarks);
+        CheckBox isAcceptedTerms = sv.findViewById(R.id.accept_terms);
         isAcceptedTerms.setVisibility(View.GONE);
 
         //Spinner
@@ -113,22 +113,22 @@ public class EditMemberActivity extends BaseActivity {
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        mRelationWithNomineeSpinner = (Spinner) sv.findViewById(R.id.spnRelationWithNominee);
+        mRelationWithNomineeSpinner = sv.findViewById(R.id.spnRelationWithNominee);
         mRelationWithNomineeSpinner.setAdapter(adapter);
 
 
-        LinearLayout llRegistrationFee = (LinearLayout) sv.findViewById(R.id.RegistrationFeeLinearLayout);
+        LinearLayout llRegistrationFee = sv.findViewById(R.id.RegistrationFeeLinearLayout);
         llRegistrationFee.setVisibility(View.GONE);
 
 
-        imageViewAvatar = (ImageView) findViewById(R.id.imageviewAvatar);
+        imageViewAvatar = findViewById(R.id.imageviewAvatar);
         long memberId = getIntent().getLongExtra(ARG_MEMBER_ID, -1);
         member = Member.getMemberFromId(getApplicationContext(), memberId);
         fillMemberDetails(member);
         mRelationWithNomineeSpinner.setSelection(adapter.getPosition(member.getRelationWithNominee()));
 
         // get selected radio button from radioGroup
-        RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
+//        RadioGroup mGenderRadioGroup = findViewById(R.id.rgpGender);
         int oldMemberGender;
         if (member.getGender().equals("Male")) {
             oldMemberGender = R.id.rdoMale;
@@ -136,7 +136,7 @@ public class EditMemberActivity extends BaseActivity {
             oldMemberGender = R.id.rdoFemale;
         }
         // find the radio button by returned id
-        RadioButton oldGenderRadioButton = (RadioButton) findViewById(oldMemberGender);
+        RadioButton oldGenderRadioButton = findViewById(oldMemberGender);
         oldGenderRadioButton.setChecked(true);
 
 
@@ -162,7 +162,7 @@ public class EditMemberActivity extends BaseActivity {
 
 
         //Button Add Member
-        final Button mUpdateMemberButton = (Button) sv.findViewById(R.id.btnAddMember);
+        final Button mUpdateMemberButton = sv.findViewById(R.id.btnAddMember);
         mUpdateMemberButton.setText(getString(R.string.update));
         mUpdateMemberButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,9 +241,9 @@ public class EditMemberActivity extends BaseActivity {
     private Member getMemberDetailsFromInput() {
         //Radio Button
         // get selected radio button from radioGroup
-        RadioGroup mGenderRadioGroup = (RadioGroup) findViewById(R.id.rgpGender);
+        RadioGroup mGenderRadioGroup = findViewById(R.id.rgpGender);
         // find the radio button by returned id
-        RadioButton mSelectedGenderRadioButton = (RadioButton) findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
+        RadioButton mSelectedGenderRadioButton = findViewById(mGenderRadioGroup.getCheckedRadioButtonId());
 
         //EditText Fields
         String name = txtName.getText().toString();
@@ -310,7 +310,7 @@ public class EditMemberActivity extends BaseActivity {
             memberAvatar = member.getAvatar();
         }
 
-        TextView tvAccountNumber = (TextView) findViewById(R.id.tvAccountNumber);
+        TextView tvAccountNumber = findViewById(R.id.tvAccountNumber);
         if (tvAccountNumber != null) {
             tvAccountNumber.setText(String.valueOf(member.getAccountNo()));
         }

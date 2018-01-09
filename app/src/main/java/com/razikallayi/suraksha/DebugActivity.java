@@ -1,17 +1,20 @@
 package com.razikallayi.suraksha;
 
-import android.graphics.Color;
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.razikallayi.suraksha.data.SurakshaDbHelper;
-import com.razikallayi.suraksha.utils.Utility;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,84 +24,113 @@ import java.nio.channels.FileChannel;
 
 public class DebugActivity extends BaseActivity {
 
+    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0x12;
+    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0x14;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.debug_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final EditText table = (EditText) findViewById(R.id.table);
-        final EditText column = (EditText) findViewById(R.id.column);
-
-
-        Button btnCapitalizeAll = (Button) findViewById(R.id.capAll);
-        btnCapitalizeAll.setText("Capitalize All");
-
-        btnCapitalizeAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String tableString = table.getText().toString();
-                final String columnString = column.getText().toString();
-                Utility.updateColumnToUpperCase(getApplicationContext(), tableString, columnString);
-            }
-        });
-
-
-        Button btnCapitalizeFirstLetter = (Button) findViewById(R.id.capFirstLetter);
-        btnCapitalizeFirstLetter.setText("Capitalize First Letter");
-        btnCapitalizeFirstLetter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String tableString = table.getText().toString();
-                final String columnString = column.getText().toString();
-                Utility.updateColumnToWordCase(getApplicationContext(), tableString, columnString);
-            }
-        });
 
 
         Button btnImport = new Button(this);
         btnImport.setText("Import Data from SD");
-        btnImport.setBackgroundColor(Color.RED);
+        btnImport.setBackgroundColor(getResources().getColor(R.color.red_dull));
         btnImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                importFromCard(SurakshaDbHelper.DATABASE_NAME);
+                Context context = getApplicationContext();
+                Activity thisActivity = DebugActivity.this;
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(thisActivity,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                    } else {
+                        ActivityCompat.requestPermissions(thisActivity,
+                                new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                } else {
+                    importFromCard(SurakshaDbHelper.DATABASE_NAME);
+                }
             }
         });
 
+
         Button btnExport = new Button(this);
         btnExport.setText("Export Data to SD");
-        btnExport.setBackgroundColor(Color.GREEN);
+        btnExport.setBackgroundColor(getResources().getColor(R.color.green_dull));
         btnExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exportToCard(SurakshaDbHelper.DATABASE_NAME);
+                Context context = getApplicationContext();
+                Activity thisActivity = DebugActivity.this;
+                if (ContextCompat.checkSelfPermission(context,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(thisActivity,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                    } else {
+                        ActivityCompat.requestPermissions(thisActivity,
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                    }
+                } else {
+                    exportToCard(SurakshaDbHelper.DATABASE_NAME);
+                }
             }
         });
 
 
         Button btnImportFromAsset = new Button(this);
         btnImportFromAsset.setText("Import Data from Asset");
-        btnImportFromAsset.setBackgroundColor(Color.YELLOW);
+        btnImportFromAsset.setBackgroundColor(getResources().getColor(R.color.orange_dull));
         btnImportFromAsset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    importFromAsset(SurakshaDbHelper.DATABASE_NAME);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                importFromAsset(SurakshaDbHelper.DATABASE_NAME);
             }
         });
 
-        LinearLayout ll = (LinearLayout) findViewById(R.id.lldebug);
+        LinearLayout ll = findViewById(R.id.lldebug);
         ll.addView(btnExport);
         ll.addView(btnImport);
         ll.addView(btnImportFromAsset);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    importFromCard(SurakshaDbHelper.DATABASE_NAME);
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Toast.makeText(this, "App doesn't have permission to read storage.", Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                exportToCard(SurakshaDbHelper.DATABASE_NAME);
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
 
@@ -133,7 +165,7 @@ public class DebugActivity extends BaseActivity {
     }
 
 
-    private void importFromAsset(String backupName) throws IOException {
+    private void importFromAsset(String backupName) {
 //        File sd = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
 //                File.separator + "Your Backup Folder"+
 //                File.separator );

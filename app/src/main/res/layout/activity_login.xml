@@ -6,6 +6,7 @@
     android:orientation="vertical"
     tools:context="com.razikallayi.suraksha.LoginActivity">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,26 +22,27 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_very_tiny"
-                android:contentDescription="Bismillahi rahmani raheem"
-                android:padding="@dimen/spacing_tiny"
-                android:src="@drawable/bismillah_image" />
 
             <ImageView
+                android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/spacing_very_tiny"
-                android:contentDescription="@string/app_full_name"
+                android:contentDescription="@string/app_name"
                 android:padding="@dimen/spacing_large"
                 android:src="@drawable/suraksha_logo_name" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:contentDescription="@string/app_tag_name"
+                android:src="@drawable/sevana_padhathi" />
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="256dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:contentDescription="Username"
+                android:layout_marginTop="@dimen/spacing_huge"
                 android:hint="@string/prompt_username">
 
                 <TextView
@@ -66,7 +68,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="256dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password">
 
@@ -112,4 +114,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
 </FrameLayout>

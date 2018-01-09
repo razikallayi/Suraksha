@@ -34,7 +34,7 @@ public class OfficerDetailActivity extends BaseActivity {
         //
 
         //Set Toolbar and load Member Name
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.

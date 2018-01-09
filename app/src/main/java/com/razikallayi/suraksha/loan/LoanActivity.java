@@ -15,7 +15,7 @@ public class LoanActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loan_activity);
         //Setup the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.

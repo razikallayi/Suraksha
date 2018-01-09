@@ -100,22 +100,22 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
 
         View rootView = inflater.inflate(R.layout.fragment_member_detail, container, false);
 
-        mMemberName = (TextView) rootView.findViewById(R.id.tvMemberName);
-        mMemberAlias = (TextView) rootView.findViewById(R.id.tvMemberAlias);
-        mMemberGender = (TextView) rootView.findViewById(R.id.tvMemberGender);
-        mMemberFather = (TextView) rootView.findViewById(R.id.tvMemberFather);
-        mMemberSpouse = (TextView) rootView.findViewById(R.id.tvMemberSpouse);
-        mMemberOccupation = (TextView) rootView.findViewById(R.id.tvMemberOccupation);
-        mMemberAge = (TextView) rootView.findViewById(R.id.tvMemberAge);
-        mMemberMobile = (TextView) rootView.findViewById(R.id.tvMemberMobile);
-        mMemberAddress = (TextView) rootView.findViewById(R.id.tvMemberAddress);
-        mMemberNominee = (TextView) rootView.findViewById(R.id.tvMemberNominee);
-        mMemberRelationWithNominee = (TextView) rootView.findViewById(R.id.tvMemberRelationWithNominee);
-        mMemberAddressOfNominee = (TextView) rootView.findViewById(R.id.tvMemberAddressOfNominee);
-        mMemberRemarks = (TextView) rootView.findViewById(R.id.tvMemberRemarks);
+        mMemberName = rootView.findViewById(R.id.tvMemberName);
+        mMemberAlias = rootView.findViewById(R.id.tvMemberAlias);
+        mMemberGender = rootView.findViewById(R.id.tvMemberGender);
+        mMemberFather = rootView.findViewById(R.id.tvMemberFather);
+        mMemberSpouse = rootView.findViewById(R.id.tvMemberSpouse);
+        mMemberOccupation = rootView.findViewById(R.id.tvMemberOccupation);
+        mMemberAge = rootView.findViewById(R.id.tvMemberAge);
+        mMemberMobile = rootView.findViewById(R.id.tvMemberMobile);
+        mMemberAddress = rootView.findViewById(R.id.tvMemberAddress);
+        mMemberNominee = rootView.findViewById(R.id.tvMemberNominee);
+        mMemberRelationWithNominee = rootView.findViewById(R.id.tvMemberRelationWithNominee);
+        mMemberAddressOfNominee = rootView.findViewById(R.id.tvMemberAddressOfNominee);
+        mMemberRemarks = rootView.findViewById(R.id.tvMemberRemarks);
 //        mMemberClosedAt             = (TextView) rootView.findViewById(R.id.tvMemberClosedAt           );
-        mMemberCreatedAt = (TextView) rootView.findViewById(R.id.tvMemberCreatedAt);
-        mMemberUpdatedAt = (TextView) rootView.findViewById(R.id.tvMemberUpdatedAt);
+        mMemberCreatedAt = rootView.findViewById(R.id.tvMemberCreatedAt);
+        mMemberUpdatedAt = rootView.findViewById(R.id.tvMemberUpdatedAt);
 
         return rootView;
     }
