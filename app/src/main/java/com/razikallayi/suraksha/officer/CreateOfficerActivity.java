@@ -2,7 +2,6 @@ package com.razikallayi.suraksha.officer;
 
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -164,8 +163,6 @@ public class CreateOfficerActivity extends BaseActivity {
             mCreateOfficerTask = null;
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.officer_creation_successful), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), OfficerListActivity.class);
-                startActivity(intent);
                 finish();
             } else {
                 Toast.makeText(getApplicationContext(), "Cannot create officer. ", Toast.LENGTH_LONG).show();

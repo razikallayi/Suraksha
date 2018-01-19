@@ -27,11 +27,12 @@
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_very_tiny"
+                android:layout_marginTop="@dimen/spacing_huge"
                 android:contentDescription="@string/app_name"
-                android:padding="@dimen/spacing_large"
                 android:src="@drawable/suraksha_logo_name" />
+
             <ImageView
+                android:id="@+id/logoTagline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_medium"
@@ -41,8 +42,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:contentDescription="Username"
                 android:layout_marginTop="@dimen/spacing_huge"
+                android:contentDescription="Username"
                 android:hint="@string/prompt_username">
 
                 <TextView
@@ -112,6 +113,8 @@
                     android:text="@string/action_sign_in"
                     android:textColor="@color/black" />
             </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 

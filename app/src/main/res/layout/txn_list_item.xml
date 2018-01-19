@@ -59,7 +59,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:padding="@dimen/spacing_very_tiny"
-                    android:src="@drawable/ic_24_loan_rupee_plastered"
+                    android:src="@drawable/ic_payments"
                     android:visibility="gone"
                     />
 

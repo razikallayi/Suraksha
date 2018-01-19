@@ -12,13 +12,12 @@ import android.widget.TextView;
 public class FontUtils {
     public static final String ROOT = "fonts/";
     public static final String FONTAWSOME = ROOT + "fontawesome-webfont.ttf";
-    public static final String MATERIAL = ROOT + "Material-Design-Iconic-Font.ttf";
 
     public static Typeface getTypeface(Context context, String font) {
         return Typeface.createFromAsset(context.getAssets(),font);
     }
 
-    //tv.setTypeface(com.razikallayi.suraksha.FontUtils.getTypeface(com.razikallayi.suraksha.FontUtils.FONTAWSOME));
+//    tv.setTypeface(com.razikallayi.suraksha.FontUtils.getTypeface(com.razikallayi.suraksha.FontUtils.FONTAWSOME));
 
 
     public static void markAsIconContainer(View v, Typeface typeface){

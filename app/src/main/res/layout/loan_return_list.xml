@@ -4,5 +4,5 @@
     android:id="@+id/loan_return_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".loan.LoanActivity"
+    tools:context=".loan.LoanReturnedListActivity"
     tools:listitem="@layout/loan_return_list_item" />

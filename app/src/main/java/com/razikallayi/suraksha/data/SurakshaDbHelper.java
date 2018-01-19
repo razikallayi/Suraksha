@@ -15,8 +15,9 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION_JUNE_2016 = 3; //App Version 2.0
     public static final int DATABASE_VERSION_FEB_2017 = 4; //App Version 3.0
     public static final int DATABASE_VERSION_JUNE_2017 = 5; //App Version 3.0
-    public static final int CURRENT_DATABASE_VERSION = DATABASE_VERSION_JUNE_2017;
-    public static final String DATABASE_NAME = "Suraksha.db";
+    public static final int DATABASE_VERSION_JAN_2018 = 5; //App Version 3.0
+    public static final int CURRENT_DATABASE_VERSION = DATABASE_VERSION_JAN_2018;
+    public static final String DATABASE_NAME = "Suraksha";
 
     private static final String TEXT_TYPE = " TEXT";
     private static final String INT_TYPE = " INT";
@@ -56,6 +57,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.MemberEntry.COLUMN_REMARKS + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_HAS_LOAN + INT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_IS_LOAN_BLOCKED + INT_TYPE + COMMA_SEP +
+                    SurakshaContract.MemberEntry.COLUMN_IS_SMS_ENABLED + INT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_CLOSED_AT + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_CREATED_AT + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.MemberEntry.COLUMN_UPDATED_AT + TEXT_TYPE +
@@ -81,8 +83,9 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_AMOUNT + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + INT_TYPE + NOT_NULL + COMMA_SEP +
-                    SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_LEDGER + INT_TYPE + COMMA_SEP +
                     SurakshaContract.TxnEntry.COLUMN_NARRATION + TEXT_TYPE + COMMA_SEP +
@@ -95,13 +98,14 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_LOAN_PAYED_ENTRIES =
             "CREATE TABLE " + SurakshaContract.LoanIssueEntry.TABLE_NAME + " (" +
                     SurakshaContract.LoanIssueEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
+                    SurakshaContract.LoanIssueEntry.COLUMN_ACCOUNT_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_SECURITY_ACCOUNT_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_AMOUNT + INT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_PURPOSE + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_LOAN_INSTALMENT_TIMES + INT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_LOAN_INSTALMENT_AMOUNT + INT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_OFFICE_STATEMENT + TEXT_TYPE + COMMA_SEP +
+                    SurakshaContract.LoanIssueEntry.COLUMN_ISSUED_AT + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_CREATED_AT + TEXT_TYPE + COMMA_SEP +
                     SurakshaContract.LoanIssueEntry.COLUMN_UPDATED_AT + TEXT_TYPE +
@@ -147,9 +151,7 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     + " )";
 
 
-
-
-//Updates of JUNE_2016
+    //Updates of JUNE_2016
     private static final String SQL_ALTER_MEMBER_ADD_ACCOUNT_NUMBER =
             "alter table " + SurakshaContract.MemberEntry.TABLE_NAME + " add column "
                     + SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO + INT_TYPE;
@@ -167,15 +169,46 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
     private static final String SQL_ALTER_LOAN_ISSUE_ADD_ISSUE_DATE =
             "alter table " + SurakshaContract.LoanIssueEntry.TABLE_NAME + " add column "
                     + SurakshaContract.LoanIssueEntry.COLUMN_ISSUED_AT + TEXT_TYPE;
+
     private static final String SQL_UPDATE_LOAN_ISSUED_TO_CREATED_AT =
             "update " + SurakshaContract.LoanIssueEntry.TABLE_NAME + " set "
                     + SurakshaContract.LoanIssueEntry.COLUMN_ISSUED_AT + " = "
                     + SurakshaContract.LoanIssueEntry.COLUMN_CREATED_AT;
 
-
-    private static final String SQL_ALTER_TRANSACTION_ADD_LOAN_RETURN_DATE =
+    private static final String SQL_ALTER_TRANSACTION_ADD_PAYMENT_DATE =
             "alter table " + SurakshaContract.TxnEntry.TABLE_NAME + " add column "
-                    + SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE + TEXT_TYPE;
+                    + SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE + TEXT_TYPE;
+
+    private static final String SQL_ALTER_MEMBER_ADD_IS_SMS_ENABLED =
+            "alter table " + SurakshaContract.MemberEntry.TABLE_NAME + " add column "
+                    + SurakshaContract.MemberEntry.COLUMN_IS_SMS_ENABLED + INT_TYPE;
+
+    private static final String SQL_UPDATE_MEMBER_COLUMN_IS_SMS_ENABLED_TO_TRUE =
+            "update " + SurakshaContract.MemberEntry.TABLE_NAME + " set "
+                    + SurakshaContract.MemberEntry.COLUMN_IS_SMS_ENABLED + " = 1";
+
+    private static final String SQL_ALTER_TRANSACTION_ADD_INSTALMENT_NUMBER =
+            "alter table " + SurakshaContract.TxnEntry.TABLE_NAME + " add column "
+                    + SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + INT_TYPE;
+
+    private static final String SQL_UPDATE_TXN_COLUMN_PAYMENT_DATE_TO_CREATED_AT =
+            "update " + SurakshaContract.TxnEntry.TABLE_NAME + " set "
+                    + SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE + " = "
+                    + SurakshaContract.TxnEntry.COLUMN_CREATED_AT;
+
+
+    private static final String SQL_UPDATE_TXN_COLUMN_UPDATED_AT_TO_CREATED_AT_WHERE_NULL =
+            "update " + SurakshaContract.TxnEntry.TABLE_NAME + " set "
+                    + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT + " = "
+                    + SurakshaContract.TxnEntry.COLUMN_CREATED_AT + " where "
+                    + SurakshaContract.TxnEntry.COLUMN_UPDATED_AT + " IS NULL";
+
+    private static final String SQL_UPDATE_TXN_INSTALMENT_NO_TO_MINUS_ONE_WHERE_NULL =
+            "update " + SurakshaContract.TxnEntry.TABLE_NAME + " set "
+                    + SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + " = -1 where "
+                    + SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + " IS NULL" +
+                    "";
+
 
     //    update member account no to member id
     private static final String SQL_UPDATE_MEMBER_ACCOUNT_NUMBER =
@@ -217,11 +250,6 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
                     SurakshaContract.OfficerEntry.COLUMN_USERNAME + ") = 'SYS'";
 
 
-    private static final String CAPITALIZE_MEMBER_NAME =
-            "UPDATE " + SurakshaContract.MemberEntry.TABLE_NAME + " SET " +
-                    SurakshaContract.MemberEntry.COLUMN_NAME +
-                    "= UPPER(" + SurakshaContract.MemberEntry.COLUMN_NAME + ")";
-
     private static final String CAPITALIZE_OFFICER_USERNAME =
             "UPDATE " + SurakshaContract.OfficerEntry.TABLE_NAME + " SET " +
                     SurakshaContract.OfficerEntry.COLUMN_USERNAME +
@@ -231,10 +259,6 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
             "UPDATE " + SurakshaContract.OfficerEntry.TABLE_NAME + " SET " +
                     SurakshaContract.OfficerEntry.COLUMN_NAME +
                     "= UPPER(" + SurakshaContract.OfficerEntry.COLUMN_NAME + ")";
-
-
-
-
 
 
     public SurakshaDbHelper(Context context) {
@@ -287,8 +311,21 @@ public class SurakshaDbHelper extends SQLiteOpenHelper {
         }
 
         if (version == DATABASE_VERSION_FEB_2017) {
-            db.execSQL(SQL_ALTER_TRANSACTION_ADD_LOAN_RETURN_DATE);
+            db.execSQL(SQL_ALTER_TRANSACTION_ADD_PAYMENT_DATE);
+            db.execSQL(SQL_ALTER_TRANSACTION_ADD_INSTALMENT_NUMBER);
+            db.execSQL(SQL_UPDATE_TXN_COLUMN_PAYMENT_DATE_TO_CREATED_AT);
+
             version = DATABASE_VERSION_JUNE_2017;
+            Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_JUNE_2017");
+        }
+
+        if (version == DATABASE_VERSION_JUNE_2017) {
+            db.execSQL(SQL_UPDATE_TXN_COLUMN_UPDATED_AT_TO_CREATED_AT_WHERE_NULL);
+            db.execSQL(SQL_UPDATE_TXN_INSTALMENT_NO_TO_MINUS_ONE_WHERE_NULL);
+            db.execSQL(SQL_ALTER_MEMBER_ADD_IS_SMS_ENABLED);
+            db.execSQL(SQL_UPDATE_MEMBER_COLUMN_IS_SMS_ENABLED_TO_TRUE);
+
+            version = DATABASE_VERSION_JAN_2018;
             Log.d("SurakshaDbHelper", "onUpgrade: DATABASE_VERSION_JUNE_2017");
         }
 

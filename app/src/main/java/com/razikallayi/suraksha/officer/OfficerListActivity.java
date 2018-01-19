@@ -2,8 +2,10 @@ package com.razikallayi.suraksha.officer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
@@ -41,6 +43,18 @@ public class OfficerListActivity extends BaseActivity
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+        }
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), CreateOfficerActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
 

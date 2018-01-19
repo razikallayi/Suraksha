@@ -42,6 +42,6 @@
         android:fontFamily="sans-serif-black"
         android:text="Officer"
         android:textColor="@color/yellow"
-        android:textSize="@dimen/font_small" />
+        android:textSize="@dimen/font_normal" />
 
 </LinearLayout>

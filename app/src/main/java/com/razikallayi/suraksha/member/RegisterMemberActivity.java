@@ -41,10 +41,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.account.Account;
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.txn.Transaction;
 import com.razikallayi.suraksha.utils.AuthUtils;
@@ -365,12 +363,6 @@ public class RegisterMemberActivity extends BaseActivity {
             getApplicationContext().getContentResolver().insert(
                     SurakshaContract.MemberEntry.CONTENT_URI, values);
 
-            //Save Account for member
-            Account account = new Account(mMember, Utility.getOpeningDepositAmount(), true);
-            account.setAccountNumber(accountNumber);
-            values = Account.getAccountContentValues(account);
-            getApplicationContext().getContentResolver().insert(SurakshaContract.AccountEntry.CONTENT_URI, values);
-
             //Save Registration Fee
             Transaction txnRegistrationFee = new Transaction(getApplicationContext(), accountNumber,
                     Utility.getRegistrationFeeAmount(), SurakshaContract.TxnEntry.RECEIPT_VOUCHER,
@@ -382,7 +374,7 @@ public class RegisterMemberActivity extends BaseActivity {
             if (SmsUtils.smsEnabledAfterRegistration(getApplicationContext())) {
                 String phoneNumber = mMember.getMobile();
                 String message = mMember.getName() + ", " + getResources().getString(R.string.member_registered_sms)
-                        + " Your account number is " + account.getAccountNumber();
+                        + " Your account number is " + accountNumber;
                 SmsUtils.sendSms(message, phoneNumber);
             }
             return true;
@@ -426,10 +418,10 @@ public class RegisterMemberActivity extends BaseActivity {
 
             try {
                 Bitmap bitmap = Glide.with(mContext)
-                        .load(uriAvatar[0])
                         .asBitmap()
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .load(uriAvatar[0])
+//                        .skipMemoryCache(true)
+//                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(AVATAR_IMAGE_SIZE_IN_PIXEL, AVATAR_IMAGE_SIZE_IN_PIXEL)
                         .get();
                 memberAvatar = ImageUtils.bitmapToByteArray(bitmap);

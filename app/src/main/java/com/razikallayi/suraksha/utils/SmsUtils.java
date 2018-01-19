@@ -12,6 +12,21 @@ import java.util.regex.Pattern;
  * Created by Razi Kallayi on 28-05-2016 09:52.
  */
 public class SmsUtils {
+    public static final int ENABLE_SMS = 1;
+    public static final int SMS_AFTER_REGISTRATION = 2;
+    public static final int SMS_AFTER_DEPOSIT = 3;
+    public static final int SMS_AFTER_LOAN_ISSUED = 4;
+    public static final int EDIT_SUMMERY_BEFORE_SENDING = 5;
+
+    public static boolean isEnabled(Context context, int smsEnvironment) {
+        if (!smsEnabled(context)) return false;
+        if (smsEnvironment == SMS_AFTER_REGISTRATION) return smsEnabledAfterRegistration(context);
+        if (smsEnvironment == SMS_AFTER_DEPOSIT) return smsEnabledAfterDeposit(context);
+        if (smsEnvironment == SMS_AFTER_LOAN_ISSUED) return smsEnabledAfterLoanIssued(context);
+        return false;
+    }
+
+
     public static boolean smsEnabledAfterRegistration(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_registration", false);
@@ -36,7 +51,7 @@ public class SmsUtils {
 
     public static boolean smsEnabledAfterLoanIssued(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_payed", false);
+        return prefs.getBoolean("enable_sms", false) && prefs.getBoolean("sms_after_loan_issued", false);
     }
 
     public static boolean smsEnabledAfterLoanReturn(Context context) {

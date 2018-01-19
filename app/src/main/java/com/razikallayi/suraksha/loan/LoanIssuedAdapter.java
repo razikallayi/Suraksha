@@ -23,44 +23,49 @@ import com.razikallayi.suraksha.utils.Utility;
 public class LoanIssuedAdapter
         extends RecyclerViewCursorAdapter<LoanIssuedAdapter.ViewHolder> {
 
-//    private FragmentManager mFragmentManager;
+    private static final int ACTIVE_LOAN = 1;
+    private static final int INACTIVE_LOAN = 2;
+    private int disabledColor;
 
     public LoanIssuedAdapter() {
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layout;
+        if (viewType == ACTIVE_LOAN) {
+            layout = R.layout.loan_issued_list_item_active;
+        } else {
+            layout = R.layout.loan_issued_list_item;
+        }
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.loan_issued_list_item, parent, false);
+                .inflate(layout, parent, false);
+        disabledColor = view.getContext().getResources().getColor(R.color.yellow_dull);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
+    public void onBindViewHolder(final ViewHolder holder, Cursor cursor, int position) {
         // Set selected state; use a state list drawable to style the view
         holder.bindData(cursor);
     }
 
-
-    private void onItemClick(View view, LoanIssue loanIssue) {
-        Intent intent = new Intent(view.getContext(), LoanReturnedListActivity.class);
-        LoanReturnedListActivity.setLoanIssue(loanIssue);
-        view.getContext().startActivity(intent);
-//        LoanReturnedFragment loanReturnedFragment = new LoanReturnedFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putLong(LoanReturnedFragment.ARG_LOAN_ISSUE_ID, loanIssueId);
-//        loanReturnedFragment.setArguments(bundle);
-//        if (mFragmentManager != null) {
-//            mFragmentManager.beginTransaction()
-//                    .addToBackStack(loanReturnedFragment.getTag())
-//                    .replace(R.id.loanFragment, loanReturnedFragment)
-//                    .commit();
-//        }
+    @Override
+    public int getItemViewType(int position) {
+        final Cursor cursor = this.getItem(position);
+        long closedAt = 0;
+        if (cursor != null && cursor.getCount() > 0) {
+//            if (cursor.getCount() == 1) {
+//                cursor.moveToFirst();
+//            }
+            closedAt = cursor.getLong(LoanIssue.LoanIssueQuery.COL_CLOSED_AT);
+        }
+        if (closedAt == 0) {
+            return ACTIVE_LOAN;
+        } else {
+            return INACTIVE_LOAN;
+        }
     }
-
-//    public void setFragmentManager(FragmentManager mFragmentManager) {
-//        this.mFragmentManager = mFragmentManager;
-//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         final View mView;
@@ -68,7 +73,6 @@ public class LoanIssuedAdapter
         final TextView amountLoanIssueItem;
         final TextView guarantorNameLoanIssueItem;
         final TextView issued_date_loan_issue_item;
-        final TextView created_date_loan_issue_item;
         final TextView purpose_loan_issue_item;
         final TextView office_statement_loan_issue_item;
         final TextView officer_loan_issue_item;
@@ -80,32 +84,44 @@ public class LoanIssuedAdapter
             amountLoanIssueItem = view.findViewById(R.id.amountLoanIssueItem);
             guarantorNameLoanIssueItem = view.findViewById(R.id.guarantorNameLoanIssueItem);
             issued_date_loan_issue_item = view.findViewById(R.id.issued_date_loan_issue_item);
-            created_date_loan_issue_item = view.findViewById(R.id.created_date_loan_issue_item);
             purpose_loan_issue_item = view.findViewById(R.id.purpose_loan_issue_item);
             office_statement_loan_issue_item = view.findViewById(R.id.office_statement_loan_issue_item);
             officer_loan_issue_item = view.findViewById(R.id.officer_loan_issue_item);
         }
 
+
         void bindData(final Cursor cursor) {
             final Context context = mView.getContext();
             final LoanIssue loanIssue = LoanIssue.getLoanIssueFromCursor(context, cursor);
+            if (loanIssue.isClosed()) {
+                mView.setBackgroundColor(disabledColor);
+            } else {
+                mView.setBackgroundColor(0);
+            }
             amountLoanIssueItem.setText(Utility.formatAmountInRupees(context, loanIssue.getAmount()));
             guarantorNameLoanIssueItem.setText(Member.getMemberFromAccountNumber(
                     context, loanIssue.getSecurityAccountNo()).getName() + " [" + loanIssue.getSecurityAccountNo() + "]");
             issued_date_loan_issue_item.setText(CalendarUtils.formatDate(loanIssue.getIssuedAt()));
-            created_date_loan_issue_item.setText(CalendarUtils.formatDate(loanIssue.getCreatedAt()));
             purpose_loan_issue_item.setText(loanIssue.getPurpose());
             office_statement_loan_issue_item.setText(loanIssue.getOfficeStatement());
+            if (loanIssue.getPurpose() == null) {
+                purpose_loan_issue_item.setVisibility(View.GONE);
+            } else {
+                purpose_loan_issue_item.setVisibility(View.VISIBLE);
+            }
+            if (loanIssue.getOfficeStatement() == null) {
+                office_statement_loan_issue_item.setVisibility(View.GONE);
+            } else {
+                office_statement_loan_issue_item.setVisibility(View.VISIBLE);
+            }
             officer_loan_issue_item.setText(Officer.getOfficerNameFromId(
                     context, loanIssue.getTransaction().getOfficer_id()));
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Context context = v.getContext();
-                    onItemClick(mView, loanIssue);
-//                    Intent intent = new Intent(context, AccountDetailActivity.class);
-//                    intent.putExtra("account_number", accountNumber);
-//                    context.startActivity(intent);
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(), LoanReturnedListActivity.class);
+                    intent.putExtra(LoanReturnedListActivity.ARG_LOAN_ISSUE_ID, loanIssue.getId());
+                    view.getContext().startActivity(intent);
                 }
             });
             mView.setLongClickable(true);

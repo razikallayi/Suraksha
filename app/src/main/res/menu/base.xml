@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".HomeActivity">
     <item
+        android:id="@+id/action_home_activity"
+        android:icon="@drawable/ic_home_24dp"
+        android:orderInCategory="99"
+        android:title="@string/action_home_activity" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_home_activity"
-        android:title="@string/action_home_activity"
-        android:orderInCategory="99"
         app:showAsAction="never" />
 </menu>

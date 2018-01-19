@@ -38,7 +38,7 @@
     <string name="remarks">Remarks</string>
     <string name="created_at">Created at</string>
     <string name="updated_at">Updated at</string>
-    <string name="closed_at">Closed at</string>
+    <string name="account_closed">Account Closed</string>
     <string name="add_member">Add Member</string>
 
     <string name="name_is_required">Please enter the name</string>
@@ -181,8 +181,7 @@
 
     <!-- Example settings for Loan -->
     <string name="pref_header_loan">Loan</string>
-    <string name="pref_title_max_loan_amount">Maximum Loanable Amount</string>
-    <string name="pref_title_loan_instalment_times">Loan Instalment Times</string>
+    <string name="pref_title_loan_instalment_times">Default Loan Instalment Times</string>
     <string name="pref_title_default_loan_issue_date">Default Loan Issue Date</string>
     <string name="pref_title_default_loan_return_date">Default Loan Return Date</string>
 
@@ -217,11 +216,16 @@
     <string name="send_reminder">Send Reminder</string>
 
 
-    <string name="title_home">Account Summery</string>
-    <string name="title_dashboard">Account Summery</string>
-    <string name="title_notifications">Account Summery</string>
+    <string name="title_daily">Daily</string>
+    <string name="title_monthly">Monthly</string>
+    <string name="title_yearly">Yearly</string>
+
     <string name="update_loan_return">Update Loan Return</string>
     <string name="loan_issue_edit_note"><b>Note: </b>This Loan has loan returns. You may delete loan returns first to edit <b>issued date</b>, <b>loan amount</b> or <b>instalment times</b>. </string>
-
+    <string name="close_account_note"><b>Note: </b>Account will be closed and you cannot undo this action or reopen the account later. You can view the deposits and loans, but you cannot edit or delete any of them. </string>
+    <string name="title_loan_issued">Loan Issued</string>
+    <string name="default_deposit_date">Default Deposit Date</string>
+    <string name="delete">Delete</string>
+    <string name="title_activity_report">Reports</string>
 
 </resources>

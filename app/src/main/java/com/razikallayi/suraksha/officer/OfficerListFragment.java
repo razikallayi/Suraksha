@@ -35,10 +35,12 @@ public class OfficerListFragment extends Fragment implements LoaderManager.Loade
     private static final String[] OFFICER_COLUMNS = {
             SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
             SurakshaContract.OfficerEntry.COLUMN_NAME,
+            SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN
     };
 
     private static final int COL_OFFICER_ID = 0;
     private static final int COL_OFFICER_NAME = 1;
+    private static final int COL_OFFICER_IS_ADMIN = 2;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

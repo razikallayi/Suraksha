@@ -1,6 +1,7 @@
 package com.razikallayi.suraksha.data;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -22,6 +23,7 @@ public class SurakshaProvider extends ContentProvider {
     static final int ACCOUNT_NUMBER = 202;
     static final int ACCOUNTS_OF_MEMBER = 210;
     static final int TXN = 300;
+    static final int TXN_ID = 301;
     static final int TXN_ON_DATE = 310;
     static final int TXN_OF_ACCOUNT = 320;
     static final int TXN_GET_WMF = 340; //getWorkinMoneyFund
@@ -36,6 +38,8 @@ public class SurakshaProvider extends ContentProvider {
     static final int OFFICER_EXIST = 402;
     static final int LOAN_ISSUE = 500;
     static final int LOAN_ISSUE_ID = 501;
+    static final int LOAN_ISSUE_ONLY = 600;
+
     // The URI Matcher used by this content provider.
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder sAccountsOfMemberQueryBuilder;
@@ -92,7 +96,7 @@ public class SurakshaProvider extends ContentProvider {
 //                        " ON " + SurakshaContract.AccountEntry.TABLE_NAME +
 //                        "." + SurakshaContract.AccountEntry.COLUMN_ACCOUNT_NUMBER +
 //                        " = " + SurakshaContract.TxnEntry.TABLE_NAME +
-//                        "." + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER);
+//                        "." + SurakshaContract.TxnEntry.COLUMN_ACCOUNT_NUMBER);
 
         sTxnAccountQueryBuilder.setTables(SurakshaContract.TxnEntry.TABLE_NAME);
     }
@@ -127,6 +131,7 @@ public class SurakshaProvider extends ContentProvider {
         matcher.addURI(authority, SurakshaContract.PATH_ACCOUNT_OF_MEMBER + "/*", ACCOUNTS_OF_MEMBER);
 
         matcher.addURI(authority, SurakshaContract.PATH_TXN, TXN);
+        matcher.addURI(authority, SurakshaContract.PATH_TXN + "/#", TXN_ID);
         matcher.addURI(authority, SurakshaContract.PATH_TXN_ON_DATE + "/*", TXN_ON_DATE);
         matcher.addURI(authority, SurakshaContract.PATH_TXN_OF_ACCOUNT + "/*", TXN_OF_ACCOUNT);
         matcher.addURI(authority, SurakshaContract.PATH_TXN_GET_WMF, TXN_GET_WMF);
@@ -139,6 +144,7 @@ public class SurakshaProvider extends ContentProvider {
 
         matcher.addURI(authority, SurakshaContract.PATH_LOAN_ISSUE, LOAN_ISSUE);
         matcher.addURI(authority, SurakshaContract.PATH_LOAN_ISSUE + "/#", LOAN_ISSUE_ID);
+        matcher.addURI(authority, SurakshaContract.PATH_LOAN_ISSUE_ONLY, LOAN_ISSUE_ONLY);
 
         return matcher;
     }
@@ -285,7 +291,7 @@ public class SurakshaProvider extends ContentProvider {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.OfficerEntry.TABLE_NAME,
                         projection,
-                        idSelection,new String[]{id},
+                        idSelection, new String[]{id},
                         null,
                         null,
                         sortOrder
@@ -298,8 +304,8 @@ public class SurakshaProvider extends ContentProvider {
                         "." + SurakshaContract.OfficerEntry.COLUMN_USERNAME + " = ? ";
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         SurakshaContract.OfficerEntry.TABLE_NAME,
-                        new String[] {SurakshaContract.OfficerEntry._ID},
-                        selectionUsername,new String[]{username},
+                        new String[]{SurakshaContract.OfficerEntry._ID},
+                        selectionUsername, new String[]{username},
                         null,
                         null,
                         sortOrder
@@ -311,6 +317,22 @@ public class SurakshaProvider extends ContentProvider {
                         SurakshaContract.TxnEntry.TABLE_NAME,
                         projection,
                         selection, selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case TXN_ID: {
+                final String txnIdSelection = SurakshaContract.TxnEntry.TABLE_NAME +
+                        "." + SurakshaContract.TxnEntry._ID + " = ? ";
+                String id = SurakshaContract.TxnEntry.getTxnId(uri);
+
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        SurakshaContract.TxnEntry.TABLE_NAME,
+                        projection,
+                        txnIdSelection,
+                        new String[]{id},
                         null,
                         null,
                         sortOrder
@@ -388,6 +410,19 @@ public class SurakshaProvider extends ContentProvider {
             }
             case LOAN_ISSUE: {
                 retCursor = sLoanIssueJoinTxnQueryBuilder.query(
+                        mOpenHelper.getReadableDatabase(),
+                        projection,
+                        selection, selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
+            case LOAN_ISSUE_ONLY: {
+                SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+                queryBuilder.setTables(SurakshaContract.LoanIssueEntry.TABLE_NAME);
+                retCursor = queryBuilder.query(
                         mOpenHelper.getReadableDatabase(),
                         projection,
                         selection, selectionArgs,
@@ -498,10 +533,10 @@ public class SurakshaProvider extends ContentProvider {
             }
         }
 
-        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE)) {
-            if (values.getAsLong(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE) > 0) {
-                long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE);
-                values.put(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE, CalendarUtils.normalizeDate(dateValue));
+        if (values.containsKey(SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE)) {
+            if (values.getAsLong(SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE) > 0) {
+                long dateValue = values.getAsLong(SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE);
+                values.put(SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE, CalendarUtils.normalizeDate(dateValue));
             }
         }
 
@@ -713,6 +748,48 @@ public class SurakshaProvider extends ContentProvider {
             default:
                 return super.bulkInsert(uri, values);
         }
+
     }
 
+//
+//    public ContentProviderResult[] applyBatch(
+//            ArrayList<ContentProviderOperation> operations)
+//            throws OperationApplicationException {
+//        System.out.println("starting transaction");
+//        ContentProviderResult[] result;
+//        try {
+//            result = super.applyBatch(operations);
+//        } catch (OperationApplicationException e) {
+//            System.out.println("aborting transaction");
+//            throw e;
+//        }
+//        System.out.println("ending transaction");
+//        return result;
+//    }
+
+
+    /**
+     * Apply the given set of {@link ContentProviderOperation}, executing inside
+     * a {@link SQLiteDatabase} transaction. All changes will be rolled back if
+     * any single one fails.
+     */
+/*    @Override
+    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+            throws OperationApplicationException {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            final int numOperations = operations.size();
+            final ContentProviderResult[] results = new ContentProviderResult[numOperations];
+            for (int i = 0; i < numOperations; i++) {
+                results[i] = operations.get(i).apply(this, results, i);
+            }
+            db.setTransactionSuccessful();
+            return results;
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    */
 }

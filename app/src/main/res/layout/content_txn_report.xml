@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".report.TxnReportActivity"
+    tools:context=".report.TxnsActivity"
     tools:showIn="@layout/activity_txn_report">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:padding="@dimen/text_margin">
 
         <TextView
-            android:id="@+id/loanReturnDate"
+            android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Transactions"
@@ -30,24 +30,24 @@
             android:text="Deposit"
             android:id="@+id/lblDeposit"
             android:fontFamily="sans-serif-condensed"
-            android:layout_below="@+id/loanReturnDate"
+            android:layout_below="@+id/date"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/deposit_count"
+            android:id="@+id/depositCount"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/loanReturnDate"
+            android:layout_below="@+id/date"
             android:text="5" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/tv_deposit_amount"
-            android:layout_below="@+id/loanReturnDate"
+            android:id="@+id/depositAount"
+            android:layout_below="@+id/date"
             android:layout_alignParentEnd="true"
             android:text="5000" />
 
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/registration_count"
+            android:id="@+id/registrationCount"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/lblDeposit"
             android:text="10" />
@@ -73,13 +73,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/registration_amount"
+            android:id="@+id/registrationAmount"
             android:layout_below="@+id/lblDeposit"
             android:layout_alignParentEnd="true"
             android:text="2500" />
 
         <TextView
-            android:id="@+id/lblLoanPayed"
+            android:id="@+id/lblLoanIssued"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@id/lblLoanPayed"
+            android:layout_below="@id/lblLoanIssued"
             android:text="Loan Return"
             
             />
@@ -118,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@id/lblLoanPayed"
+            android:layout_below="@id/lblLoanIssued"
             android:layout_centerHorizontal="true"
             android:text="4" />
 
@@ -126,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@id/lblLoanPayed"
+            android:layout_below="@id/lblLoanIssued"
             android:layout_alignParentEnd="true"
             android:text="8000" />
     </RelativeLayout>

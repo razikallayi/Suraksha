@@ -1,24 +1,13 @@
 package com.razikallayi.suraksha;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
-import android.util.Log;
-
-import com.razikallayi.suraksha.data.SurakshaContract;
-import com.razikallayi.suraksha.data.SurakshaDbHelper;
-import com.razikallayi.suraksha.member.Member;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Razi Kallayi on 10-01-2016.
  */
-public class TestDb extends AndroidTestCase{
-    public static final String LOG_TAG = TestDb.class.getSimpleName();
-    public void testCreateDb() throws Throwable {
+public class TestDb extends AndroidTestCase {
+  /*  public static final String LOG_TAG = TestDb.class.getSimpleName();
+    public void testCreateDb() {
         mContext.deleteDatabase(SurakshaDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new SurakshaDbHelper(
                 this.mContext).getWritableDatabase();
@@ -73,5 +62,5 @@ public class TestDb extends AndroidTestCase{
             String expectedValue = entry.getValue().toString();
             assertEquals(expectedValue, valueCursor.getString(index));
         }
-    }
+    }*/
 }

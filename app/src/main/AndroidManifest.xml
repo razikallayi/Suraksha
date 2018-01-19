@@ -15,13 +15,16 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- To backup database to SD Card -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
         android:backupAgent=".SurakshaBackup"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -57,16 +60,15 @@
         <activity
             android:name=".officer.OfficerDetailActivity"
             android:parentActivityName=".officer.OfficerListActivity" />
+        <activity
+            android:name=".member.CloseAccountActivity"
+            android:parentActivityName=".member.MemberDetailActivity" />
 
         <provider
             android:name=".data.SurakshaProvider"
             android:authorities="com.razikallayi.suraksha"
             android:exported="false" />
 
-        <activity
-            android:name=".account.CreateAccountActivity"
-            android:noHistory="true"
-            android:parentActivityName=".member.MemberDetailActivity" />
         <activity
             android:name=".member.MemberListActivity"
             android:label="@string/title_member_list"
@@ -88,19 +90,21 @@
                 android:value=".member.MemberListActivity" />
         </activity>
         <activity
-            android:name=".account.AccountDetailActivity"
-            android:label="@string/title_account_detail" />
-        <activity
-            android:name=".dailyTxn.DailyTransactionActivity"
-            android:label="@string/title_activity_daily_transaction"
+            android:name=".DebugActivity"
             android:parentActivityName=".HomeActivity">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:name="com.google.android.apps.drive.suraksha-ssf"
+                android:value="id=AIzaSyDYUK8IBmkw180kuYuYrtW_mn-lVYtUJHg" />
+
+            <intent-filter>
+                <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
+
+                <data android:mimeType="application/vnd.google-apps.drive-sdk.1234567890" />
+                <data android:mimeType="image/png" />
+                <data android:mimeType="image/jpeg" />
+                <data android:mimeType="image/jpg" />
+            </intent-filter>
         </activity>
-        <activity
-            android:name=".DebugActivity"
-            android:parentActivityName=".HomeActivity" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -110,7 +114,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".report.TxnReportActivity"
+            android:name=".report.TxnsActivity"
             android:label="@string/title_activity_txn_report"
             android:parentActivityName=".HomeActivity">
             <meta-data
@@ -139,21 +143,28 @@
             android:label="@string/title_activity_avatar"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".deposit.DepositActivity"
+            android:name=".deposit.DepositListActivity"
             android:label="@string/title_deposit" />
         <activity
-            android:name=".loan.LoanActivity"
+            android:name=".deposit.MakeDepositActivity"
+            android:label="@string/title_deposit" />
+        <activity
+            android:name=".loan.ReturnLoanActivity"
             android:label="@string/title_loan_return" />
         <activity
-            android:name=".loan.LoanReturnActivity"
-            android:label="@string/title_loan_return" />
-        <activity
-            android:name=".loan.LoanIssuedActivity"
-            android:label="@string/title_loan_issue" />
+            android:name=".loan.LoanIssuedListActivity"
+            android:label="@string/title_loan_issued" />
         <activity
             android:name=".loan.LoanReturnedListActivity"
             android:label="@string/title_loan_returned" />
-        <activity android:name=".TestKotlinActivity"></activity>
+        <activity
+            android:name=".report.ReportActivity"
+            android:label="@string/title_activity_report"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.razikallayi.suraksha.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

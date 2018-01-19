@@ -1,22 +1,23 @@
 package com.razikallayi.suraksha.member;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.data.SurakshaContract;
+import com.razikallayi.suraksha.loan.LoanIssue;
 import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 
@@ -26,14 +27,15 @@ import com.razikallayi.suraksha.utils.CalendarUtils;
  * in two-pane mode (on tablets) or a {@link MemberDetailActivity}
  * on handsets.
  */
-public class MemberDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MemberDetailFragment extends Fragment {
     public static final String TAG = MemberDetailFragment.class.getSimpleName();
+    public static final int REQUEST_CODE_CLOSE_ACCOUNT_ACTIVITY = 0x323;
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_MEMBER_ID = "member_id";
-    public static final int MEMBER_DETAIL_LOADER = 0;
+    //    public static final int MEMBER_DETAIL_LOADER = 0;
     private long mMemberId;
     private TextView mMemberName;
     private TextView mMemberAlias;
@@ -51,6 +53,12 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     //    private TextView mMemberClosedAt           ;
     private TextView mMemberCreatedAt;
     private TextView mMemberUpdatedAt;
+    private RelativeLayout layoutMemberInfo;
+    private Switch switchIsSmsEnabled;
+    private View accountClosedHolder;
+    private TextView closeAccountBtn;
+    private TextView mMemberClosedAt;
+    private Member mMember;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -81,16 +89,13 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AuthUtils.isAdmin(getContext())) {
+        if (mMember == null) {
+            mMemberId = getArguments().getLong(ARG_MEMBER_ID);
+            mMember = Member.getMemberFromId(getContext(), mMemberId);
+        }
+        if (AuthUtils.isAdmin(getContext()) && !mMember.isAccountClosed()) {
             setHasOptionsMenu(true);
         }
-        mMemberId = getArguments().getLong(ARG_MEMBER_ID);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(MEMBER_DETAIL_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
     }
 
 
@@ -99,7 +104,7 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_member_detail, container, false);
-
+        layoutMemberInfo = rootView.findViewById(R.id.layoutMemberInfo);
         mMemberName = rootView.findViewById(R.id.tvMemberName);
         mMemberAlias = rootView.findViewById(R.id.tvMemberAlias);
         mMemberGender = rootView.findViewById(R.id.tvMemberGender);
@@ -108,66 +113,96 @@ public class MemberDetailFragment extends Fragment implements LoaderManager.Load
         mMemberOccupation = rootView.findViewById(R.id.tvMemberOccupation);
         mMemberAge = rootView.findViewById(R.id.tvMemberAge);
         mMemberMobile = rootView.findViewById(R.id.tvMemberMobile);
-        mMemberAddress = rootView.findViewById(R.id.tvMemberAddress);
+        mMemberAddress = rootView.findViewById(R.id.tvAddress);
         mMemberNominee = rootView.findViewById(R.id.tvMemberNominee);
         mMemberRelationWithNominee = rootView.findViewById(R.id.tvMemberRelationWithNominee);
         mMemberAddressOfNominee = rootView.findViewById(R.id.tvMemberAddressOfNominee);
         mMemberRemarks = rootView.findViewById(R.id.tvMemberRemarks);
-//        mMemberClosedAt             = (TextView) rootView.findViewById(R.id.tvMemberClosedAt           );
         mMemberCreatedAt = rootView.findViewById(R.id.tvMemberCreatedAt);
         mMemberUpdatedAt = rootView.findViewById(R.id.tvMemberUpdatedAt);
+        switchIsSmsEnabled = rootView.findViewById(R.id.switchIsSmsEnabled);
+        mMemberClosedAt = rootView.findViewById(R.id.tvMemberClosedAt);
+        accountClosedHolder = rootView.findViewById(R.id.AccountClosedHolder);
+        closeAccountBtn = rootView.findViewById(R.id.closeAccountBtn);
 
+        displayMemberDetails();
         return rootView;
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(final int loaderId, Bundle args) {
-        switch (loaderId) {
-            case MEMBER_DETAIL_LOADER:
-                return new CursorLoader(getActivity(),
-                        SurakshaContract.MemberEntry.buildMemberUri(mMemberId),
-                        Member.MemberQuery.PROJECTION,
-                        null,
-                        null,
-                        null);
-            default:
-                // An invalid id was passed in
-                return null;
-        }
+    private void displayMemberDetails() {
+        mMemberId = getArguments().getLong(ARG_MEMBER_ID);
+        mMember = Member.getMemberFromId(getContext(), mMemberId);
 
-    }
+        mMember.setMemberInfo(getContext(), layoutMemberInfo);
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        switch (loader.getId()) {
-            case MEMBER_DETAIL_LOADER:
-                if (data != null && data.moveToFirst()) {
-                    Member member = Member.getMemberFromCursor(data);
-                    if (member != null) {
-                        mMemberName.setText(member.getName());
-                        mMemberAlias.setText(member.getAlias());
-                        mMemberGender.setText(member.getGender());
-                        mMemberFather.setText(member.getFather());
-                        mMemberSpouse.setText(member.getSpouse());
-                        mMemberOccupation.setText(member.getOccupation());
-                        mMemberAge.setText(String.valueOf(member.getAge()));
-                        mMemberMobile.setText(member.getMobile());
-                        mMemberAddress.setText(member.getAddress());
-                        mMemberNominee.setText(member.getNominee());
-                        mMemberRelationWithNominee.setText(member.getRelationWithNominee());
-                        mMemberAddressOfNominee.setText(member.getAddressOfNominee());
-                        mMemberRemarks.setText(member.getRemarks());
+        mMemberName.setText(mMember.getName());
+        mMemberAlias.setText(mMember.getAlias());
+        mMemberGender.setText(mMember.getGender());
+        mMemberFather.setText(mMember.getFather());
+        mMemberSpouse.setText(mMember.getSpouse());
+        mMemberOccupation.setText(mMember.getOccupation());
+        mMemberAge.setText(String.valueOf(mMember.getAge()));
+        mMemberMobile.setText(mMember.getMobile());
+        mMemberAddress.setText(mMember.getAddress());
+        mMemberNominee.setText(mMember.getNominee());
+        mMemberRelationWithNominee.setText(mMember.getRelationWithNominee());
+        mMemberAddressOfNominee.setText(mMember.getAddressOfNominee());
+        mMemberRemarks.setText(mMember.getRemarks());
 //                    mMemberClosedAt.setText(Utility.formatDateTime(data.getLong(Member.MemberQuery.COL_CLOSED_AT)));
-                        mMemberCreatedAt.setText(CalendarUtils.getFriendlyDayString(getContext(), member.getCreatedAt()));
-                        mMemberUpdatedAt.setText(CalendarUtils.getFriendlyDayString(getContext(), member.getUpdatedAt()));
-                    }
+        mMemberCreatedAt.setText(CalendarUtils.getFriendlyDayString(getContext(), mMember.getCreatedAt()));
+        mMemberUpdatedAt.setText(CalendarUtils.getFriendlyDayString(getContext(), mMember.getUpdatedAt()));
+        switchIsSmsEnabled.setChecked(mMember.isSmsEnabled());
+
+        if (mMember.isAccountClosed()) {
+            mMemberClosedAt.setText(CalendarUtils.formatDate(mMember.getClosedAt()));
+            accountClosedHolder.setVisibility(View.VISIBLE);
+            closeAccountBtn.setVisibility(View.GONE);
+
+            switchIsSmsEnabled.setEnabled(false);
+        } else {
+            accountClosedHolder.setVisibility(View.GONE);
+            switchIsSmsEnabled.setEnabled(true);
+            switchIsSmsEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    mMember.saveIsSmsEnabled(getContext(), b);
                 }
-                break;
+            });
+            if (AuthUtils.isAdmin(getContext()) || AuthUtils.isDeveloper(getContext())) {
+                closeAccountBtn.setVisibility(View.VISIBLE);
+                closeAccountBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LoanIssue activeBystanderLoan = mMember.getActiveBystanderLoan(getContext());
+                        if (activeBystanderLoan != null) {
+                            Member loanMember = activeBystanderLoan.getMember(getContext());
+                            new AlertDialog.Builder(getActivity())
+                                    .setMessage(mMember.getName() + " is a security mMember for "
+                                            + loanMember.getName()
+                                            + ".Please close the loan first")
+                                    .setPositiveButton("OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    dialog.cancel();
+                                                }
+                                            }
+                                    ).create().show();
+                        } else {
+                            Intent intent = new Intent(getActivity(), CloseAccountActivity.class);
+                            intent.putExtra(CloseAccountActivity.ARG_MEMBER_ID, mMemberId);
+                            getActivity().startActivityForResult(intent, REQUEST_CODE_CLOSE_ACCOUNT_ACTIVITY);
+                        }
+                    }
+                });
+            } else {
+                closeAccountBtn.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
+    public void onResume() {
+        super.onResume();
+        displayMemberDetails();
     }
 }

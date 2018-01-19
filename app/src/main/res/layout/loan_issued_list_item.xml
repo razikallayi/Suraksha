@@ -4,7 +4,6 @@
     android:id="@+id/cardVIewLoanIssuedItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
     android:background="@drawable/touch_selector"
     android:columnCount="2"
     android:padding="@dimen/spacing_tiny">
@@ -55,17 +54,6 @@
         android:layout_gravity="start"
         android:layout_marginStart="@dimen/spacing_medium"
         android:text="SYS"
-        android:textSize="@dimen/font_medium" />
-
-    <TextView android:text="Created Date" />
-
-    <TextView
-        android:id="@+id/created_date_loan_issue_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="@dimen/spacing_medium"
-        android:text="01 June 2016"
         android:textSize="@dimen/font_medium" />
 
     <TextView android:text="Purpose" />

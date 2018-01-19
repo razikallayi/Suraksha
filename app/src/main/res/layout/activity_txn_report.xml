@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".report.TxnReportActivity">
+        tools:context=".report.TxnsActivity">
 
         <include layout="@layout/toolbar" />
 
@@ -25,7 +25,7 @@
             android:fastScrollEnabled="true"
             android:scrollbarStyle="outsideOverlay"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".report.TxnReportActivity"
+            tools:context=".report.TxnsActivity"
             tools:listitem="@layout/txn_list_item" />
 
         <android.support.design.widget.FloatingActionButton

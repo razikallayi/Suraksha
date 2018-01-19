@@ -24,63 +24,7 @@
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/white">
-
-                <ImageView
-                    android:id="@+id/imgAvatarMemberLoanIssue"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="Member Image"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_account_circle_black_48dp" />
-
-                <TextView
-                    android:id="@+id/lblMemberNameLoanIssue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="52dp"
-                    android:layout_marginRight="70dp"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-thin"
-                    android:maxLines="1"
-                    android:text="Name"
-                    android:textSize="@dimen/font_larger" />
-
-                <TextView
-                    android:id="@+id/lblAddressLoanIssue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/lblMemberNameLoanIssue"
-                    android:layout_below="@id/lblMemberNameLoanIssue"
-                    android:layout_marginRight="70dp"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-thin"
-                    android:maxLines="1"
-                    android:text="Mobile/Address"
-                    android:textSize="@dimen/font_normal" />
-
-                <TextView
-                    android:id="@+id/lblAccountNumberInLoanIssueTitle"
-                    android:layout_width="64dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="sans-serif-thin"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/font_huge" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/spacing_very_tiny"
-                    android:layout_toStartOf="@id/lblAccountNumberInLoanIssueTitle"
-                    android:background="@color/colorSeparatorLine" />
-            </RelativeLayout>
+            <include layout="@layout/member_info" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,12 +47,15 @@
 
                 <TextView
                     android:id="@+id/calendar_fa_icon"
-                    android:layout_width="48dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:background="@drawable/touch_selector"
+                    android:padding="@dimen/spacing_small"
                     android:text="@string/fa_ic_calendar"
                     android:textAlignment="center"
-                    android:textSize="@dimen/font_huge" />
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/font_larger" />
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -204,6 +151,7 @@
                         android:id="@+id/txtSecurityMemberName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:completionThreshold="1"
                         android:inputType="textCapWords" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -263,7 +211,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimaryLight"
+                    android:background="@drawable/touch_selector_primary_dark"
+                    android:textColor="@color/white"
                     android:contentDescription="Issue Loan Button"
                     android:focusable="true"
                     android:text="Issue Loan" />

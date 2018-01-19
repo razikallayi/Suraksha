@@ -30,7 +30,7 @@ public class FragmentViewPagerAdapter extends FragmentStatePagerAdapter {
 
 //    @Override
 //    public int getItemPosition(Object object) {
-//        AccountManipulationsFragment amf=(AccountManipulationsFragment) object;
+//        MemberSummeryFragment amf=(MemberSummeryFragment) object;
 //        if(amf!=null){
 //            amf.update();
 //        }

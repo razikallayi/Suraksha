@@ -11,13 +11,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by Razi Kallayi on 19-05-2016.
  */
 public class CalendarUtils extends GregorianCalendar {
 
-    private static int mDepositStartDay = 10;//Normal deposit date is 10 every month
+    private static int DUE_START_DATE = 1;//Normal deposit/Loan date is due on 1 every month
+    private static int DELAY_DATE = 15;//deposit/Loan is considered delayed after 15th of every month
 
     public static String formatDateTime(long dateInMilliseconds) {
         if (dateInMilliseconds == 0L) {
@@ -43,7 +45,11 @@ public class CalendarUtils extends GregorianCalendar {
     }
 
     public static int getDueDay() {
-        return mDepositStartDay;
+        return DUE_START_DATE;
+    }
+
+    public static int getDelayDate() {
+        return DELAY_DATE;
     }
 
     public static long getDepositStartDay() {
@@ -92,17 +98,13 @@ public class CalendarUtils extends GregorianCalendar {
     // To make it easy to query for the exact date, we normalize all dates that go into
     // the database to the start of the the Julian day at UTC.
     public static long normalizeDate(long dateWithTime) {
-        // normalize the start date to the beginning of the (UTC) day
-        Calendar date = getInstance();
+        Calendar date = new GregorianCalendar();
         date.setTimeInMillis(dateWithTime);
-        Calendar standardDate = Calendar.getInstance();
-        standardDate.setTimeInMillis(0);
-        standardDate.set(date.get(YEAR), date.get(MONTH), date.get(DATE));
-        return standardDate.getTimeInMillis();
-//        Time time = new Time();
-//        time.set(dateWithTime);
-//        int julianDay = Time.getJulianDay(dateWithTime, time.gmtoff);
-//        return time.setJulianDay(julianDay);
+        date.set(HOUR_OF_DAY,0);
+        date.set(MINUTE,0);
+        date.set(SECOND,0);
+        date.set(MILLISECOND,0);
+        return date.getTimeInMillis();
     }
 
     // To make it easy to query for the exact calendar, we normalize all dates that go into
@@ -177,44 +179,36 @@ public class CalendarUtils extends GregorianCalendar {
 
         long yesterday = currentDate - DateUtils.DAY_IN_MILLIS;
         long tomorrow = currentDate + DateUtils.DAY_IN_MILLIS;
-
         // If the date we're building the String for is today's date, the format
         // is "Today, June 24"
+
+//        return String.valueOf(givenDate); //TODO:Done for error correction. Once cleared, delete this line and enable below block commeents
         int formatId = R.string.format_full_friendly_date;
         if (givenDate == currentDate) {
-            return String.format(context.getString(
-                    formatId,
-                    context.getString(R.string.today),
-                    getFormattedMonthDay(context, dateInMillis)));
+            return context.getString(R.string.today);
+
         } else if (givenDate == tomorrow)
-            return String.format(context.getString(
-                    formatId,
-                    context.getString(R.string.tomorrow),
-                    getFormattedMonthDay(context, dateInMillis)));
+            return context.getString(R.string.tomorrow);
         else if (givenDate == yesterday)
-            return String.format(context.getString(
-                    formatId,
-                    context.getString(R.string.yesterday),
-                    getFormattedMonthDay(context, dateInMillis)));
+            return context.getString(R.string.yesterday);
         else {
             // Otherwise, use the form "Mon Jun 3"
-            return getFormattedMonthDay(context, dateInMillis);
+            return getFormattedMonthDay(dateInMillis);
         }
     }
 
     /**
      * Converts db date format to the format "Month day", e.g "June 24".
      *
-     * @param context      Context to use for resource localization
      * @param dateInMillis The db formatted date string, expected to be of the form specified
      *                     in Utility.DATE_FORMAT
      * @return The day in the form of a string formatted "December 6"
      */
-    public static String getFormattedMonthDay(Context context, long dateInMillis) {
+    public static String getFormattedMonthDay(long dateInMillis) {
 //        SimpleDateFormat dbDateFormat = new SimpleDateFormat(CalendarUtils.DATE_FORMAT);
-        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMM dd EEE");
+        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMM dd EEE", Locale.ENGLISH);
         if (!isCurrentYear(dateInMillis)) {
-            monthDayFormat = new SimpleDateFormat("MMM dd, yyyy");
+            monthDayFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
         }
         return monthDayFormat.format(dateInMillis);
     }

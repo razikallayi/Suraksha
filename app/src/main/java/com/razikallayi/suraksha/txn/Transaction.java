@@ -26,7 +26,8 @@ public class Transaction implements Serializable {
     private long officer_id;
     private long depositForDate = -1;
     private long loanPayedId = -1;
-    private long loanReturnDate = -1;
+    private long paymentDate = -1;
+    private int instalmentNumber = -1;
     private long createdAt;
     private long updatedAt;
     //private Officer officer;
@@ -50,28 +51,37 @@ public class Transaction implements Serializable {
                 SurakshaContract.TxnEntry.buildTxnUri(id),
                 Transaction.TxnQuery.PROJECTION, null, null, null);
 
-        return getTxnFromCursor(context,cursor);
+        return getTxnFromCursor(context, cursor);
     }
 
-    public static final String getLedgerName(int ledger) {
+
+    public int destroy(Context context) {
+        return context.getContentResolver().delete(
+                SurakshaContract.TxnEntry.CONTENT_URI,
+                SurakshaContract.TxnEntry._ID + " =? ", new String[]{String.valueOf(id)});
+    }
+
+    public static String getLedgerName(int ledger) {
         //Change in SurakshaContract.TxnEntry, if you make any change here
         switch (ledger) {
-            case 1:
+            case SurakshaContract.TxnEntry.REGISTRATION_FEE_LEDGER:
                 return "REGISTRATION FEE";
-            case 2:
+            case SurakshaContract.TxnEntry.DEPOSIT_LEDGER:
                 return "DEPOSIT";
-            case 3:
+            case SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER:
                 return "LOAN ISSUED";
-            case 4:
+            case SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER:
                 return "LOAN RETURN";
-            case 5:
+            case SurakshaContract.TxnEntry.WORKING_COST_LEDGER:
                 return "WORKING COST";
+            case SurakshaContract.TxnEntry.ACCOUNT_CLOSE_LEDGER:
+                return "ACCOUNT CLOSE";
             default:
                 return "UNKNOWN";
         }
     }
 
-    public static final String getVoucherName(int ledger) {
+    public static String getVoucherName(int ledger) {
         //Change in SurakshaContract.TxnEntry, if you make any change here
         switch (ledger) {
             case 100://REGISTRATION_FEE_LEDGER
@@ -82,6 +92,7 @@ public class Transaction implements Serializable {
                 return "UNKNOWN";
         }
     }
+
 
     //Get working money fund amount
     public static Double getWmf(Context context) {
@@ -109,23 +120,23 @@ public class Transaction implements Serializable {
         return amount;
     }
 
-/*
-    //Get Instalment count of loan return
-    public int getInstalmentCount(Context context) {
-        Cursor cursor = context.getContentResolver().query(SurakshaContract.TxnEntry.buildGetTotalDeposit(),
-                null, SurakshaContract.TxnEntry._ID + "= ?", new String[]{String.valueOf(this.loanPayedId)},
-                null);
-        if (cursor != null) {
-            cursor.moveToFirst();
+    /*
+        //Get Instalment count of loan return
+        public int getInstalmentCount(Context context) {
+            Cursor cursor = context.getContentResolver().query(SurakshaContract.TxnEntry.buildGetTotalDeposit(),
+                    null, SurakshaContract.TxnEntry._ID + "= ?", new String[]{String.valueOf(this.loanPayedId)},
+                    null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+            }
+            Double amount = null;
+            if (cursor != null) {
+                amount = cursor.getDouble(0);
+                cursor.close();
+            }
+            return amount;
         }
-        Double amount = null;
-        if (cursor != null) {
-            amount = cursor.getDouble(0);
-            cursor.close();
-        }
-        return amount;
-    }
-*/
+    */
     //Get Total Loan Payed amount in suraksha
     public static Double getTotalLoanPayed(Context context) {
 
@@ -155,18 +166,9 @@ public class Transaction implements Serializable {
         return amount;
     }
 
-
-    public boolean isLateDeposit(){
-        Calendar depositForDate = Calendar.getInstance();
-        depositForDate.setTimeInMillis(this.depositForDate);
-        depositForDate.add(Calendar.DAY_OF_MONTH,15);
-        return createdAt > depositForDate.getTimeInMillis();
-    }
-
-
     public static List<Transaction> getTxnListFromCursor(Context context, Cursor c) {
         List<Transaction> txnList = new ArrayList<>();
-        if (c.getCount() <= 0) {
+        if (c == null || c.getCount() <= 0) {
             return txnList;
         }
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -179,6 +181,9 @@ public class Transaction implements Serializable {
     public static Transaction getTxnFromCursor(Context context, Cursor c) {
         Transaction txn = new Transaction();
         if (c != null) {
+            if (c.getCount() == 1) {
+                c.moveToFirst();
+            }
             txn = new Transaction(context, c.getInt(TxnQuery.COL_FK_ACCOUNT_NUMBER),
                     c.getDouble(TxnQuery.COL_AMOUNT), c.getInt(TxnQuery.COL_VOUCHER_TYPE),
                     c.getInt(TxnQuery.COL_LEDGER), c.getString(TxnQuery.COL_NARRATION),
@@ -187,13 +192,13 @@ public class Transaction implements Serializable {
             txn.id = c.getLong(TxnQuery.COL_ID);
             txn.depositForDate = c.getLong(TxnQuery.COL_DEFINED_DEPOSIT_DATE);
             txn.loanPayedId = c.getInt(TxnQuery.COL_FK_LOAN_PAYED_ID);
-            txn.loanReturnDate = c.getLong(TxnQuery.COL_LOAN_RETURN_DATE);
+            txn.paymentDate = c.getLong(TxnQuery.COL_PAYMENT_DATE);
+            txn.instalmentNumber = c.getInt(TxnQuery.COL_INSTALMENT_NUMBER);
             txn.createdAt = c.getLong(TxnQuery.COL_CREATED_AT);
             txn.updatedAt = c.getLong(TxnQuery.COL_UPDATED_AT);
         }
         return txn;
     }
-
 
     public static ContentValues getTxnContentValues(Transaction txn) {
         ContentValues values = new ContentValues();
@@ -205,15 +210,24 @@ public class Transaction implements Serializable {
         values.put(SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE, txn.getVoucherType());
         values.put(SurakshaContract.TxnEntry.COLUMN_NARRATION, txn.getNarration());
         values.put(SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID, txn.getOfficer_id());
-        values.put(SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE, txn.getLoanReturnDate());
-        if(txn.createdAt == 0) {
+        values.put(SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE, txn.getPaymentDate());
+        values.put(SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER, txn.getInstalmentNumber());
+        if (txn.createdAt == 0) {
             values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, System.currentTimeMillis());
-        }else{
+        } else {
             values.put(SurakshaContract.TxnEntry.COLUMN_CREATED_AT, txn.createdAt);
         }
         values.put(SurakshaContract.TxnEntry.COLUMN_UPDATED_AT, System.currentTimeMillis());
 
         return values;
+    }
+
+    public boolean isLateDeposit() {
+        int delayDate = CalendarUtils.getDelayDate();
+        Calendar depositForDate = Calendar.getInstance();
+        depositForDate.setTimeInMillis(this.depositForDate);
+        depositForDate.set(Calendar.DAY_OF_MONTH, delayDate);
+        return paymentDate > depositForDate.getTimeInMillis();
     }
 
     public int getVoucherType() {
@@ -320,16 +334,27 @@ public class Transaction implements Serializable {
                 ", voucher='" + getVoucherName(voucherType) + '\'' +
                 ", ledger='" + getLedgerName(ledger) + '\'' +
                 ", accountNo='" + accountNumber + '\'' +
+                ", instalmentNo='" + instalmentNumber + '\'' +
+                ", DepositMonth='" + CalendarUtils.readableDepositMonth(depositForDate) + '\'' +
+                ", payedDate='" + CalendarUtils.formatDateTime(paymentDate) + '\'' +
                 ", created='" + CalendarUtils.formatDateTime(createdAt) + '\'' +
                 '}';
     }
 
-    public long getLoanReturnDate() {
-        return loanReturnDate;
+    public long getPaymentDate() {
+        return paymentDate;
     }
 
-    public void setLoanReturnDate(long loanReturnDate) {
-        this.loanReturnDate = loanReturnDate;
+    public void setPaymentDate(long paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public int getInstalmentNumber() {
+        return instalmentNumber;
+    }
+
+    public void setInstalmentNumber(int instalmentNumber) {
+        this.instalmentNumber = instalmentNumber;
     }
 
 
@@ -346,7 +371,8 @@ public class Transaction implements Serializable {
                 SurakshaContract.TxnEntry.COLUMN_DEPOSIT_FOR_DATE,
                 SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID,
                 SurakshaContract.TxnEntry.COLUMN_FK_OFFICER_ID,
-                SurakshaContract.TxnEntry.COLUMN_LOAN_RETURN_DATE
+                SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE,
+                SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER,
         };
         int COL_ID = 0;
         int COL_FK_ACCOUNT_NUMBER = 1;
@@ -359,6 +385,7 @@ public class Transaction implements Serializable {
         int COL_DEFINED_DEPOSIT_DATE = 8;
         int COL_FK_LOAN_PAYED_ID = 9;
         int COL_FK_OFFICER_ID = 10;
-        int COL_LOAN_RETURN_DATE = 11;
+        int COL_PAYMENT_DATE = 11;
+        int COL_INSTALMENT_NUMBER = 12;
     }
 }

@@ -16,20 +16,19 @@ import android.graphics.drawable.ColorDrawable;
  * Created by Razi Kallayi on 06-04-2016.
  */
 public class LetterAvatar extends ColorDrawable {
-    Paint paint   = new Paint();
-    Rect bounds  = new Rect();
+    Paint paint = new Paint();
+    Rect bounds = new Rect();
 
-    String              pLetters;
-    private float       ONE_DP  = 0.0f;
-    private Resources   pResources;
-    private int         pPadding;
-    int                 pSize   = 0;
-    float               pMesuredTextWidth;
+    String pLetters;
+    int pSize = 0;
+    float pMesuredTextWidth;
+    int pBoundsTextwidth;
+    int pBoundsTextHeight;
+    private float ONE_DP = 0.0f;
+    private Resources pResources;
+    private int pPadding;
 
-    int                 pBoundsTextwidth;
-    int                 pBoundsTextHeight;
-
-    public LetterAvatar (Context context, int color, String letter, int paddingInDp) {
+    public LetterAvatar(Context context, int color, String letter, int paddingInDp) {
         super(color);
         this.pLetters = letter;
         this.pResources = context.getResources();
@@ -46,7 +45,8 @@ public class LetterAvatar extends ColorDrawable {
             paint.setTextSize(++pSize);
             paint.getTextBounds(pLetters, 0, pLetters.length(), bounds);
 
-        } while ((bounds.height() < (canvas.getHeight() - pPadding)) && (paint.measureText(pLetters) < (canvas.getWidth() - pPadding)));
+        }
+        while ((bounds.height() < (canvas.getHeight() - pPadding)) && (paint.measureText(pLetters) < (canvas.getWidth() - pPadding)));
 
         paint.setTextSize(pSize);
         pMesuredTextWidth = paint.measureText(pLetters);
@@ -55,7 +55,7 @@ public class LetterAvatar extends ColorDrawable {
         float xOffset = ((canvas.getWidth() - pMesuredTextWidth) / 2);
         float yOffset = pBoundsTextHeight + (canvas.getHeight() - pBoundsTextHeight) / 2;
 //        paint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        paint.setTypeface(Typeface.create("sans-serif-black",0));
+        paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
         paint.setColor(0xffffffff);
         canvas.drawText(pLetters, xOffset, yOffset, paint);
     }

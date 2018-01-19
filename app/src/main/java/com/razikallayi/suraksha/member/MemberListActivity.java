@@ -4,10 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -21,18 +18,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.razikallayi.suraksha.AvatarActivity;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.account.AccountManipulationsFragment;
 import com.razikallayi.suraksha.data.SurakshaContract;
-import com.razikallayi.suraksha.utils.LetterAvatar;
-
-import java.util.Random;
 
 /**
  * An activity representing a list of Members. This activity
@@ -52,13 +42,15 @@ public class MemberListActivity extends BaseActivity
             SurakshaContract.MemberEntry.COLUMN_NAME,
             SurakshaContract.MemberEntry.COLUMN_ADDRESS,
             SurakshaContract.MemberEntry.COLUMN_AVATAR,
-            SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO
+            SurakshaContract.MemberEntry.COLUMN_ACCOUNT_NO,
+            SurakshaContract.MemberEntry.COLUMN_CLOSED_AT,
     };
     private static final int COL_MEMBER_ID = 0;
     private static final int COL_MEMBER_NAME = 1;
     private static final int COL_MEMBER_ADDRESS = 2;
     private static final int COL_MEMBER_AVATAR = 3;
     private static final int COL_MEMBER_ACCOUNT_NO = 4;
+    private static final int COL_CLOSED_AT = 5;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -68,7 +60,6 @@ public class MemberListActivity extends BaseActivity
     private MemberListAdapter mMemberListAdapter;
     // If non-null, this is the current filter the user has provided.
     private String mCurFilter;
-
 
 
     @Override
@@ -101,7 +92,7 @@ public class MemberListActivity extends BaseActivity
 //            });
 //        }
 
-        if (findViewById(R.id.member_details_view_pager_container) != null) {
+        if (findViewById(R.id.member_list_and_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -117,24 +108,14 @@ public class MemberListActivity extends BaseActivity
 
         mMemberListAdapter.setOnItemClickListener(new MemberListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(long memberId, String memberName) {
+            public void onItemClick(View view, long memberId, String memberName) {
                 if (mTwoPane) {
                     RecyclerView.State state = new RecyclerView.State();
 
-                    View rootView = findViewById(R.id.member_details_view_pager_container);
-                    TextView nameTextView = rootView.findViewById(R.id.nameMember);
-                    nameTextView.setText(memberName);
-                    //Load Avatar
-                    LoadAvatarTask loadAvatarTask = new LoadAvatarTask();
-                    loadAvatarTask.execute(memberId);
 
                     ViewPager viewPager = findViewById(R.id.member_detail_container);
                     if (viewPager != null) {
                         setupViewPager(viewPager, memberId);
-                    }
-                    TabLayout tabLayout = findViewById(R.id.tabs);
-                    if (viewPager != null && tabLayout != null) {
-                        tabLayout.setupWithViewPager(viewPager);
                     }
 
                 } else {
@@ -157,29 +138,17 @@ public class MemberListActivity extends BaseActivity
     private void setupViewPager(ViewPager viewPager, long memberId) {
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
 
-
-        AccountManipulationsFragment accountManipulationsFragment = (AccountManipulationsFragment)
-                getSupportFragmentManager().findFragmentByTag(AccountManipulationsFragment.TAG);
-        if (null == accountManipulationsFragment) {
+        MemberSummeryFragment memberSummeryFragment = (MemberSummeryFragment)
+                getSupportFragmentManager().findFragmentByTag(MemberSummeryFragment.TAG);
+        if (null == memberSummeryFragment) {
             Bundle arguments = new Bundle();
-            //AccountManipulationsFragment
-            arguments.putLong(AccountManipulationsFragment.ARG_MEMBER_ID, memberId);
-            accountManipulationsFragment = new AccountManipulationsFragment();
-            accountManipulationsFragment.setArguments(arguments);
-            adapter.addFragment(accountManipulationsFragment, "Account");
+            //MemberSummeryFragment
+            arguments.putLong(MemberSummeryFragment.ARG_MEMBER_ID, memberId);
+            memberSummeryFragment = new MemberSummeryFragment();
+            memberSummeryFragment.setArguments(arguments);
+            adapter.addFragment(memberSummeryFragment, "Account");
         }
 
-
-//        AccountListFragment accountListFragment = (AccountListFragment)
-//                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
-//        if (null == accountListFragment) {
-//            Bundle arguments = new Bundle();
-//            //AccountList
-//            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
-//            accountListFragment = new AccountListFragment();
-//            accountListFragment.setArguments(arguments);
-//            adapter.addFragment(accountListFragment, "Accounts");
-//        }
 
         MemberDetailFragment memberDetailFragment = (MemberDetailFragment)
                 getSupportFragmentManager().findFragmentByTag(MemberDetailFragment.TAG);
@@ -287,61 +256,5 @@ public class MemberListActivity extends BaseActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mMemberListAdapter.swapCursor(null);
-    }
-
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Log.d("JELLYFISH", "onActivityResult:req cod " + requestCode);
-//        Log.d("JELLYFISH", "onActivityResult: resut" + resultCode);
-//        Log.d("JELLYFISH", "onActivityResult: resut" + data.getSerializableExtra("result").toString());
-//        if (requestCode == AccountManipulationsFragment.ISSUE_LOAN_ACTIVITY) {
-////            AccountManipulationsFragment amf = (AccountManipulationsFragment) getSupportFragmentManager().findFragmentByTag(AccountManipulationsFragment.TAG);
-////            amf.onLoanIssued((Member) data.getSerializableExtra("result"));
-//        }
-//    }
-
-
-    private class LoadAvatarTask extends AsyncTask<Long, Void, Member> {
-        @Override
-        protected Member doInBackground(Long[] memberId) {
-            return Member.getMemberFromId(getApplicationContext(), memberId[0]);
-        }
-
-        @Override
-        protected void onPostExecute(final Member member) {
-            super.onPostExecute(member);
-
-            //Address Or Mobile
-            TextView tvMobile = findViewById(R.id.mobileMember);
-            String mobileOrAddress = member.getAddress().isEmpty() ? member.getMobile() : member.getAddress();
-            tvMobile.setText(mobileOrAddress);
-
-            //AccountNumber
-            TextView lblAccountNumber = findViewById(R.id.lblAccountNumberInTitle);
-            String accountNumber = String.valueOf(member.getAccountNo());
-            lblAccountNumber.setText(accountNumber);
-
-            ImageView ivAvatar = findViewById(R.id.avatarMember);
-            if (member.getAvatarDrawable() != null) {
-                ivAvatar.setImageDrawable(member.getAvatarDrawable());
-                ivAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), AvatarActivity.class);
-                        intent.putExtra("avatar", member.getAvatar());
-                        startActivity(intent);
-                    }
-                });
-            } else {
-                Random rnd = new Random();
-                int Low = 50;
-                int High = 200;
-                int color = Color.rgb(rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low, rnd.nextInt(High - Low) + Low);
-                ivAvatar.setImageDrawable(new LetterAvatar(getApplicationContext(),
-                        color, member.getName().substring(0, 1).toUpperCase(), 24));
-            }
-        }
     }
 }

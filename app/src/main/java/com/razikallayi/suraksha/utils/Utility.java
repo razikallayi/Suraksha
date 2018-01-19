@@ -17,7 +17,6 @@ import java.util.Calendar;
 public class Utility {
 
     public static String formatAmountInRupees(Context context, double amount) {
-        if(amount==0L) return "";
         return context.getString(R.string.format_rupees, amount);
     }
 

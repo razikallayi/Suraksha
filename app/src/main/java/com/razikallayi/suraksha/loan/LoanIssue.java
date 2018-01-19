@@ -3,6 +3,7 @@ package com.razikallayi.suraksha.loan;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import com.razikallayi.suraksha.data.SurakshaContract;
 import com.razikallayi.suraksha.member.Member;
@@ -11,6 +12,8 @@ import com.razikallayi.suraksha.utils.AuthUtils;
 import com.razikallayi.suraksha.utils.CalendarUtils;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -60,11 +63,24 @@ public class LoanIssue implements Serializable {
         cursor.moveToFirst();
         return getLoanIssueFromCursor(context, cursor);
     }
+/*
+    public static List<LoanIssue> getLoanIssueListFromCursor(Context context, Cursor c) {
+        List<LoanIssue> loanIssueList = new ArrayList<>();
+        if (c == null || c.getCount() <= 0) {
+            return loanIssueList;
+        }
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            LoanIssue loanIssue = getLoanIssueFromCursor(context, c);
+            loanIssueList.add(loanIssue);
+        }
+        return loanIssueList;
+    }
+*/
 
     public static ContentValues getLoanIssuedContentValues(LoanIssue loanIssue) {
         ContentValues values = new ContentValues();
 
-        values.put(SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER, loanIssue.accountNumber);
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_ACCOUNT_NUMBER, loanIssue.accountNumber);
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_AMOUNT, loanIssue.amount);
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_LOAN_INSTALMENT_TIMES, loanIssue.loanInstalmentTimes);
         values.put(SurakshaContract.LoanIssueEntry.COLUMN_LOAN_INSTALMENT_AMOUNT, loanIssue.loanInstalmentAmount);
@@ -85,8 +101,10 @@ public class LoanIssue implements Serializable {
 
     public static LoanIssue getLoanIssueFromCursor(Context context, Cursor cursor) {
         LoanIssue loanIssue = new LoanIssue();
-        cursor.moveToFirst();
-        if (cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
+            if (cursor.getCount() == 1) {
+                cursor.moveToFirst();
+            }
             loanIssue = new LoanIssue(cursor.getInt(LoanIssueQuery.COL_FK_ACCOUNT_NUMBER),
                     cursor.getDouble(LoanIssueQuery.COL_AMOUNT),
                     cursor.getString(LoanIssueQuery.COL_PURPOSE),
@@ -128,14 +146,89 @@ public class LoanIssue implements Serializable {
                 ", instalmentTimes='" + loanInstalmentTimes + '\'' +
                 ", purpose='" + purpose + '\'' +
                 ", officeStatement='" + officeStatement + '\'' +
-                ", transaction='" + transaction.toString() + '\'' +
+//                ", transaction='" + transaction.toString() + '\'' +
                 ", issued='" + CalendarUtils.formatDateTime(issuedAt) + '\'' +
                 ", created='" + CalendarUtils.formatDateTime(createdAt) + '\'' +
                 '}';
     }
 
-    public int nextInstalmentCount(Context context) {
-        return getLoanReturnTxnList(context).size() + 1;
+    public int nextInstalmentNumber(Context context) {
+        return lastInstalmentNumber(context) + 1;
+    }
+
+    public boolean hasInstalmentDue(Context context) {
+        long nextInstalmentDueDate = instalmentDueDate(nextInstalmentNumber(context));
+        long currentDate = CalendarUtils.normalizeDate(System.currentTimeMillis());
+        return nextInstalmentDueDate <= currentDate;
+    }
+
+    public boolean isInstalmentDue(int instalmentNo) {
+        if (instalmentNo > loanInstalmentTimes) return false;
+        return instalmentDueDate(instalmentNo)
+                <= CalendarUtils.normalizeDate(System.currentTimeMillis());
+    }
+
+    public long instalmentDueDate(int instalmentNumber) {
+        long issuedDate = CalendarUtils.normalizeDate(issuedAt);
+        Calendar dueDateCal = new GregorianCalendar();
+        dueDateCal.setTimeInMillis(issuedDate);
+        dueDateCal.add(Calendar.MONTH, instalmentNumber);
+        dueDateCal.set(Calendar.DAY_OF_MONTH, CalendarUtils.getDueDay());
+        return dueDateCal.getTimeInMillis();
+    }
+//
+//    public int nextInstalmentNumber(Context context) {
+//        return getLoanReturnTxnList(context).size() + 1;
+//    }
+
+    public Transaction getInstalmentTxn(Context context, int instalmentNo) {
+        String receiptVoucher = String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER);
+        String loanReturnLedger = String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER);
+        String selection = SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + " = ? and "
+                + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? and "
+                + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? and "
+                + SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + " = ?";
+
+        String[] selectionArgs = new String[]{String.valueOf(id),
+                receiptVoucher,
+                loanReturnLedger,
+                String.valueOf(instalmentNo)};
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.CONTENT_URI,
+                Transaction.TxnQuery.PROJECTION, selection, selectionArgs, null);
+        return Transaction.getTxnFromCursor(context, cursor);
+    }
+
+    public Transaction lastInstalmentTxn(Context context) {
+        return getInstalmentTxn(context, lastInstalmentNumber(context));
+    }
+
+    public int lastInstalmentNumber(Context context) {
+        String[] projection = new String[]{
+                "MAX(" + SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + ")"
+        };
+
+        int colInstalmentNo = 0;
+        String receiptVoucher = String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER);
+        String loanReturnLedger = String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER);
+        String selection = SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + " = ? and "
+                + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + " = ? and "
+                + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(id), receiptVoucher, loanReturnLedger};
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs, null);
+        int instalmentNo = 0;
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                instalmentNo = cursor.getInt(colInstalmentNo);
+            }
+            cursor.close();
+        }
+        return instalmentNo;
     }
 
     public List<Transaction> getLoanReturnTxnList(Context context) {
@@ -149,9 +242,35 @@ public class LoanIssue implements Serializable {
                         + SurakshaContract.TxnEntry.COLUMN_LEDGER + " = ? ",
                 new String[]{String.valueOf(id), receiptVoucher, loanReturnLedger},
                 SurakshaContract.TxnEntry._ID + " DESC");
+        if (cursor == null) {
+            return null;
+        }
         loanReturnList = Transaction.getTxnListFromCursor(context, cursor);
         cursor.close();
         return loanReturnList;
+    }
+
+
+    public double sumOfLoanReturns(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.TxnEntry.CONTENT_URI,
+                new String[]{"sum(" + SurakshaContract.TxnEntry.COLUMN_AMOUNT + ")"},
+                SurakshaContract.TxnEntry.COLUMN_LEDGER + "= ? AND "
+                        + SurakshaContract.TxnEntry.COLUMN_VOUCHER_TYPE + "= ? AND "
+                        + SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + "= ? AND "
+                        + SurakshaContract.TxnEntry.COLUMN_FK_ACCOUNT_NUMBER + "= ?",
+                new String[]{String.valueOf(SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER),
+                        String.valueOf(SurakshaContract.TxnEntry.RECEIPT_VOUCHER),
+                        String.valueOf(id),
+                        String.valueOf(accountNumber)}, null);
+        if (cursor == null || cursor.getCount() <= 0) {
+            return 0.0;
+        } else {
+            cursor.moveToFirst();
+            double sum = cursor.getDouble(0);
+            cursor.close();
+            return sum;
+        }
     }
 
     public int bystanderReleaseInstalment() {
@@ -159,9 +278,19 @@ public class LoanIssue implements Serializable {
     }
 
 
+    public int remainingInstalments(Context context) {
+        return getLoanInstalmentTimes() - lastInstalmentNumber(context);
+    }
+
+
+    public int remainingInstalments(int instalmentNo) {
+        return getLoanInstalmentTimes() - instalmentNo;
+    }
+
+
     public Transaction updateLoanReturn(Context context, Transaction loanReturnTxn,
                                         long loanReturnDate, String remarks) {
-        loanReturnTxn.setLoanReturnDate(loanReturnDate);
+        loanReturnTxn.setPaymentDate(loanReturnDate);
         loanReturnTxn.setNarration(remarks);
         ContentValues values = Transaction.getTxnContentValues(loanReturnTxn);
         context.getContentResolver().update(SurakshaContract.TxnEntry.CONTENT_URI,
@@ -173,7 +302,7 @@ public class LoanIssue implements Serializable {
     }
 
     public Transaction saveLoanReturn(Context context, long returnDate, String narration) {
-        int nextInstalmentCount = this.nextInstalmentCount(context);
+        int nextInstalmentCount = this.nextInstalmentNumber(context);
 
         int maxLoanInstalmentTime = this.getLoanInstalmentTimes();
         //Check if instalment is already complete
@@ -188,7 +317,8 @@ public class LoanIssue implements Serializable {
                 SurakshaContract.TxnEntry.LOAN_RETURN_LEDGER,
                 narration, AuthUtils.getAuthenticatedOfficerId(context));
         txnLoanReturn.setLoanPayedId(id);
-        txnLoanReturn.setLoanReturnDate(returnDate);
+        txnLoanReturn.setPaymentDate(returnDate);
+        txnLoanReturn.setInstalmentNumber(nextInstalmentCount);
 
         ContentValues values = Transaction.getTxnContentValues(txnLoanReturn);
         context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, values);
@@ -205,6 +335,42 @@ public class LoanIssue implements Serializable {
             getSecurityMember(context).saveIsLoanBlocked(context, false);
         }
         return txnLoanReturn;
+    }
+
+    public boolean isByStanderReleased(int instalmentNumber) {
+        return instalmentNumber >= this.bystanderReleaseInstalment();
+    }
+
+    public static void saveIssueLoan(Context context, LoanIssue loanIssue, Member member) {
+        Member securityMember = Member.getMemberFromAccountNumber(context,
+                loanIssue.getSecurityAccountNo());
+        loanIssue.setSecurityMember(securityMember);
+
+        ContentValues loanIssueValues = LoanIssue.getLoanIssuedContentValues(loanIssue);
+        long loanIssueId;
+        Uri loanIssueUri = context.getContentResolver().insert(
+                SurakshaContract.LoanIssueEntry.CONTENT_URI, loanIssueValues);
+        loanIssueId = SurakshaContract.LoanIssueEntry.getLoanIssueIdFromUri(loanIssueUri);
+
+        //Save Loan Transaction
+        Transaction txnIssueLoan = new Transaction(context,
+                loanIssue.getAccountNumber(),
+                loanIssue.getAmount(),
+                SurakshaContract.TxnEntry.PAYMENT_VOUCHER,
+                SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER,
+                loanIssue.getPurpose(),
+                AuthUtils.getAuthenticatedOfficerId(context));
+        txnIssueLoan.setLoanPayedId(loanIssueId);
+        txnIssueLoan.setPaymentDate(System.currentTimeMillis());
+        ContentValues txnValues = Transaction.getTxnContentValues(txnIssueLoan);
+
+        context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, txnValues);
+
+        //Set Member HasLoan Flag On
+        member.saveHasLoan(context, true);
+        member.saveIsLoanBlocked(context, true);
+        //Set Security Member loan Blocked
+        securityMember.saveIsLoanBlocked(context, true);
     }
 
     public void closeLoan(Context context) {
@@ -352,7 +518,7 @@ public class LoanIssue implements Serializable {
     public interface LoanIssueQuery {
         String[] PROJECTION = new String[]{
                 SurakshaContract.LoanIssueEntry.TABLE_NAME + "." + SurakshaContract.LoanIssueEntry._ID,
-                SurakshaContract.LoanIssueEntry.TABLE_NAME + "." + SurakshaContract.LoanIssueEntry.COLUMN_FK_ACCOUNT_NUMBER,
+                SurakshaContract.LoanIssueEntry.TABLE_NAME + "." + SurakshaContract.LoanIssueEntry.COLUMN_ACCOUNT_NUMBER,
                 SurakshaContract.LoanIssueEntry.TABLE_NAME + "." + SurakshaContract.LoanIssueEntry.COLUMN_SECURITY_ACCOUNT_NUMBER,
                 SurakshaContract.LoanIssueEntry.COLUMN_PURPOSE,
                 SurakshaContract.LoanIssueEntry.TABLE_NAME + "." + SurakshaContract.LoanIssueEntry.COLUMN_AMOUNT,

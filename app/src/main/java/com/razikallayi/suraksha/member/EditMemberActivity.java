@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.R;
 import com.razikallayi.suraksha.SettingsActivity;
@@ -265,8 +264,8 @@ public class EditMemberActivity extends BaseActivity {
         member.setName(name);
         member.setAlias(alias);
         member.setGender(gender);
-        member.setFather( father);
-        member.setSpouse( spouse);
+        member.setFather(father);
+        member.setSpouse(spouse);
         member.setOccupation(occupation);
         member.setAge(age);
         member.setMobile(mobile);
@@ -431,16 +430,16 @@ public class EditMemberActivity extends BaseActivity {
 
         @Override
         protected Bitmap doInBackground(Uri... uriAvatar) {
-            if(uriAvatar == null){
+            if (uriAvatar == null) {
                 return null;
             }
 
             try {
                 Bitmap bitmap = Glide.with(mContext)
-                        .load(uriAvatar[0])
                         .asBitmap()
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .load(uriAvatar[0])
+//                        .skipMemoryCache(true)
+//                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(AVATAR_IMAGE_SIZE_IN_PIXEL, AVATAR_IMAGE_SIZE_IN_PIXEL)
                         .get();
                 memberAvatar = ImageUtils.bitmapToByteArray(bitmap);

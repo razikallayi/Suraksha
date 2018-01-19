@@ -1,4 +1,3 @@
-
 package com.razikallayi.suraksha;
 
 import android.content.Context;
@@ -18,27 +17,21 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.razikallayi.suraksha.member.MemberListActivity;
-import com.razikallayi.suraksha.officer.Officer;
 import com.razikallayi.suraksha.officer.OfficerListActivity;
-import com.razikallayi.suraksha.report.TxnReportActivity;
+import com.razikallayi.suraksha.report.ReportActivity;
 import com.razikallayi.suraksha.utils.AuthUtils;
 
 public abstract class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int THIRTY_SECONDS = 30000; //30 seconds
+    protected static final int mMinLockTime = THIRTY_SECONDS;
+    private static final int FIFTEEN_MINUTES = 900000; //15 minutes
+    protected static final int mMinOfficerLockTime = FIFTEEN_MINUTES;
     protected static int LOCK_SCREEN_REQUEST = 100;
     protected boolean mSkipLockOnce = false;
     private boolean mHasLoaded = false;
     private Context mContext;
-
-    private static final int THIRTY_SECONDS = 30000; //30 seconds
-    private static final int FIFTEEN_MINUTES = 900000; //15 minutes
-
-
-    protected static final int mMinLockTime = THIRTY_SECONDS;
-    protected static final int mMinOfficerLockTime = FIFTEEN_MINUTES;
-
-    public static Officer authOfficer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,7 +178,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 startActivity(new Intent(this, MemberListActivity.class));
                 break;
             case R.id.nav_reports:
-                startActivity(new Intent(this, TxnReportActivity.class));
+                startActivity(new Intent(this, ReportActivity.class));
                 break;
             case R.id.nav_officer:
                 startActivity(new Intent(this, OfficerListActivity.class));
@@ -227,7 +220,6 @@ public abstract class BaseActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
 
 }

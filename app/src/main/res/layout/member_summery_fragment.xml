@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_light"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".member.MemberDetailActivity"
+    tools:showIn="@layout/member_summery_fragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/member_info"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="@dimen/spacing_large" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/loanReturnDueCardAMF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                card_view:cardCornerRadius="10dp"
+                card_view:contentPadding="@dimen/spacing_tiny">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_due_bell_loan"
+                        android:text="@string/pending_loan_return"
+                        android:textSize="@dimen/font_normal"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lblLoanInstalmentTimeAMF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/instalment"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/font_large" />
+
+                    <TextView
+                        android:id="@+id/lblLoanReturnAmountAMF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:textSize="@dimen/font_larger" />
+
+                    <TextView
+                        android:id="@+id/loanReturnAMF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="@dimen/spacing_very_tiny"
+                        android:background="@drawable/touch_selector_maroon"
+                        android:paddingBottom="@dimen/spacing_tiny"
+                        android:paddingEnd="@dimen/spacing_small"
+                        android:paddingStart="@dimen/spacing_small"
+                        android:paddingTop="@dimen/spacing_tiny"
+                        android:text="@string/loan_return"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/depositDueCardAMF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                card_view:cardCornerRadius="10dp"
+                card_view:contentPadding="@dimen/spacing_tiny">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_due_bell_deposit"
+                        android:text="@string/pending_deposit"
+                        android:textSize="@dimen/font_normal"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/lblDepositMonthAMF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/font_large" />
+
+                    <TextView
+                        android:id="@+id/lblDepositAmountAMF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:textSize="@dimen/font_larger" />
+
+
+                    <TextView
+                        android:id="@+id/makeDepositAMF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="@dimen/spacing_very_tiny"
+                        android:background="@drawable/touch_selector_blue"
+                        android:paddingBottom="@dimen/spacing_tiny"
+                        android:paddingEnd="@dimen/spacing_small"
+                        android:paddingStart="@dimen/spacing_small"
+                        android:paddingTop="@dimen/spacing_tiny"
+                        android:text="@string/make_deposit"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/loanAMF"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:background="@drawable/touch_selector_white"
+                android:drawableTop="@drawable/ic_loan_umbrella"
+                android:padding="@dimen/spacing_large"
+                android:text="@string/loans"
+                android:textAlignment="center"
+                android:textSize="@dimen/font_large" />
+
+            <TextView
+                android:id="@+id/depositsAMF"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/touch_selector_white"
+                android:drawableTop="@drawable/ic_pigpot"
+                android:padding="@dimen/spacing_large"
+                android:text="@string/deposits"
+                android:textAlignment="center"
+                android:textSize="@dimen/font_large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_normal">
+
+
+            <TextView
+                android:id="@+id/issueLoanView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/touch_selector_white"
+                android:drawableTop="@drawable/ic_issueloan"
+                android:paddingBottom="@dimen/spacing_larger"
+                android:paddingEnd="@dimen/spacing_tiny"
+                android:paddingStart="@dimen/spacing_tiny"
+                android:paddingTop="@dimen/spacing_larger"
+                android:text="@string/issue_loan"
+                android:textAlignment="center"
+                android:textSize="@dimen/font_large" />
+
+            <TextView
+                android:id="@+id/lblLoanBlockedReason"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_info"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:padding="@dimen/text_margin"
+                android:text="Loan blocked reason"
+                android:textSize="@dimen/font_normal"
+                android:visibility="visible" />
+        </LinearLayout>
+
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/summeryCardAMF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            card_view:cardCornerRadius="10dp"
+            card_view:contentPadding="@dimen/spacing_tiny">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pending_summery"
+                    android:textSize="@dimen/font_normal"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/lblSummeryAMF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_reminder"
+                    android:fontFamily="sans-serif"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:text="Pending loan: March,April,May\nPending Deposit: June July\nTotal:25000"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_medium" />
+
+
+                <TextView
+                    android:id="@+id/summerySendReminderBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/spacing_very_tiny"
+                    android:background="@drawable/touch_selector_yellow"
+                    android:paddingBottom="@dimen/spacing_tiny"
+                    android:paddingEnd="@dimen/spacing_small"
+                    android:paddingStart="@dimen/spacing_small"
+                    android:paddingTop="@dimen/spacing_tiny"
+                    android:text="@string/send_reminder"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

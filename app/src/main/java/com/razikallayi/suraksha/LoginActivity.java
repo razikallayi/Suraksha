@@ -1,18 +1,16 @@
 package com.razikallayi.suraksha;
 
-import android.animation.AnimatorSet;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.method.TransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -39,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private String mRecentOfficer = null;
     private boolean isBackPressed = false;
+    private ImageView logo;
+    private ImageView logoTagline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,31 +48,8 @@ public class LoginActivity extends AppCompatActivity {
 
         mUsernameView = findViewById(R.id.username);
         mPasswordView = findViewById(R.id.password);
-        final ImageView logo = findViewById(R.id.logo);
-
-
-        final ValueAnimator animator = ValueAnimator.ofFloat(-200, 50);
-
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float translateValue = (float) animation.getAnimatedValue();
-                logo.setTranslationY(translateValue);
-            }
-        });
-
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.setDuration(600);
-        animator.start();
-
-
-        LayoutTransition l = new LayoutTransition();
-        l.enableTransitionType(LayoutTransition.CHANGING);
-        ViewGroup viewGroup = (ViewGroup) mUsernameView.getParent().getParent();
-        viewGroup.setLayoutTransition(l);
-
-
-        mockLogin("RAZI", "4976", 4000);
+        logo = findViewById(R.id.logo);
+        logoTagline = findViewById(R.id.logoTagline);
 
         mRecentOfficer = SettingsUtils.getOfficerUsername(getApplicationContext());
         if (null != mRecentOfficer) {
@@ -95,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
-
+        mPasswordView.setTransformationMethod(new HiddenPassTransformationMethod());
         mPasswordView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -109,10 +86,11 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.id.sign_in_button || id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
@@ -129,80 +107,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
-    public void startAnimation(View view) {
-        float dest = 0;
-        ImageView aniView = findViewById(R.id.logo);
-        switch (view.getId()) {
-
-            case R.id.username:
-                dest = 360;
-                if (aniView.getRotation() == 360) {
-                    System.out.println(aniView.getAlpha());
-                    dest = 0;
-                }
-                ObjectAnimator animation1 = ObjectAnimator.ofFloat(aniView,
-                        "rotation", dest);
-                animation1.setDuration(2000);
-                animation1.start();
-                // Show how to load an animation from XML
-                // Animation animation1 = AnimationUtils.loadAnimation(this,
-                // R.anim.myanimation);
-                // animation1.setAnimationListener(this);
-                // animatedView1.startAnimation(animation1);
-                break;
-
-
-        /*    case R.id.password:
-                // shows how to define a animation via code
-                // also use an Interpolator (BounceInterpolator)
-                Paint paint = new Paint();
-                TextView aniTextView = mUsernameView;
-                float measureTextCenter = paint.measureText(aniTextView.getText()
-                        .toString());
-                dest = 0 - measureTextCenter;
-                if (aniTextView.getX() < 0) {
-                    dest = 0;
-                }
-                ObjectAnimator animation2 = ObjectAnimator.ofFloat(aniTextView,
-                        "y", dest);
-                animation2.setDuration(2000);
-                animation2.start();
-                break;*/
-
-           /* case R.id.password:
-                // demonstrate fading and adding an AnimationListener
-
-                dest = 1;
-                if (aniView.getAlpha() > 0) {
-                    dest = 0;
-                }
-                ObjectAnimator animation3 = ObjectAnimator.ofFloat(aniView,
-                        "alpha", dest);
-                animation3.setDuration(2000);
-                animation3.start();
-                break;*/
-
-            case R.id.password:
-
-                ObjectAnimator fadeOut = ObjectAnimator.ofFloat(aniView, "alpha",
-                        0f);
-                fadeOut.setDuration(2000);
-                ObjectAnimator mover = ObjectAnimator.ofFloat(aniView,
-                        "translationX", -500f, 0f);
-                mover.setDuration(2000);
-                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(aniView, "alpha",
-                        0f, 1f);
-                fadeIn.setDuration(2000);
-                AnimatorSet animatorSet = new AnimatorSet();
-
-                animatorSet.play(mover).with(fadeIn).after(fadeOut);
-                animatorSet.start();
-                break;
-
-            default:
-                break;
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final ValueAnimator animator = ValueAnimator.ofFloat(-300, 0);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float translateValue = (float) animation.getAnimatedValue();
+                logo.setTranslationX(translateValue);
+                logoTagline.setTranslationX(translateValue);
+            }
+        });
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(2000);
+        animator.start();
 
     }
 
@@ -314,6 +233,46 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+        }
+    }
+
+    private class HiddenPassTransformationMethod implements TransformationMethod {
+
+        private char DOT = '\u2022';
+
+        @Override
+        public CharSequence getTransformation(final CharSequence charSequence, final View view) {
+            return new PassCharSequence(charSequence);
+        }
+
+        @Override
+        public void onFocusChanged(final View view, final CharSequence charSequence, final boolean b, final int i,
+                                   final Rect rect) {
+            //nothing to do here
+        }
+
+        private class PassCharSequence implements CharSequence {
+
+            private final CharSequence charSequence;
+
+            public PassCharSequence(final CharSequence charSequence) {
+                this.charSequence = charSequence;
+            }
+
+            @Override
+            public char charAt(final int index) {
+                return DOT;
+            }
+
+            @Override
+            public int length() {
+                return charSequence.length();
+            }
+
+            @Override
+            public CharSequence subSequence(final int start, final int end) {
+                return new PassCharSequence(charSequence.subSequence(start, end));
+            }
         }
     }
 }

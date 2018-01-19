@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class LoanReturnedAdapter
         extends RecyclerView.Adapter<LoanReturnedAdapter.ViewHolder> {
-    List<Transaction> loanReturnList;
+    private List<Transaction> loanReturnList;
     private Context mContext;
 
 
@@ -43,8 +43,8 @@ public class LoanReturnedAdapter
 //            final LoanIssue loanIssue = LoanIssue.getLoanIssueFromCursor(context, cursor);
         final Transaction loanReturnTxn = loanReturnList.get(position);
 
-        holder.instalment_count_loan_return_item.setText(String.valueOf(loanReturnList.size() - position));
-        holder.date_loan_return_item.setText(CalendarUtils.formatDate(loanReturnTxn.getLoanReturnDate()));
+        holder.instalment_count_loan_return_item.setText(String.valueOf(loanReturnTxn.getInstalmentNumber()));
+        holder.date_loan_return_item.setText(CalendarUtils.formatDate(loanReturnTxn.getPaymentDate()));
         holder.amount_loan_return_item.setText(Utility.formatAmountInRupees(mContext, loanReturnTxn.getAmount()));
         holder.remarks_loan_return_item.setText(loanReturnTxn.getNarration());
         holder.officer_loan_return_item.setText(Officer.getOfficerNameFromId(mContext, loanReturnTxn.getOfficer_id()));
@@ -61,8 +61,8 @@ public class LoanReturnedAdapter
         holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent intent = new Intent(mContext, LoanReturnActivity.class);
-                intent.putExtra(LoanReturnActivity.ARG_LOAN_RETURN_TXT_ID, loanReturnTxn.getId());
+                Intent intent = new Intent(mContext, ReturnLoanActivity.class);
+                intent.putExtra(ReturnLoanActivity.ARG_LOAN_RETURN_TXN_ID, loanReturnTxn.getId());
                 mContext.startActivity(intent);
                 return true;
             }
@@ -76,8 +76,8 @@ public class LoanReturnedAdapter
 
 
 //    void onLoanReturnClick(final View view, LayoutInflater inflater, final LoanIssue loanIssue) {
-//        Intent intent = new Intent(view.getContext(), LoanReturnActivity.class);
-//        LoanReturnActivity.setLoanIssue(loanIssue);
+//        Intent intent = new Intent(view.getContext(), ReturnLoanActivity.class);
+//        ReturnLoanActivity.setLoanIssue(loanIssue);
 //        view.getContext().startActivity(intent);
 
 //        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());

@@ -1,9 +1,10 @@
 package com.razikallayi.suraksha;
 
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -16,6 +17,9 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.preference.SwitchPreference;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,8 +44,9 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
     /**
-     * A preference value change listener that updates the preference's summary
+     * A enableSmsSwitchPref value change listener that updates the enableSmsSwitchPref's summary
      * to reflect its new value.
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener
@@ -55,7 +60,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
-                // the preference's 'entries' list.
+                // the enableSmsSwitchPref's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
 
@@ -87,10 +92,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 }
 
-            }  else if (preference instanceof DatePreference) {
+            } else if (preference instanceof DatePreference) {
                 preference.setSummary(CalendarUtils.formatDate(Long.valueOf(stringValue)));
-            }else
-            {
+            } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
@@ -109,11 +113,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
+     * Binds a enableSmsSwitchPref's summary to its value. More specifically, when the
+     * enableSmsSwitchPref's value is changed, its summary (line of text below the
+     * enableSmsSwitchPref title) is updated to reflect the value. The summary is also
      * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
+     * dependent on the type of enableSmsSwitchPref.
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
@@ -121,12 +125,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-        // Trigger the listener immediately with the preference's
+        // Trigger the listener immediately with the enableSmsSwitchPref's
         // current value.
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(),""));
+                PreferenceManager.getDefaultSharedPreferences(preference.getContext())
+                        .getString(preference.getKey(), ""));
     }
 
     @Override
@@ -172,87 +175,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || LoanPreferenceFragment.class.getName().equals(fragmentName)
-                || SmsPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || PaymentPreferenceFragment.class.getName().equals(fragmentName)
+                || SmsPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            super.onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
-            return super.onCreateView(inflater, container, savedInstanceState);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
-            return super.onCreateView(inflater, container, savedInstanceState);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
+    public static final int PERMISSION_REQUEST_SEND_SMS_AND_PHONE_STATE = 0X00103;
 
     /**
      * This fragment shows notification preferences only. It is used when the
@@ -260,11 +197,36 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class SmsPreferenceFragment extends PreferenceFragment {
+
+        SwitchPreference enableSmsSwitchPref;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_sms);
-            setHasOptionsMenu(true);
+            enableSmsSwitchPref = (SwitchPreference) findPreference("enable_sms");
+            enableSmsSwitchPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    boolean isEnabled = (boolean) o;
+                    if (!isEnabled) {
+                        return true;
+                    }
+                    Context c = preference.getContext();
+                    if (ContextCompat.checkSelfPermission(c,
+                            android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{
+                                        Manifest.permission.SEND_SMS,
+                                        Manifest.permission.READ_PHONE_STATE
+                                }, PERMISSION_REQUEST_SEND_SMS_AND_PHONE_STATE);
+                        return false;
+                    }
+                    return true;
+
+
+                }
+            });
         }
 
         @Override
@@ -272,54 +234,32 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
             return super.onCreateView(inflater, container, savedInstanceState);
         }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
     }
+
 
     /**
      * This fragment shows loan preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class LoanPreferenceFragment extends PreferenceFragment {
+    public static class PaymentPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_loan);
-            setHasOptionsMenu(true);
+            addPreferencesFromResource(R.xml.pref_payments);
 //
 //            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
 //            // to their values. When their values change, their summaries are
 //            // updated to reflect the new value, per the Android Design
 //            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("max_loan_amount"));
             bindPreferenceSummaryToValue(findPreference("loan_instalment_times"));
             bindPreferenceSummaryToValue(findPreference("default_loan_issue_date"));
-//            bindPreferenceSummaryToValue(findPreference("default_loan_return_date"));
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             container.setPadding(0, Utility.getActionBarHeight(getActivity()), 0, 0);
             return super.onCreateView(inflater, container, savedInstanceState);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
         }
     }
 }

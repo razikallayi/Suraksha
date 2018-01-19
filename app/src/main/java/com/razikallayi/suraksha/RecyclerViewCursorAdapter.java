@@ -23,6 +23,13 @@ public abstract class RecyclerViewCursorAdapter<ViewHolder extends RecyclerView.
                 : 0;
     }
 
+//    @Override
+//    public int getItemViewType(int position) {
+//        final Cursor cursor = this.getItem(position);
+//        this.getItemViewType(cursor);
+//        return super.getItemViewType(position);
+//    }
+
     public Cursor getItem(final int position) {
         if (this.cursor != null && !this.cursor.isClosed()) {
             this.cursor.moveToPosition(position);
@@ -38,8 +45,10 @@ public abstract class RecyclerViewCursorAdapter<ViewHolder extends RecyclerView.
     @Override
     public final void onBindViewHolder(final ViewHolder holder, final int position) {
         final Cursor cursor = this.getItem(position);
-        this.onBindViewHolder(holder, cursor);
+        this.onBindViewHolder(holder, cursor, position);
     }
 
-    public abstract void onBindViewHolder(final ViewHolder holder, final Cursor cursor);
+    public abstract void onBindViewHolder(final ViewHolder holder, final Cursor cursor, int position);
+
+//    public abstract void getItemViewType(final Cursor cursor);
 }

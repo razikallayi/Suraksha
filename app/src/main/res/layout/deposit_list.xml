@@ -4,5 +4,5 @@
     android:id="@+id/deposited_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".deposit.DepositActivity"
+    tools:context=".deposit.DepositListActivity"
     tools:listitem="@layout/deposited_list_item" />

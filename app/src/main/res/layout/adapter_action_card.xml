@@ -1,69 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="56dp"
+    android:background="@color/white"
+    android:orientation="horizontal">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white"
-        >
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/spacing_tiny">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvMemberName"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="Information"
+            android:textSize="@dimen/font_larger" />
 
-            <TextView
-                android:id="@+id/tvAcNo"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-condensed"
-                android:gravity="center"
-                android:maxLines="1"
-                android:minWidth="52dp"
-                android:text="101"
-                android:textSize="@dimen/font_large"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="middle"
+            android:text="details"
+            android:singleLine="true" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvMemberName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="marquee"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="name"
-                    android:textSize="@dimen/font_larger" />
-
-                <TextView
-                    android:id="@+id/tvMemberAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Parakkal" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/tvActonButton"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:paddingEnd="@dimen/spacing_small"
-                android:paddingStart="@dimen/spacing_small"
-                android:text="Start" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/tvActonButton"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/touch_selector_yellow"
+        android:paddingEnd="@dimen/spacing_small"
+        android:paddingStart="@dimen/spacing_small"
+        android:text="Start" />
 
 </LinearLayout>

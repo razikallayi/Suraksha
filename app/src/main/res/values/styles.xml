@@ -54,6 +54,7 @@
         <item name="android:textSize">@dimen/font_large</item>
         <item name="android:textColor">@color/maroon</item>
     </style>
+
     <style name="HomeFAIcons" parent="@style/AppTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">100dp</item>
@@ -74,15 +75,25 @@
     <style name="HomeIconText" parent="@style/AppTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:textAlignment">center</item>d
+        <item name="android:padding">@dimen/spacing_normal</item>d
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/touch_selector_white</item>
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:layout_margin">@dimen/spacing_large</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="HomeCards" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">100dp</item>
         <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="AppTheme.TabWidget" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textSize">@dimen/font_medium</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
 

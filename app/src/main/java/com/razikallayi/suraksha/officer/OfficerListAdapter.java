@@ -21,12 +21,14 @@ public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAda
     }
 
     private static final String[] OFFICER_COLUMNS = {
-            SurakshaContract.OfficerEntry.TABLE_NAME+"."+SurakshaContract.MemberEntry._ID,
+            SurakshaContract.OfficerEntry.TABLE_NAME + "." + SurakshaContract.MemberEntry._ID,
             SurakshaContract.OfficerEntry.COLUMN_NAME,
+            SurakshaContract.OfficerEntry.COLUMN_IS_ADMIN
     };
 
     private static final int COL_OFFICER_ID = 0;
     private static final int COL_OFFICER_NAME = 1;
+    private static final int COL_OFFICER_IS_ADMIN = 2;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,13 +38,19 @@ public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAda
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
+    public void onBindViewHolder(final ViewHolder holder, Cursor cursor, int position) {
         // The Cursor is now set to the right position
         Officer officer = new Officer();
         officer.setId(cursor.getLong(COL_OFFICER_ID));
         officer.setName(cursor.getString(COL_OFFICER_NAME));
+        officer.setAdmin(cursor.getInt(COL_OFFICER_IS_ADMIN) == 1);
         holder.mOfficer = officer;
         holder.mOfficerName.setText(officer.getName());
+        if (officer.isAdmin()) {
+            holder.mOfficerIsAdmin.setVisibility(View.VISIBLE);
+        } else {
+            holder.mOfficerIsAdmin.setVisibility(View.GONE);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,16 +65,17 @@ public class OfficerListAdapter extends RecyclerViewCursorAdapter<OfficerListAda
     }
 
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mOfficerName;
+        public final TextView mOfficerIsAdmin;
         public Officer mOfficer;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mOfficerName = view.findViewById(R.id.content);
+            mOfficerIsAdmin = view.findViewById(R.id.status);
         }
 
         @Override

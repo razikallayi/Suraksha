@@ -2,17 +2,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_light"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/spacing_normal">
+
+        <include
+            layout="@layout/member_info"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_margin="@dimen/spacing_normal" />
 
         <LinearLayout
+            android:id="@+id/AccountClosedHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/yellow"
             android:orientation="horizontal">
 
             <TextView
@@ -23,7 +32,40 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
+                android:text="@string/account_closed"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/font_large" />
+
+            <TextView
+                android:id="@+id/tvMemberClosedAt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"
+                android:layout_weight="1"
+                android:accessibilityLiveRegion="assertive"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="start"
+                android:padding="@dimen/spacing_tiny"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/font_large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:accessibilityLiveRegion="assertive"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center|start"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/name"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -36,13 +78,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -53,7 +96,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/mobile"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -67,13 +110,14 @@
                 android:autoLink="phone"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -84,12 +128,12 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/address"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
-                android:id="@+id/tvMemberAddress"
+                android:id="@+id/tvAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -97,7 +141,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -105,6 +149,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -115,7 +160,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/alias"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -128,13 +173,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -145,7 +191,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/gender"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -158,13 +204,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -175,7 +222,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/father"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -188,13 +235,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -205,7 +253,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/spouse"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -218,13 +266,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -235,7 +284,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/occupation"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -248,13 +297,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -265,7 +315,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/age"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -278,7 +328,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -286,6 +336,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -296,7 +347,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/nominee"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -309,13 +360,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -326,7 +378,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/relation_with_nominee"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -339,13 +391,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -356,7 +409,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/address_of_nominee"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -369,13 +422,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -386,7 +440,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/remarks"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -399,7 +453,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -416,7 +470,7 @@
         <!--android:layout_weight="1"-->
         <!--android:layout_gravity="start"-->
         <!--android:gravity="center|start"-->
-        <!--android:padding="10dp"-->
+        <!--android:padding="@dimen/spacing_tiny"-->
         <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
         <!--android:fontFamily="sans-serif-condensed"/>-->
 
@@ -428,7 +482,7 @@
         <!--android:layout_gravity="end"-->
         <!--android:layout_weight="1"-->
         <!--android:gravity="start"-->
-        <!--android:padding="10dp"-->
+        <!--android:padding="@dimen/spacing_tiny"-->
         <!---->
         <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
         <!--android:fontFamily="sans-serif-condensed"/>-->
@@ -436,6 +490,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -446,7 +501,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/created_at"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -459,13 +514,14 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:orientation="horizontal">
 
             <TextView
@@ -476,7 +532,7 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center|start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:text="@string/updated_at"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -489,9 +545,36 @@
                 android:accessibilityLiveRegion="assertive"
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="start"
-                android:padding="10dp"
+                android:padding="@dimen/spacing_tiny"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
+
+
+        <Switch
+            android:id="@+id/switchIsSmsEnabled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:accessibilityLiveRegion="assertive"
+            android:background="@color/white"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center|start"
+            android:padding="@dimen/spacing_tiny"
+            android:text="SMS Active"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/default_text_color" />
+
+        <TextView
+            android:id="@+id/closeAccountBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            android:background="@drawable/touch_selector_white"
+            android:gravity="center"
+            android:padding="@dimen/spacing_small"
+            android:text="Close Account"
+            android:textAllCaps="true"
+            android:textColor="@color/danger" />
 
     </LinearLayout>
 

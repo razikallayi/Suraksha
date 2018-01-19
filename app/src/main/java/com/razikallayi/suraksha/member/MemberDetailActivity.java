@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import com.razikallayi.suraksha.BaseActivity;
 import com.razikallayi.suraksha.FragmentViewPagerAdapter;
 import com.razikallayi.suraksha.R;
-import com.razikallayi.suraksha.account.AccountManipulationsFragment;
 
 /**
  * An activity representing a single Member detail screen. This
@@ -81,31 +80,16 @@ public class MemberDetailActivity extends BaseActivity {
     private void setupViewPager(ViewPager viewPager, long memberId) {
         FragmentViewPagerAdapter adapter = new FragmentViewPagerAdapter(getSupportFragmentManager());
 
-        AccountManipulationsFragment accountManipulationsFragment = (AccountManipulationsFragment)
-                getSupportFragmentManager().findFragmentByTag(AccountManipulationsFragment.TAG);
-        if (null == accountManipulationsFragment) {
+        MemberSummeryFragment memberSummeryFragment = (MemberSummeryFragment)
+                getSupportFragmentManager().findFragmentByTag(MemberSummeryFragment.TAG);
+        if (null == memberSummeryFragment) {
             Bundle arguments = new Bundle();
-            //AccountManipulationsFragment
-            arguments.putLong(AccountManipulationsFragment.ARG_MEMBER_ID, memberId);
-            accountManipulationsFragment = new AccountManipulationsFragment();
-            accountManipulationsFragment.setArguments(arguments);
-            adapter.addFragment(accountManipulationsFragment, "Account");
+            //MemberSummeryFragment
+            arguments.putLong(MemberSummeryFragment.ARG_MEMBER_ID, memberId);
+            memberSummeryFragment = new MemberSummeryFragment();
+            memberSummeryFragment.setArguments(arguments);
+            adapter.addFragment(memberSummeryFragment, "Account");
         }
-
-
-//        AccountListFragment accountListFragment = (AccountListFragment)
-//                getSupportFragmentManager().findFragmentByTag(AccountListFragment.TAG);
-//        if(null == accountListFragment) {
-//            Bundle arguments = new Bundle();
-//            //AccountList
-//            arguments.putLong(AccountListFragment.ARG_MEMBER_ID, memberId);
-//            accountListFragment = new AccountListFragment();
-//            accountListFragment.setArguments(arguments);
-////        getFragmentManager().beginTransaction()
-////                .replace(R.id.account_list_container, accountListFragment)
-////                .commit();
-//            adapter.addFragment(accountListFragment, "Accounts");
-//        }
 
         MemberDetailFragment memberDetailFragment = (MemberDetailFragment)
                 getSupportFragmentManager().findFragmentByTag(MemberDetailFragment.TAG);
@@ -117,9 +101,6 @@ public class MemberDetailActivity extends BaseActivity {
             memberDetailFragment = new MemberDetailFragment();
             memberDetailFragment.setArguments(arguments);
             adapter.addFragment(memberDetailFragment, "Personal");
-            //        getSupportFragmentManager().beginTransaction()
-            //                .add(R.id.member_detail_container, fragment)
-            //                .commit();
         }
 
         viewPager.setAdapter(adapter);

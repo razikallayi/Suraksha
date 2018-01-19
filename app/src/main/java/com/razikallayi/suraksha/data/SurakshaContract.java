@@ -46,6 +46,7 @@ public class SurakshaContract {
     public static final String PATH_OFFICER_EXIST = "officer_exist";
 
     public static final String PATH_LOAN_ISSUE = "loan_issue";
+    public static final String PATH_LOAN_ISSUE_ONLY = "loan_issue_only";
 
 
     // To prevent someone from accidentally instantiating the contract class,
@@ -82,6 +83,7 @@ public class SurakshaContract {
         public static final String COLUMN_REMARKS = "remarks";
         public static final String COLUMN_HAS_LOAN = "has_loan";
         public static final String COLUMN_IS_LOAN_BLOCKED = "is_loan_blocked";
+        public static final String COLUMN_IS_SMS_ENABLED = "is_sms_enabled";
         public static final String COLUMN_IS_DELETED = "is_deleted";
         public static final String COLUMN_CLOSED_AT = "closed_at";
         public static final String COLUMN_CREATED_AT = "created_at";
@@ -157,8 +159,9 @@ public class SurakshaContract {
         public static final String COLUMN_FK_ACCOUNT_NUMBER = "fk_account_number";
         public static final String COLUMN_AMOUNT = "amount";
         public static final String COLUMN_DEPOSIT_FOR_DATE = "deposit_for_date";
+        public static final String COLUMN_INSTALMENT_NUMBER = "instalment_no";
         public static final String COLUMN_FK_LOAN_PAYED_ID = "loan_payed_id";
-        public static final String COLUMN_LOAN_RETURN_DATE = "loan_return_date";
+        public static final String COLUMN_PAYMENT_DATE = "payment_date";
         public static final String COLUMN_VOUCHER_TYPE = "voucher_type";
         public static final String COLUMN_LEDGER = "ledger";
         public static final String COLUMN_FK_OFFICER_ID = "fk_officer_id";
@@ -174,6 +177,7 @@ public class SurakshaContract {
         public static final int LOAN_ISSUED_LEDGER = 3;
         public static final int LOAN_RETURN_LEDGER = 4;
         public static final int WORKING_COST_LEDGER = 5;
+        public static final int ACCOUNT_CLOSE_LEDGER = 6;
 
         //Voucher_type
         //Change in Transaction, if you make any change here
@@ -255,13 +259,15 @@ public class SurakshaContract {
     public static class LoanIssueEntry implements BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOAN_ISSUE).build();
+        public static final Uri LOANISSUE_ONLY_CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_LOAN_ISSUE_ONLY).build();
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOAN_ISSUE;
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_LOAN_ISSUE;
 
         public static final String TABLE_NAME = "loan_payed";
-        public static final String COLUMN_FK_ACCOUNT_NUMBER = "account_number";
+        public static final String COLUMN_ACCOUNT_NUMBER = "account_number";
         public static final String COLUMN_SECURITY_ACCOUNT_NUMBER = "security_acno";
         public static final String COLUMN_PURPOSE = "purpose";
         public static final String COLUMN_AMOUNT = "amount";

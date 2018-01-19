@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutMemberInfo"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/imgAvatarMemberInfo"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_centerVertical="true"
+        android:contentDescription="Member Image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_account_circle_black_48dp" />
+
+    <TextView
+        android:id="@+id/lblNameMemberInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="56dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:maxLines="1"
+        android:text="Name"
+        android:textSize="@dimen/font_larger" />
+
+    <TextView
+        android:id="@+id/lblAddressMemberInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/lblNameMemberInfo"
+        android:layout_below="@id/lblNameMemberInfo"
+        android:layout_marginEnd="70dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:maxLines="1"
+        android:text="Mobile/Address"
+        android:textSize="@dimen/font_normal" />
+
+    <TextView
+        android:id="@+id/lblAccountNumberMemberInfo"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/font_huge" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/spacing_very_tiny"
+        android:layout_toStartOf="@id/lblAccountNumberMemberInfo"
+        android:background="@color/colorSeparatorLine" />
+</RelativeLayout>
