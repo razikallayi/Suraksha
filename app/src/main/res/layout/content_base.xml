@@ -192,7 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:columnCount="3"
-            tools:context="com.razikallayi.suraksha.HomeActivity">
+            tools:context="com.razikallayi.suraksha_ssf.HomeActivity">
 
 
             <TextView

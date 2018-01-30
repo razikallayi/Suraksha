@@ -19,7 +19,7 @@
         -->
         <fragment
             android:id="@+id/fragment_officer"
-            android:name="com.razikallayi.suraksha.officer.OfficerListFragment"
+            android:name="com.razikallayi.suraksha_ssf.officer.OfficerListFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"

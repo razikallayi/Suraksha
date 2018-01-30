@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_bg_gradient"
     android:orientation="vertical"
-    tools:context="com.razikallayi.suraksha.LoginActivity">
+    tools:context="com.razikallayi.suraksha_ssf.LoginActivity">
 
 
     <ScrollView
@@ -43,7 +43,6 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_huge"
-                android:contentDescription="Username"
                 android:hint="@string/prompt_username">
 
                 <TextView

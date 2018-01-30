@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        applicationId "com.razikallayi.suraksha"
+        applicationId "com.razikallayi.suraksha_ssf"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 4
-        versionName "3.1"
+        targetSdkVersion 27
+        versionCode 5
+        versionName "3.2"
         // Enabling multidex support.
         multiDexEnabled true
     }
@@ -27,14 +27,15 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-core:11.8.0'
     compile 'com.google.firebase:firebase-database:11.8.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support:support-v4:26.1.0'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:cardview-v7:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
     compile 'com.wdullaer:materialdatetimepicker:2.3.0'
     compile 'com.github.bumptech.glide:glide:4.3.1'
     compile 'com.bignerdranch.android:expandablerecyclerview:1.0.3'
@@ -44,6 +45,7 @@ dependencies {
 
 }
 
+//apply plugin: 'com.google.gms.google-services'
 
 
 apply plugin: 'com.google.gms.google-services'

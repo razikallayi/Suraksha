@@ -162,6 +162,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/ic_rounded_rectangle"
                     android:padding="@dimen/spacing_extra_tiny"
+                    android:contentDescription="@string/clear"
                     android:src="@drawable/ic_close"
                     android:visibility="gone" />
             </LinearLayout>

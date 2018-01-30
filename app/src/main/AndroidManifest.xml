@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.razikallayi.suraksha">
+    package="com.razikallayi.suraksha_ssf">
 
     <!-- &lt;!&ndash; To auto-complete the email text field in the login form with the user's emails &ndash;&gt; -->
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
@@ -23,7 +23,7 @@
 
     <application
         android:allowBackup="true"
-        android:backupAgent=".SurakshaBackup"
+        android:backupAgent="com.razikallayi.suraksha_ssf.SurakshaBackup"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -34,7 +34,7 @@
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIXLdGA5rk3lp3lLaWC1PloaufdO7kqJZDike-Mg" />
 
-        <activity android:name=".HomeActivity">
+        <activity android:name="com.razikallayi.suraksha_ssf.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,35 +42,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".member.RegisterMemberActivity"
+            android:name="com.razikallayi.suraksha_ssf.member.RegisterMemberActivity"
             android:label="@string/title_register_member"
-            android:parentActivityName=".member.MemberListActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.member.MemberListActivity" />
         <activity
-            android:name=".member.EditMemberActivity"
+            android:name="com.razikallayi.suraksha_ssf.member.EditMemberActivity"
             android:label="@string/title_register_member"
-            android:parentActivityName=".member.MemberDetailActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.member.MemberDetailActivity" />
         <activity
-            android:name=".officer.CreateOfficerActivity"
+            android:name="com.razikallayi.suraksha_ssf.officer.CreateOfficerActivity"
             android:label="@string/title_create_officer"
-            android:parentActivityName=".officer.OfficerListActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.officer.OfficerListActivity" />
         <activity
-            android:name=".officer.EditOfficerActivity"
+            android:name="com.razikallayi.suraksha_ssf.officer.EditOfficerActivity"
             android:label="@string/title_edit_officer"
-            android:parentActivityName=".officer.OfficerListActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.officer.OfficerListActivity" />
         <activity
-            android:name=".officer.OfficerDetailActivity"
-            android:parentActivityName=".officer.OfficerListActivity" />
+            android:name="com.razikallayi.suraksha_ssf.officer.OfficerDetailActivity"
+            android:parentActivityName="com.razikallayi.suraksha_ssf.officer.OfficerListActivity" />
         <activity
-            android:name=".member.CloseAccountActivity"
-            android:parentActivityName=".member.MemberDetailActivity" />
+            android:name="com.razikallayi.suraksha_ssf.member.CloseAccountActivity"
+            android:parentActivityName="com.razikallayi.suraksha_ssf.member.MemberDetailActivity" />
 
         <provider
-            android:name=".data.SurakshaProvider"
-            android:authorities="com.razikallayi.suraksha"
+            android:name="com.razikallayi.suraksha_ssf.data.SurakshaProvider"
+            android:authorities="com.razikallayi.suraksha_ssf"
             android:exported="false" />
 
         <activity
-            android:name=".member.MemberListActivity"
+            android:name="com.razikallayi.suraksha_ssf.member.MemberListActivity"
             android:label="@string/title_member_list"
             android:launchMode="singleTop">
             <intent-filter>
@@ -82,16 +82,16 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".member.MemberDetailActivity"
+            android:name="com.razikallayi.suraksha_ssf.member.MemberDetailActivity"
             android:label="@string/title_member_detail"
-            android:parentActivityName=".member.MemberListActivity">
+            android:parentActivityName="com.razikallayi.suraksha_ssf.member.MemberListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".member.MemberListActivity" />
+                android:value="com.razikallayi.suraksha_ssf.member.MemberListActivity" />
         </activity>
         <activity
-            android:name=".DebugActivity"
-            android:parentActivityName=".HomeActivity">
+            android:name="com.razikallayi.suraksha_ssf.DebugActivity"
+            android:parentActivityName="com.razikallayi.suraksha_ssf.HomeActivity">
             <meta-data
                 android:name="com.google.android.apps.drive.suraksha-ssf"
                 android:value="id=AIzaSyDYUK8IBmkw180kuYuYrtW_mn-lVYtUJHg" />
@@ -114,56 +114,56 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".report.TxnsActivity"
+            android:name="com.razikallayi.suraksha_ssf.report.TxnsActivity"
             android:label="@string/title_activity_txn_report"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName="com.razikallayi.suraksha_ssf.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value="com.razikallayi.suraksha_ssf.HomeActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.razikallayi.suraksha_ssf.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".HomeActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.HomeActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.razikallayi.suraksha_ssf.LoginActivity"
             android:label="@string/title_activity_login"
             android:launchMode="singleTop" />
         <activity
-            android:name=".officer.OfficerListActivity"
+            android:name="com.razikallayi.suraksha_ssf.officer.OfficerListActivity"
             android:label="@string/title_officer_list"
-            android:parentActivityName=".HomeActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.HomeActivity" />
         <activity
-            android:name=".loan.IssueLoanActivity"
+            android:name="com.razikallayi.suraksha_ssf.loan.IssueLoanActivity"
             android:label="@string/title_loan_issue"
-            android:parentActivityName=".member.MemberDetailActivity" />
+            android:parentActivityName="com.razikallayi.suraksha_ssf.member.MemberDetailActivity" />
         <activity
-            android:name=".AvatarActivity"
+            android:name="com.razikallayi.suraksha_ssf.AvatarActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_avatar"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".deposit.DepositListActivity"
+            android:name="com.razikallayi.suraksha_ssf.deposit.DepositListActivity"
             android:label="@string/title_deposit" />
         <activity
-            android:name=".deposit.MakeDepositActivity"
+            android:name="com.razikallayi.suraksha_ssf.deposit.MakeDepositActivity"
             android:label="@string/title_deposit" />
         <activity
-            android:name=".loan.ReturnLoanActivity"
+            android:name="com.razikallayi.suraksha_ssf.loan.ReturnLoanActivity"
             android:label="@string/title_loan_return" />
         <activity
-            android:name=".loan.LoanIssuedListActivity"
+            android:name="com.razikallayi.suraksha_ssf.loan.LoanIssuedListActivity"
             android:label="@string/title_loan_issued" />
         <activity
-            android:name=".loan.LoanReturnedListActivity"
+            android:name="com.razikallayi.suraksha_ssf.loan.LoanReturnedListActivity"
             android:label="@string/title_loan_returned" />
         <activity
-            android:name=".report.ReportActivity"
+            android:name="com.razikallayi.suraksha_ssf.report.ReportActivity"
             android:label="@string/title_activity_report"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName="com.razikallayi.suraksha_ssf.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.razikallayi.suraksha.HomeActivity" />
+                android:value="com.razikallayi.suraksha_ssf.HomeActivity" />
         </activity>
     </application>
 

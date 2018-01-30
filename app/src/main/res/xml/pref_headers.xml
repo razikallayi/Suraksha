@@ -13,12 +13,12 @@
     <!--android:title="@string/pref_header_notifications" />-->
 
     <header
-        android:fragment="com.razikallayi.suraksha.SettingsActivity$SmsPreferenceFragment"
+        android:fragment="com.razikallayi.suraksha_ssf.SettingsActivity$SmsPreferenceFragment"
         android:icon="@drawable/ic_24_sms_envelope"
         android:title="@string/pref_header_sms" />
 
     <header
-        android:fragment="com.razikallayi.suraksha.SettingsActivity$PaymentPreferenceFragment"
+        android:fragment="com.razikallayi.suraksha_ssf.SettingsActivity$PaymentPreferenceFragment"
         android:icon="@drawable/ic_payments"
         android:title="@string/pref_header_loan" />
 

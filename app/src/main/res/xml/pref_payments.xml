@@ -14,7 +14,7 @@
         android:key="use_current_date_for_payments"
         android:title="Use Current Date For Payments" />
 
-    <com.razikallayi.suraksha.DatePreference
+    <com.razikallayi.suraksha_ssf.DatePreference
         android:dependency="use_current_date_for_payments"
         android:key="default_loan_issue_date"
         android:title="@string/pref_title_default_loan_issue_date" />

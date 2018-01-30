@@ -227,5 +227,8 @@
     <string name="default_deposit_date">Default Deposit Date</string>
     <string name="delete">Delete</string>
     <string name="title_activity_report">Reports</string>
+    <string name="user_image">user image</string>
+    <string name="username">Username</string>
+    <string name="clear">clear</string>
 
 </resources>
