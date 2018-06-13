@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public class DailyTxn {
-    private static final String DATE_COLUMN = SurakshaContract.TxnEntry.COLUMN_CREATED_AT;
+    private static String dateColumn = SurakshaContract.TxnEntry.COLUMN_PAYMENT_DATE;
 
     public static List<DailyItem> getTxnReportOfDate(Context context, long date) {
         Calendar dayEnd = new GregorianCalendar();
@@ -52,8 +52,8 @@ public class DailyTxn {
 
     public static List<DailyItem> getTxnReport(Context context, long startDate, long endDate) {
         String sql = "SELECT count(_id) as count , sum(amount) as amount ," +
-                " ledger as label FROM transactions WHERE " + DATE_COLUMN + " >= ?" +
-                " and " + DATE_COLUMN + " < ? group by ledger";
+                " ledger as label FROM transactions WHERE " + dateColumn + " >= ?" +
+                " and " + dateColumn + " < ? group by ledger";
         String[] selectionArgs = new String[]{
                 String.valueOf(CalendarUtils.normalizeDate(startDate)),
                 String.valueOf(CalendarUtils.normalizeDate(endDate))
@@ -82,17 +82,17 @@ public class DailyTxn {
 //        Calendar day = new GregorianCalendar();
 //        day.setTimeInMillis(CalendarUtils.normalizeDate(date));
 //        String[] projection = new String[]{
-//                DATE_COLUMN
+//                dateColumn
 //        };
 //        String selection;
 //        String sort;
 //        if (isNext) {
-//            selection = DATE_COLUMN + " > ? ";
+//            selection = dateColumn + " > ? ";
 //            sort = SurakshaContract.TxnEntry._ID + " asc limit 1 ";
 //            day.add(Calendar.DATE, 1);
 //        } else {
 //            //Previous
-//            selection = DATE_COLUMN + " < ? ";
+//            selection = dateColumn + " < ? ";
 //            sort = SurakshaContract.TxnEntry._ID + " desc limit 1 ";
 //            day.add(Calendar.DATE, -1);
 //        }
@@ -122,17 +122,17 @@ public class DailyTxn {
         }
 
         String[] projection = new String[]{
-                DATE_COLUMN
+                dateColumn
         };
         String selection;
         String sort;
         if (isNext) {
-            selection = DATE_COLUMN + " > ? ";
+            selection = dateColumn + " > ? ";
             sort = SurakshaContract.TxnEntry._ID + " asc limit 1 ";
             day.add(field, 1);
         } else {
             //Previous
-            selection = DATE_COLUMN + " < ? ";
+            selection = dateColumn + " < ? ";
             sort = SurakshaContract.TxnEntry._ID + " desc limit 1 ";
         }
         String[] selectionArgs = new String[]{

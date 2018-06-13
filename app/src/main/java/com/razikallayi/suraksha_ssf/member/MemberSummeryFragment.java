@@ -23,8 +23,8 @@ import com.razikallayi.suraksha_ssf.deposit.MakeDepositActivity;
 import com.razikallayi.suraksha_ssf.loan.IssueLoanActivity;
 import com.razikallayi.suraksha_ssf.loan.LoanIssue;
 import com.razikallayi.suraksha_ssf.loan.LoanIssuedListActivity;
-import com.razikallayi.suraksha_ssf.loan.ReturnLoanActivity;
 import com.razikallayi.suraksha_ssf.loan.LoanReturnedListActivity;
+import com.razikallayi.suraksha_ssf.loan.ReturnLoanActivity;
 import com.razikallayi.suraksha_ssf.txn.Transaction;
 import com.razikallayi.suraksha_ssf.utils.CalendarUtils;
 import com.razikallayi.suraksha_ssf.utils.SmsUtils;
@@ -382,13 +382,15 @@ public class MemberSummeryFragment extends Fragment {
             //if the member is a bystander for another loan
             if (bystanderLoan != null) {
                 int remainingInstalments = bystanderLoan.remainingInstalments(getContext());
+                int releaseInstalment = bystanderLoan.bystanderReleaseInstalment(); //usually 5
+                int pendingReleaseInstalments = remainingInstalments - releaseInstalment;
                 final Member bystanderForMember = bystanderLoan.getMember(getContext());
                 //Show the details of bystander as reason to block loan
                 if (bystanderForMember != null) {
                     // TODO: 29-06-2016 change to string resource.
                     lblLoanBlockedReason.setText(Html.fromHtml("Loan guarantor of <b>" + bystanderForMember.getName()
                             + " [" + bystanderForMember.getAccountNo() + "]</b>.<br/> Capable to issue loan after <b>"
-                            + remainingInstalments + "</b> more instalments."));
+                            + pendingReleaseInstalments + "</b> more instalments."));
                     lblLoanBlockedReason.setBackground(getResources().getDrawable(R.drawable.touch_selector_white));
                     lblLoanBlockedReason.setOnClickListener(new View.OnClickListener() {
                         @Override

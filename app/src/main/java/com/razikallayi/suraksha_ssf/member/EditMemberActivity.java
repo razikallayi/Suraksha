@@ -55,7 +55,7 @@ public class EditMemberActivity extends BaseActivity {
     //Intent to pick avatar from gallery
     private static final int CHOOSE_AVATAR_REQUEST = 2;
 
-    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 720;
+    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 500;
 
     private EditText txtName, txtAlias, txtFather, txtSpouse, txtOccupation, txtAge, txtMobile, txtAddress,
             txtNominee, txtAddressOfNominee, txtRemarks;
@@ -160,7 +160,7 @@ public class EditMemberActivity extends BaseActivity {
         });
 
 
-        //Button Add Member
+        //Button Update Member
         final Button mUpdateMemberButton = sv.findViewById(R.id.btnAddMember);
         mUpdateMemberButton.setText(getString(R.string.update));
         mUpdateMemberButton.setOnClickListener(new View.OnClickListener() {
@@ -276,6 +276,8 @@ public class EditMemberActivity extends BaseActivity {
         member.setRemarks(remarks);
         if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
+        }else{
+            member.setAvatar(null);
         }
         return member;
     }
@@ -325,7 +327,7 @@ public class EditMemberActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        showExitConfirmationDialog();
+        //showExitConfirmationDialog();
     }
 
     private void showExitConfirmationDialog() {
@@ -365,7 +367,7 @@ public class EditMemberActivity extends BaseActivity {
         }
 
         if (id == android.R.id.home) {
-            showExitConfirmationDialog();
+            //showExitConfirmationDialog();
             return true;
         }
 

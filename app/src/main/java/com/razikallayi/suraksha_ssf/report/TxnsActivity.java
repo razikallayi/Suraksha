@@ -232,7 +232,7 @@ public class TxnsActivity extends BaseActivity implements
                 int ledgerId = txnItem.txn.getLedger();
                 String ledgerName = Transaction.getLedgerName(ledgerId);
                 if (ledgerId == 3) {//LOAN ISSUED
-                    LoanIssue loanIssue = LoanIssue.getLoanIssue(getApplicationContext(), txnItem.txn.getLoanPayedId());
+                    LoanIssue loanIssue = LoanIssue.fetchLoanIssue(getApplicationContext(), txnItem.txn.getLoanPayedId());
                     String issuedDate = null;
                     if (loanIssue != null) {
                         issuedDate = CalendarUtils.formatDate(loanIssue.getIssuedAt());

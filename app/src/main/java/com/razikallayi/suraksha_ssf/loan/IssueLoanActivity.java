@@ -4,6 +4,7 @@ package com.razikallayi.suraksha_ssf.loan;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,9 +16,12 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -91,7 +95,7 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         long loanIssueId = getIntent().getLongExtra(ARG_LOAN_ISSUE_ID, -1);
         if (loanIssueId != -1) {
             editMode = true;
-            mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
+            mLoanIssue = LoanIssue.fetchLoanIssue(this, loanIssueId);
         }
 //        mAccountNo = getIntent().getIntExtra(ARG_ACCOUNT_NUMBER, -1);
 
@@ -477,6 +481,21 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (AuthUtils.isAdmin(this) && editMode) {
+            if (!mMember.isAccountClosed()) {
+                if (mLoanIssue.isLatestLoan(this)) {
+                    MenuInflater inflater = getMenuInflater();
+                    inflater.inflate(R.menu.menu_payment_form_delete, menu);
+                }
+            }
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -485,6 +504,31 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
         if (id == android.R.id.home) {
             setResult(Activity.RESULT_CANCELED);
             finish();
+            return true;
+        }
+        final Activity thisActivity = this;
+        if (id == R.id.delete) {
+            if (mLoanIssue != null) {
+                new AlertDialog.Builder(this)
+                        .setMessage("Issued Loan and all its loan returns will be deleted. Are you sure want to delete?")
+                        .setPositiveButton("Confirm",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        new DeleteIssuedLoanTask(mLoanIssue).execute();
+                                        Intent returnIntent = getIntent();
+                                        setResult(Activity.RESULT_OK, returnIntent);
+                                        thisActivity.finish();
+                                        dialog.cancel();
+                                    }
+                                }
+                        ).setNegativeButton("Cancel",   new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.cancel();
+                            }
+                        }
+                        )
+                        .create().show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -651,6 +695,63 @@ public class IssueLoanActivity extends BaseActivity implements LoaderManager.Loa
 
         }
     }
+
+    /**
+     * Represents an asynchronous delete Loan Issued task used.
+     */
+    public class DeleteIssuedLoanTask extends AsyncTask<Void, Void, Boolean> {
+        private LoanIssue mLoanIssue;
+        private Member mSecurityMember;
+
+        DeleteIssuedLoanTask(LoanIssue mLoanIssue) {
+            this.mLoanIssue = mLoanIssue;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Context context = getApplicationContext();
+            mSecurityMember = Member.getMemberFromAccountNumber(context,
+                    mLoanIssue.getSecurityAccountNo());
+            mLoanIssue.setSecurityMember(mSecurityMember);
+
+            long loanIssueId;
+            if (editMode) {
+                loanIssueId = mLoanIssue.getId();
+                getContentResolver().delete(
+                        SurakshaContract.TxnEntry.CONTENT_URI,
+                        SurakshaContract.TxnEntry.COLUMN_FK_LOAN_PAYED_ID + " =? ", new String[]{String.valueOf(loanIssueId)});
+                getContentResolver().delete(
+                        SurakshaContract.LoanIssueEntry.CONTENT_URI,
+                        SurakshaContract.LoanIssueEntry._ID + " =? ", new String[]{String.valueOf(loanIssueId)});
+            }
+
+            mMember.saveHasLoan(context, false);
+            mMember.saveIsLoanBlocked(context, false);
+            //Remove Security Member loan Blocked
+            mSecurityMember.saveIsLoanBlocked(context, false);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            super.onPostExecute(success);
+            Context context = getApplicationContext();
+            if (success) {
+                Intent returnIntent = getIntent();
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            } else {
+
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+
+        }
+    }
+
 
     public interface MemberColumns {
         String[] PROJECTION = {

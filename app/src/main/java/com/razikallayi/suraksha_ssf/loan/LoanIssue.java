@@ -3,7 +3,7 @@ package com.razikallayi.suraksha_ssf.loan;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
+import android.widget.Toast;
 
 import com.razikallayi.suraksha_ssf.data.SurakshaContract;
 import com.razikallayi.suraksha_ssf.member.Member;
@@ -52,7 +52,7 @@ public class LoanIssue implements Serializable {
         this.issuedAt = issuedAt;
     }
 
-    public static LoanIssue getLoanIssue(Context context, long loanIssueId) {
+    public static LoanIssue fetchLoanIssue(Context context, long loanIssueId) {
         Cursor cursor = context.getContentResolver().query(
                 SurakshaContract.LoanIssueEntry.buildLoanIssueUri(loanIssueId),
                 LoanIssueQuery.PROJECTION
@@ -203,6 +203,29 @@ public class LoanIssue implements Serializable {
         return getInstalmentTxn(context, lastInstalmentNumber(context));
     }
 
+    public boolean isLatestLoan(Context context){
+        String[] projection = new String[]{
+                "MAX(" + SurakshaContract.LoanIssueEntry.TABLE_NAME+"."+SurakshaContract.LoanIssueEntry._ID+ ")"
+        };
+        int colId = 0;
+        String selection = SurakshaContract.LoanIssueEntry.COLUMN_ACCOUNT_NUMBER+ " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(accountNumber)};
+        Cursor cursor = context.getContentResolver().query(
+                SurakshaContract.LoanIssueEntry.CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs, null);
+        long maxLoanIssueId = 0;
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                maxLoanIssueId = cursor.getLong(colId);
+            }
+            cursor.close();
+        }
+        return maxLoanIssueId == this.id;
+    }
+
     public int lastInstalmentNumber(Context context) {
         String[] projection = new String[]{
                 "MAX(" + SurakshaContract.TxnEntry.COLUMN_INSTALMENT_NUMBER + ")"
@@ -301,6 +324,45 @@ public class LoanIssue implements Serializable {
         return loanReturnTxn;
     }
 
+    public int deleteLastLoanReturn(Context context) {
+        int lastInstalmentCount = lastInstalmentNumber(context);
+        if(lastInstalmentCount == 0) return 0;
+        Transaction lastLoanReturn = lastInstalmentTxn(context);
+
+        //if total loan returned amount is half of loan issued, security member lock is freed
+        if (lastInstalmentCount == bystanderReleaseInstalment()) {
+            Member securityMember = getSecurityMember(context);
+            if(securityMember.hasActiveLoan()){
+                String message = "Cannot delete the loan return. The guarantor "+securityMember.getName()+" ["+securityMember.getAccountNo()
+                        +"] has an active loan";
+                Toast.makeText(context,message , Toast.LENGTH_LONG).show();
+                return -1;
+            }
+            //If security member is bystanding for any other loan, this loan return cannot be deleted
+            else if(securityMember.isLoanBlocked()){
+                Member securitiesBystandingMember = securityMember.getActiveBystanderLoan(context).getMember(context);
+                String message = "Cannot delete the loan return. The guarantor "+securityMember.getName()+" ["+securityMember.getAccountNo()
+                        +"] is already taken by "+securitiesBystandingMember.getName()
+                        +" ["+securitiesBystandingMember.getAccountNo()+"]";
+                Toast.makeText(context,message , Toast.LENGTH_LONG).show();
+                return -1;
+            }else {
+                securityMember.saveIsLoanBlocked(context, true);
+            }
+        }
+
+        int maxLoanInstalmentTime = getLoanInstalmentTimes();
+        //Check if instalment is already complete
+        if (lastInstalmentCount == maxLoanInstalmentTime) {
+            reOpenLoan(context);
+            Member loanReOpenableMember = getMember(context);
+            loanReOpenableMember.saveHasLoan(context, true);
+            loanReOpenableMember.saveIsLoanBlocked(context, true);
+        }
+
+        int rowsUpdated = lastLoanReturn.destroy(context);
+        return rowsUpdated;
+    }
     public Transaction saveLoanReturn(Context context, long returnDate, String narration) {
         int nextInstalmentCount = this.nextInstalmentNumber(context);
 
@@ -308,7 +370,9 @@ public class LoanIssue implements Serializable {
         //Check if instalment is already complete
         if (nextInstalmentCount > maxLoanInstalmentTime) {
             this.closeLoan(context);
-            getMember(context).saveHasLoan(context, false);
+            Member loanClosableMember = getMember(context);
+            loanClosableMember.saveHasLoan(context, false);
+            loanClosableMember.saveIsLoanBlocked(context, false);
             return null;
         }
 
@@ -327,7 +391,9 @@ public class LoanIssue implements Serializable {
         //If maximum instalment reached, close loan and free member
         if (nextInstalmentCount == maxLoanInstalmentTime) {
             this.closeLoan(context);
-            getMember(context).saveHasLoan(context, false);
+            Member loanClosableMember = getMember(context);
+            loanClosableMember.saveHasLoan(context, false);
+            loanClosableMember.saveIsLoanBlocked(context, false);
         }
 
         //if total loan returned amount is half of loan issued, security member lock is freed
@@ -341,37 +407,37 @@ public class LoanIssue implements Serializable {
         return instalmentNumber >= this.bystanderReleaseInstalment();
     }
 
-    public static void saveIssueLoan(Context context, LoanIssue loanIssue, Member member) {
-        Member securityMember = Member.getMemberFromAccountNumber(context,
-                loanIssue.getSecurityAccountNo());
-        loanIssue.setSecurityMember(securityMember);
-
-        ContentValues loanIssueValues = LoanIssue.getLoanIssuedContentValues(loanIssue);
-        long loanIssueId;
-        Uri loanIssueUri = context.getContentResolver().insert(
-                SurakshaContract.LoanIssueEntry.CONTENT_URI, loanIssueValues);
-        loanIssueId = SurakshaContract.LoanIssueEntry.getLoanIssueIdFromUri(loanIssueUri);
-
-        //Save Loan Transaction
-        Transaction txnIssueLoan = new Transaction(context,
-                loanIssue.getAccountNumber(),
-                loanIssue.getAmount(),
-                SurakshaContract.TxnEntry.PAYMENT_VOUCHER,
-                SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER,
-                loanIssue.getPurpose(),
-                AuthUtils.getAuthenticatedOfficerId(context));
-        txnIssueLoan.setLoanPayedId(loanIssueId);
-        txnIssueLoan.setPaymentDate(System.currentTimeMillis());
-        ContentValues txnValues = Transaction.getTxnContentValues(txnIssueLoan);
-
-        context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, txnValues);
-
-        //Set Member HasLoan Flag On
-        member.saveHasLoan(context, true);
-        member.saveIsLoanBlocked(context, true);
-        //Set Security Member loan Blocked
-        securityMember.saveIsLoanBlocked(context, true);
-    }
+//    public static void saveIssueLoan(Context context, LoanIssue loanIssue, Member member) {
+//        Member securityMember = Member.getMemberFromAccountNumber(context,
+//                loanIssue.getSecurityAccountNo());
+//        loanIssue.setSecurityMember(securityMember);
+//
+//        ContentValues loanIssueValues = LoanIssue.getLoanIssuedContentValues(loanIssue);
+//        long loanIssueId;
+//        Uri loanIssueUri = context.getContentResolver().insert(
+//                SurakshaContract.LoanIssueEntry.CONTENT_URI, loanIssueValues);
+//        loanIssueId = SurakshaContract.LoanIssueEntry.getLoanIssueIdFromUri(loanIssueUri);
+//
+//        //Save Loan Transaction
+//        Transaction txnIssueLoan = new Transaction(context,
+//                loanIssue.getAccountNumber(),
+//                loanIssue.getAmount(),
+//                SurakshaContract.TxnEntry.PAYMENT_VOUCHER,
+//                SurakshaContract.TxnEntry.LOAN_ISSUED_LEDGER,
+//                loanIssue.getPurpose(),
+//                AuthUtils.getAuthenticatedOfficerId(context));
+//        txnIssueLoan.setLoanPayedId(loanIssueId);
+//        txnIssueLoan.setPaymentDate(System.currentTimeMillis());
+//        ContentValues txnValues = Transaction.getTxnContentValues(txnIssueLoan);
+//
+//        context.getContentResolver().insert(SurakshaContract.TxnEntry.CONTENT_URI, txnValues);
+//
+//        //Set Member HasLoan Flag On
+//        member.saveHasLoan(context, true);
+//        member.saveIsLoanBlocked(context, true);
+//        //Set Security Member loan Blocked
+//        securityMember.saveIsLoanBlocked(context, true);
+//    }
 
     public void closeLoan(Context context) {
         ContentValues values = new ContentValues();
@@ -381,6 +447,17 @@ public class LoanIssue implements Serializable {
         context.getContentResolver().update(SurakshaContract.LoanIssueEntry.CONTENT_URI, values,
                 SurakshaContract.LoanIssueEntry._ID + "= ?", new String[]{String.valueOf(this.id)});
         this.closedAt = currentTime;
+        this.updatedAt = currentTime;
+    }
+
+    public void reOpenLoan(Context context) {
+        ContentValues values = new ContentValues();
+        long currentTime = System.currentTimeMillis();
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_CLOSED_AT, 0);
+        values.put(SurakshaContract.LoanIssueEntry.COLUMN_UPDATED_AT, currentTime);
+        context.getContentResolver().update(SurakshaContract.LoanIssueEntry.CONTENT_URI, values,
+                SurakshaContract.LoanIssueEntry._ID + "= ?", new String[]{String.valueOf(this.id)});
+        this.closedAt = 0;
         this.updatedAt = currentTime;
     }
 

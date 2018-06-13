@@ -38,6 +38,8 @@
     <color name="black">#323232</color>
     <color name="full_black">#000000</color>
 
+    <color name="selector">#e2d2bc</color>
+
     <!-- colors indicators-->
     <color name="danger">#c72419</color>
     <color name="warning">#ffa726</color>

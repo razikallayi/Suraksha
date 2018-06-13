@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,6 +22,7 @@ import com.razikallayi.suraksha_ssf.DatePickerFragment;
 import com.razikallayi.suraksha_ssf.R;
 import com.razikallayi.suraksha_ssf.member.Member;
 import com.razikallayi.suraksha_ssf.txn.Transaction;
+import com.razikallayi.suraksha_ssf.utils.AuthUtils;
 import com.razikallayi.suraksha_ssf.utils.CalendarUtils;
 import com.razikallayi.suraksha_ssf.utils.FontUtils;
 import com.razikallayi.suraksha_ssf.utils.SmsUtils;
@@ -55,7 +59,7 @@ public class ReturnLoanActivity extends BaseActivity {
             loanIssueId = mLoanReturnTxn.getLoanPayedId();
         }
         if (loanIssueId != -1) {
-            mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
+            mLoanIssue = LoanIssue.fetchLoanIssue(this, loanIssueId);
         }
 
         RelativeLayout layoutMemberInfo = findViewById(R.id.layoutMemberInfo);
@@ -221,6 +225,58 @@ public class ReturnLoanActivity extends BaseActivity {
                 txtDateLoanReturn.setText(CalendarUtils.formatDate(mLoanReturnPaymentDate));
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (AuthUtils.isAdmin(this) && editMode) {
+            if (mLoanIssue == null) {
+                long loanIssueId = getIntent().getLongExtra(ARG_LOAN_RETURN_TXN_ID, -1);
+                mLoanIssue = LoanIssue.fetchLoanIssue(this, loanIssueId);
+            }
+            if (mLoanReturnTxn == null) {
+                long loanReturnTxnId = getIntent().getLongExtra(ARG_LOAN_RETURN_TXN_ID, -1);
+                mLoanReturnTxn = Transaction.getTxnFromId(this, loanReturnTxnId);
+            }
+            if(mMember == null){
+                mMember = mLoanIssue.getMember(this);
+            }
+
+            if (!mMember.isAccountClosed()) {
+                if(mLastLoanReturn == null) {
+                    mLastLoanReturn = mLoanIssue.lastInstalmentTxn(this);
+                }
+                if (mLoanReturnTxn.getId() == mLastLoanReturn.getId()) {
+                    MenuInflater inflater = getMenuInflater();
+                    inflater.inflate(R.menu.menu_payment_form_delete, menu);
+                }
+            }
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.delete) {
+            if (mLoanIssue != null) {
+                int rowsUpdated =  mLoanIssue.deleteLastLoanReturn(this);
+                if(rowsUpdated >=1){
+                    Intent returnIntent = getIntent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                }else if(rowsUpdated == 0){
+                    Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupEnvironment() {

@@ -320,10 +320,9 @@
                 android:id="@+id/btnAddMember"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="@drawable/touch_selector_yellow"
                 android:contentDescription="Add Member"
                 android:focusable="true"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:text="@string/add_member" />
 
         </LinearLayout>

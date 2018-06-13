@@ -42,7 +42,7 @@ public class LoanReturnedListActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         long loanIssueId = getIntent().getLongExtra(ARG_LOAN_ISSUE_ID, -1);
-        mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
+        mLoanIssue = LoanIssue.fetchLoanIssue(this, loanIssueId);
         if (mLoanIssue != null) {
             mMember = mLoanIssue.getMember(this);
         }
@@ -110,7 +110,7 @@ public class LoanReturnedListActivity extends BaseActivity {
         super.onResume();
         if (mLoanIssue == null) {
             long loanIssueId = getIntent().getLongExtra(ARG_LOAN_ISSUE_ID, -1);
-            mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
+            mLoanIssue = LoanIssue.fetchLoanIssue(this, loanIssueId);
         }
         if (mLoanIssue != null) {
             reloadList(mLoanIssue.lastInstalmentNumber(this));
@@ -120,7 +120,7 @@ public class LoanReturnedListActivity extends BaseActivity {
     private void reloadList(int lastInstalmentNo) {
 
         long loanIssueId = getIntent().getLongExtra(ARG_LOAN_ISSUE_ID, -1);
-        mLoanIssue = LoanIssue.getLoanIssue(this, loanIssueId);
+        mLoanIssue = LoanIssue.fetchLoanIssue(this, loanIssueId);
         loadLoanReturnList();
         if (lastInstalmentNo >= mLoanIssue.bystanderReleaseInstalment()) {
             tvActionDetails.setText("Guarantor Closed");

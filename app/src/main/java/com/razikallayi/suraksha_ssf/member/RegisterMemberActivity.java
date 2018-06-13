@@ -54,7 +54,7 @@ import java.util.concurrent.ExecutionException;
 
 public class RegisterMemberActivity extends BaseActivity {
 
-    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 720;
+    public static final int AVATAR_IMAGE_SIZE_IN_PIXEL = 500;
     //Intent to pick Contact
     private static final int PICK_CONTACT_REQUEST = 1;
     //Intent to pick avatar from gallery
@@ -287,6 +287,9 @@ public class RegisterMemberActivity extends BaseActivity {
                 occupation, age, mobile, address, nominee, relationWithNominee, addressOfNominee, remarks);
         if (memberAvatar != null) {
             member.setAvatar(memberAvatar);
+        }
+        else{
+            member.setAvatar(null);
         }
         return member;
     }

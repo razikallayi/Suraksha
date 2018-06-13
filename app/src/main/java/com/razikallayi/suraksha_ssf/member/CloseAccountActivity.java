@@ -232,6 +232,7 @@ public class CloseAccountActivity extends BaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close);
             actionBar.setHomeActionContentDescription("Close");
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Close Account");
         }
 
         //Enable full view scroll while soft keyboard is shown

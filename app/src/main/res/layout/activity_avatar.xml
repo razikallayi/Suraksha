@@ -26,9 +26,8 @@
 
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
             android:layout_width="match_parent"
-            android:layout_gravity="center"
+            android:gravity="end"
             android:layout_height="wrap_content"
             android:background="@color/black_overlay"
             android:orientation="horizontal"
@@ -37,12 +36,11 @@
             <TextView
                 android:id="@+id/closeBtn"
                 android:textColor="@color/white"
-                style="?metaButtonBarButtonStyle"
+                android:paddingEnd="@dimen/spacing_small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="X"
-                android:fontFamily="sans-serif-light"
-                android:textSize="@dimen/font_extra_huge"
+                android:text="x"
+                android:textSize="@dimen/font_huge"
                 android:contentDescription="@string/close"/>
 
         </LinearLayout>

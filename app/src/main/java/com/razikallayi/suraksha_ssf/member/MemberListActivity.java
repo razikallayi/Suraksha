@@ -172,10 +172,12 @@ public class MemberListActivity extends BaseActivity
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        mSearchView.setOnQueryTextListener(this);
-        // Assumes current activity is the searchable activity
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+        if(mSearchView!=null) {
+            mSearchView.setOnQueryTextListener(this);
+            // Assumes current activity is the searchable activity
+            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            mSearchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
